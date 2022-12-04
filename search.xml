@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>linuxCommand</title>
+    <title>linux 常用命令</title>
     <url>/posts/64968/</url>
-    <content><![CDATA[<p>linux 常用命令</p>
+    <content><![CDATA[<h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>切换不同文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
+
+<p>dd 删除一行</p>
+<p>gg dG 删除所有</p>
+<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p>main command</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
+
+<p>debug contaniner</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
+
+<h1 id="json"><a href="#json" class="headerlink" title="json"></a>json</h1><p>把一个json文件在terminal pretty查看</p>
+<p>(1) 使用python tool</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
+
+<p>(2) 使用jq 解析工具</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
+
+<p>jq还可以直接定位对应json中key的value</p>
+<h1 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h1><p>在file.h中找到xxx代表的含义</p>
+<p>In file.h</p>
+<p>#define xxx “hello world”</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
+
+<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
 ]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
       <tags>
-        <tag>linux</tag>
+        <tag>command</tag>
       </tags>
   </entry>
 </search>

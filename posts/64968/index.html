@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="linux," />
+  <meta name="keywords" content="command," />
 
 
 
@@ -86,17 +86,17 @@
 
 
 
-<meta name="description" content="linux 常用命令">
+<meta name="description" content="vim切换不同文件 1:e filename   dd 删除一行 gg dG 删除所有 dockermain command 12345docker pull 拉imagedocker run 跑imagedocker ps 查看当前运行的imagedocker stop 停止containerdocker rm 删除container  debug contaniner 1234docker l">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linuxCommand">
+<meta property="og:title" content="linux 常用命令">
 <meta property="og:url" content="http://example.com/posts/64968/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="linux 常用命令">
+<meta property="og:description" content="vim切换不同文件 1:e filename   dd 删除一行 gg dG 删除所有 dockermain command 12345docker pull 拉imagedocker run 跑imagedocker ps 查看当前运行的imagedocker stop 停止containerdocker rm 删除container  debug contaniner 1234docker l">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-12-04T02:36:39.000Z">
-<meta property="article:modified_time" content="2022-12-04T02:59:55.316Z">
+<meta property="article:modified_time" content="2022-12-04T08:21:39.064Z">
 <meta property="article:author" content="Fanta">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="command">
 <meta name="twitter:card" content="summary">
 
 
@@ -133,7 +133,7 @@
 
 
 
-  <title>linuxCommand | Hexo</title>
+  <title>linux 常用命令 | Hexo</title>
   
 
 
@@ -311,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linuxCommand</h1>
+          <h1 class="post-title" itemprop="name headline">linux 常用命令</h1>
         
 
         <div class="post-meta">
@@ -336,6 +336,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -357,7 +379,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5
+                  217
                 </span>
               
 
@@ -394,7 +416,31 @@
       
 
       
-        <p>linux 常用命令</p>
+        <h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>切换不同文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
+
+<p>dd 删除一行</p>
+<p>gg dG 删除所有</p>
+<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p>main command</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
+
+<p>debug contaniner</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
+
+<h1 id="json"><a href="#json" class="headerlink" title="json"></a>json</h1><p>把一个json文件在terminal pretty查看</p>
+<p>(1) 使用python tool</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
+
+<p>(2) 使用jq 解析工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
+
+<p>jq还可以直接定位对应json中key的value</p>
+<h1 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h1><p>在file.h中找到xxx代表的含义</p>
+<p>In file.h</p>
+<p>#define xxx “hello world”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
+
+<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
 
       
     </div>
@@ -412,7 +458,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+            <a href="/tags/command/" rel="tag"><i class="fa fa-tag"></i> command</a>
           
         </div>
       
@@ -484,8 +530,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -510,6 +565,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
@@ -556,7 +620,7 @@
 				  
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/64968/" title="linuxCommand" target="_blank">linuxCommand</a>
+					  <a href="/posts/64968/" title="linux 常用命令" target="_blank">linux 常用命令</a>
 					</li>
 				  
 				</ul>
@@ -575,6 +639,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vim"><span class="nav-number">1.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker"><span class="nav-number">2.</span> <span class="nav-text">docker</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#json"><span class="nav-number">3.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cut"><span class="nav-number">4.</span> <span class="nav-text">cut</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -603,7 +683,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">5</span>
+    <span title="Site words total count">217</span>
   
 </div>
 <!--
