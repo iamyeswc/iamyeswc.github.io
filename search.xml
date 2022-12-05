@@ -1,6 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>goPackage</title>
+    <url>/posts/51187/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>学习计划</title>
+    <url>/posts/44479/</url>
+    <content><![CDATA[<h1 id="学习计划"><a href="#学习计划" class="headerlink" title="学习计划"></a>学习计划</h1><table>
+<thead>
+<tr>
+<th>Summary</th>
+<th>Tasks</th>
+<th>Effort Estimastion</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>preparation（11月）</td>
+<td>学习书籍</td>
+<td>1 day</td>
+<td>The Go Programming Language： <a href="https://gopl-zh.github.io/">https://gopl-zh.github.io/</a>     Go in action ebook</td>
+</tr>
+<tr>
+<td></td>
+<td>博客网站</td>
+<td>5 days</td>
+<td>hexo 搭建博客网站： <a href="https://blog.csdn.net/yaorongke/article/details/119089190">https://blog.csdn.net/yaorongke/article/details/119089190</a></td>
+</tr>
+<tr>
+<td></td>
+<td>笔记工具</td>
+<td>2 day</td>
+<td>Typora：所见即所得 <a href="https://zahui.fan/posts/64b52e0d/">https://zahui.fan/posts/64b52e0d/</a></td>
+</tr>
+<tr>
+<td>knowledge（12月）</td>
+<td>go基础知识(数据类型+函数)</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>方法+接口</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Goroutines ,Channels+并发</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>包+测试+反射</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td>practice（1月）</td>
+<td>go项目练习（打包+工具链）</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>数组，切片+映射</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>类型系统</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>并发</td>
+<td>3 days</td>
+<td></td>
+</tr>
+<tr>
+<td>project</td>
+<td>github： go web</td>
+<td>15 days</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h1><p>（1）博客评论</p>
+<p>（2）ui优化</p>
+<p>（3）url link</p>
+]]></content>
+      <categories>
+        <category>plan</category>
+      </categories>
+      <tags>
+        <tag>study</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>linux 常用命令</title>
     <url>/posts/64968/</url>
     <content><![CDATA[<h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>切换不同文件</p>
@@ -22,6 +123,8 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
 
 <p>jq还可以直接定位对应json中key的value</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat test.txt|jq .</span><br><span class="line">&#123;</span><br><span class="line">  &quot;foo&quot;: &#123;</span><br><span class="line">    &quot;bar&quot;: &#123;</span><br><span class="line">      &quot;baz&quot;: 123</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">cat test.txt|jq &quot;.foo&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;bar&quot;: &#123;</span><br><span class="line">    &quot;baz&quot;: 123</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h1 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h1><p>在file.h中找到xxx代表的含义</p>
 <p>In file.h</p>
 <p>#define xxx “hello world”</p>
