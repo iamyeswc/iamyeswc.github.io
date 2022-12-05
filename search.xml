@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>goPackage</title>
+    <title>go package 使用</title>
     <url>/posts/51187/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>环境：go version<br>go version go1.19.3 windows&#x2F;amd64</p>
+<p>需要在main.go里导入自己写的包</p>
+<p><img src="E:\hexo-blog\source\pic\goPackage.png" alt="项目结构"></p>
+<p>在main.go里调用tempconv.go 出现error:</p>
+<p>go run “d:\vsProject\gocode\main.go”<br>main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><ul>
+<li><p>在go 1.11以前无法在除了root的目录下开发，1.11后提供了go mod来管理包</p>
+</li>
+<li><p>在同一目录下只能一个package</p>
+</li>
+</ul>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><h2 id="GO-ENV"><a href="#GO-ENV" class="headerlink" title="GO ENV"></a>GO ENV</h2><p>设置GO111MODULE</p>
+<p>on: 使用modules, 不会去gopath下查找</p>
+<p>off: 不支持modules, 去gopath下查找</p>
+<p>auto: 根据当前目录决定是否启动modules</p>
+<h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export GO111MODULE=off</span><br><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
+
+<h3 id="winodows"><a href="#winodows" class="headerlink" title="winodows"></a>winodows</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set GO111MODULE=off</span><br><span class="line">set GO111MODULE=on</span><br></pre></td></tr></table></figure>
+
+<p>或者设置系统环境变量</p>
+<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p>（1）关闭 go mod 模式：设置GO111MODULE off</p>
+<p>（2）go env查看当前的GOPATH,  将需要导入的tempconv.go放入$GOPATH&#x2F;src下</p>
+<p>note: 不建议这种方式，需要修改$GOPATH&#x2F;src</p>
+<h2 id="GO-MOD"><a href="#GO-MOD" class="headerlink" title="GO MOD"></a>GO MOD</h2><p>（1）打开 go mod 模式：设置GO111MODULE off</p>
+<p>（2）go mod init xx</p>
+<p>（3）import xxx&#x2F;filename</p>
+<p>go mod init gocode</p>
+<p>项目结构：</p>
+<p>gocode</p>
+<p>—-module&#x2F;tempconv.go</p>
+<p>—-main.go</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &quot;gocode/module&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go package</tag>
+      </tags>
   </entry>
   <entry>
     <title>学习计划</title>
@@ -91,8 +132,10 @@
 </tr>
 </tbody></table>
 <h1 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h1><p>（1）博客评论</p>
-<p>（2）ui优化</p>
-<p>（3）url link</p>
+<p>（2）ui menu 优化</p>
+<p>（3）blog url link</p>
+<p>（4）git push+git desktop</p>
+<p>（5）hexo picture</p>
 ]]></content>
       <categories>
         <category>plan</category>
