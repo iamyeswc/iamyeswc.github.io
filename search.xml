@@ -1,91 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>acm</title>
-    <url>/posts/50104/</url>
-    <content><![CDATA[<h1 id="素数（埃拉托色尼筛法）"><a href="#素数（埃拉托色尼筛法）" class="headerlink" title="素数（埃拉托色尼筛法）"></a>素数（埃拉托色尼筛法）</h1><p>题目：给定一个数 n，打印所有小于或等于 n 的素数。</p>
-<p>素数是恰好有两个不同的自然数约数的自然数：数字1和它本身，则素数不可能有因数</p>
-<p>（1）2是最小的素数</p>
-<p>（2）2的倍数则不是素数，将2的倍数的数字都进行标记</p>
-<p>（3）按照这种方法标记所有数字，剩余没有标记的就是素数</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PrimeNumer</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">	<span class="type">bool</span> prime[num + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">memset</span>(prime, <span class="literal">true</span>, num + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>; (i * i) &lt; (num + <span class="number">1</span>); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i] == <span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j = i * i; j &lt; (num + <span class="number">1</span>); j = j + i) &#123;</span><br><span class="line">				prime[j] = <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span> ; i &lt; num + <span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i])</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">PrimeNumer</span>(n);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>output: 30以内的素数 2 3 5 7 11 13 17 19 23 29 </p>
-<p>相关题目：给定两个整数 M 和 N，生成 M 和 N 之间的所有素数，包括 M 和 N。</p>
-<p>解决方法，把第二个循环中取素数的范围改为（M,N), 如果M&lt;2, 则取的范围是从（2，N)</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> begin = <span class="built_in">max</span>(M, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = begin ; i &lt; N + <span class="number">1</span>; i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(prime[i])</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>geek link: <a href="https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1">https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1</a></p>
-<h1 id="模运算中的幂"><a href="#模运算中的幂" class="headerlink" title="模运算中的幂"></a>模运算中的幂</h1><p>给三个数 x, y and p, 计算(x^y) % p. </p>
-<p>（1）y如果是奇数，则把x先乘以res;</p>
-<p>最后一个y肯定是1，把之前的结果都乘给res</p>
-<p>（2）计算x^y时需要注意，如果x,y很大，取幂次方容易越界，导致结果为0</p>
-<p>因此每次计算结果需要取余后再进行下一次幂运算</p>
-<p>（2）y左移一位后，x取平方记录在原始值中</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">PowerInmod</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(y &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">//y如果是奇数，则把x先乘以res;</span></span><br><span class="line">        <span class="comment">//最后一个y肯定是1，把之前的结果都乘给res</span></span><br><span class="line">		<span class="keyword">if</span>(y % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">			res = (res * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//y左移一位，x乘以2，结果都保留在x中</span></span><br><span class="line">		<span class="comment">//y = y &gt;&gt; 1; 等价于下面这一行</span></span><br><span class="line">		y = y / <span class="number">2</span>;</span><br><span class="line">		x = (x * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">136</span>, y = <span class="number">926</span>, p = <span class="number">961</span>;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">PowerInmod</span>(x, y, p);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>output:165</p>
-<h1 id="扩展欧几里得算法"><a href="#扩展欧几里得算法" class="headerlink" title="扩展欧几里得算法"></a>扩展欧几里得算法</h1><p>题目：找到整数系数 x 和 y，使得： ax + by &#x3D; gcd(a, b) </p>
-<p>欧几里得算法：两个正整数的最大公约数等于较小的数和两数的余数的最大公约数</p>
-<p>gcd(a,b) &#x3D; gcd(b%a, a)</p>
-<p>gcd(b%a, a) &#x3D; b%a x1 + a y1</p>
-<p>ax + by &#x3D; b%a x1 + a y1</p>
-<p>ax + by &#x3D; (b-(b&#x2F;a * a))x1 +  a y1</p>
-<p>ax + by &#x3D; a (y1 - b&#x2F;a x1) + b x1</p>
-<p>综上，</p>
-<p>x &#x3D; (y1 - b&#x2F;a x1)</p>
-<p>y &#x3D;  x1</p>
-<p>每次递归求最大公约数的时候，更新x, y的值</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GcdExtend</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> *x, <span class="type">int</span> *y)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(a == <span class="number">0</span>) &#123;</span><br><span class="line">		*x = <span class="number">0</span>;</span><br><span class="line">		*y = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">int</span> x1, y1;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(b%a, a, &amp;x1, &amp;y1);</span><br><span class="line">	*x = (y1 - (b/a) * x1);</span><br><span class="line">	*y = x1;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">Gcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> gcd = <span class="built_in">GcdExtend</span>(a, b, &amp;x, &amp;y);</span><br><span class="line">	<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt; &#123;gcd, x, y&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(<span class="number">35</span>, <span class="number">15</span>, &amp;x, &amp;y);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>output: 5</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>typedef 函数与函数指针的使用</title>
-    <url>/posts/40855/</url>
-    <content><![CDATA[<p>函数名是该函数的入口地址</p>
-<p>函数指针：指向函数的指针，可以用来调用函数</p>
-<h1 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>形式：typedef  返回类型(新类型)(参数列表)</p>
-<p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
-<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
-<p>（3）使用：变量（参数列表）</p>
-<p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
-<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>形式：typedef  返回类型(*新类型)(参数列表)</p>
-<p>（1）声明：新类型 变量</p>
-<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
-<p>（3）使用：变量（参数列表）</p>
-<p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
-<li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
-<li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
-</ul>
-<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>output：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
-
-<h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
-<p>即别人函数调用过程中来回调你实现的函数</p>
-<p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
-<p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
-<p>（3）在callBack中调用helloWorld</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>c++</category>
-      </categories>
-      <tags>
-        <tag>typedef</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>go package 使用</title>
     <url>/posts/51187/</url>
     <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>环境：go version<br>go version go1.19.3 windows&#x2F;amd64</p>
 <p>需要在main.go里导入自己写的包</p>
-<p><img src="E:\hexo-blog\source\pic\goPackage.png" alt="项目结构"></p>
+<p><img src="/images/goPackage.png" alt="项目结构"></p>
 <p>在main.go里调用tempconv.go 出现error:</p>
 <p>go run “d:\vsProject\gocode\main.go”<br>main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
 <h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><ul>
@@ -124,6 +44,83 @@
       </categories>
       <tags>
         <tag>go package</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux 常用命令</title>
+    <url>/posts/64968/</url>
+    <content><![CDATA[<h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>切换不同文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
+
+<p>dd 删除一行</p>
+<p>gg dG 删除所有</p>
+<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p>main command</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
+
+<p>debug contaniner</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
+
+<h1 id="json"><a href="#json" class="headerlink" title="json"></a>json</h1><p>把一个json文件在terminal pretty查看</p>
+<p>(1) 使用python tool</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
+
+<p>(2) 使用jq 解析工具</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
+
+<p>jq还可以直接定位对应json中key的value</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat test.txt|jq .</span><br><span class="line">&#123;</span><br><span class="line">  &quot;foo&quot;: &#123;</span><br><span class="line">    &quot;bar&quot;: &#123;</span><br><span class="line">      &quot;baz&quot;: 123</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">cat test.txt|jq &quot;.foo&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;bar&quot;: &#123;</span><br><span class="line">    &quot;baz&quot;: 123</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h1><p>在file.h中找到xxx代表的含义</p>
+<p>In file.h</p>
+<p>#define xxx “hello world”</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
+
+<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>command</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>typedef 函数与函数指针的使用</title>
+    <url>/posts/40855/</url>
+    <content><![CDATA[<p>函数名是该函数的入口地址</p>
+<p>函数指针：指向函数的指针，可以用来调用函数</p>
+<h1 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>形式：typedef  返回类型(新类型)(参数列表)</p>
+<p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
+<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
+<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>形式：typedef  返回类型(*新类型)(参数列表)</p>
+<p>（1）声明：新类型 变量</p>
+<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
+<li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
+<li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
+</ul>
+<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>output：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
+
+<h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
+<p>即别人函数调用过程中来回调你实现的函数</p>
+<p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
+<p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
+<p>（3）在callBack中调用helloWorld</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>typedef</tag>
       </tags>
   </entry>
   <entry>
@@ -225,41 +222,263 @@
       </tags>
   </entry>
   <entry>
-    <title>linux 常用命令</title>
-    <url>/posts/64968/</url>
-    <content><![CDATA[<h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>切换不同文件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
+    <title>acm</title>
+    <url>/posts/50104/</url>
+    <content><![CDATA[<h1 id="素数（埃拉托色尼筛法）"><a href="#素数（埃拉托色尼筛法）" class="headerlink" title="素数（埃拉托色尼筛法）"></a>素数（埃拉托色尼筛法）</h1><p>题目：给定一个数 n，打印所有小于或等于 n 的素数。</p>
+<p>素数是恰好有两个不同的自然数约数的自然数：数字1和它本身，则素数不可能有因数</p>
+<p>（1）2是最小的素数</p>
+<p>（2）2的倍数则不是素数，将2的倍数的数字都进行标记</p>
+<p>（3）按照这种方法标记所有数字，剩余没有标记的就是素数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PrimeNumer</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">	<span class="type">bool</span> prime[num + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">memset</span>(prime, <span class="literal">true</span>, num + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>; (i * i) &lt; (num + <span class="number">1</span>); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i] == <span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j = i * i; j &lt; (num + <span class="number">1</span>); j = j + i) &#123;</span><br><span class="line">				prime[j] = <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span> ; i &lt; num + <span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i])</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">PrimeNumer</span>(n);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>dd 删除一行</p>
-<p>gg dG 删除所有</p>
-<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p>main command</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
+<p>output: 30以内的素数 2 3 5 7 11 13 17 19 23 29 </p>
+<p>相关题目：给定两个整数 M 和 N，生成 M 和 N 之间的所有素数，包括 M 和 N。</p>
+<p>解决方法，把第二个循环中取素数的范围改为（M,N), 如果M&lt;2, 则取的范围是从（2，N)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> begin = <span class="built_in">max</span>(M, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = begin ; i &lt; N + <span class="number">1</span>; i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(prime[i])</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>debug contaniner</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
+<p>geek link: <a href="https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1">https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1</a></p>
+<h1 id="模运算中的幂"><a href="#模运算中的幂" class="headerlink" title="模运算中的幂"></a>模运算中的幂</h1><p>给三个数 x, y and p, 计算(x^y) % p. </p>
+<p>（1）y如果是奇数，则把x先乘以res;</p>
+<p>最后一个y肯定是1，把之前的结果都乘给res</p>
+<p>（2）计算x^y时需要注意，如果x,y很大，取幂次方容易越界，导致结果为0</p>
+<p>因此每次计算结果需要取余后再进行下一次幂运算</p>
+<p>（2）y左移一位后，x取平方记录在原始值中</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">PowerInmod</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(y &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">//y如果是奇数，则把x先乘以res;</span></span><br><span class="line">        <span class="comment">//最后一个y肯定是1，把之前的结果都乘给res</span></span><br><span class="line">		<span class="keyword">if</span>(y % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">			res = (res * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//y左移一位，x乘以2，结果都保留在x中</span></span><br><span class="line">		<span class="comment">//y = y &gt;&gt; 1; 等价于下面这一行</span></span><br><span class="line">		y = y / <span class="number">2</span>;</span><br><span class="line">		x = (x * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">136</span>, y = <span class="number">926</span>, p = <span class="number">961</span>;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">PowerInmod</span>(x, y, p);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="json"><a href="#json" class="headerlink" title="json"></a>json</h1><p>把一个json文件在terminal pretty查看</p>
-<p>(1) 使用python tool</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
+<p>output:165</p>
+<h1 id="扩展欧几里得算法"><a href="#扩展欧几里得算法" class="headerlink" title="扩展欧几里得算法"></a>扩展欧几里得算法</h1><p>题目：找到整数系数 x 和 y，使得： ax + by &#x3D; gcd(a, b) </p>
+<p>欧几里得算法：两个正整数的最大公约数等于较小的数和两数的余数的最大公约数</p>
+<p>gcd(a,b) &#x3D; gcd(b%a, a)</p>
+<p>gcd(b%a, a) &#x3D; b%a x1 + a y1</p>
+<p>ax + by &#x3D; b%a x1 + a y1</p>
+<p>ax + by &#x3D; (b-(b&#x2F;a * a))x1 +  a y1</p>
+<p>ax + by &#x3D; a (y1 - b&#x2F;a x1) + b x1</p>
+<p>综上，</p>
+<p>x &#x3D; (y1 - b&#x2F;a x1)</p>
+<p>y &#x3D;  x1</p>
+<p>每次递归求最大公约数的时候，更新x, y的值</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GcdExtend</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> *x, <span class="type">int</span> *y)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(a == <span class="number">0</span>) &#123;</span><br><span class="line">		*x = <span class="number">0</span>;</span><br><span class="line">		*y = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">int</span> x1, y1;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(b%a, a, &amp;x1, &amp;y1);</span><br><span class="line">	*x = (y1 - (b/a) * x1);</span><br><span class="line">	*y = x1;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">Gcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> gcd = <span class="built_in">GcdExtend</span>(a, b, &amp;x, &amp;y);</span><br><span class="line">	<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt; &#123;gcd, x, y&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(<span class="number">35</span>, <span class="number">15</span>, &amp;x, &amp;y);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>(2) 使用jq 解析工具</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
+<p>output: 5</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Goinactionchapter1-4</title>
+    <url>/posts/46357/</url>
+    <content><![CDATA[<h1 id="Go-语言介绍"><a href="#Go-语言介绍" class="headerlink" title="Go 语言介绍"></a>Go 语言介绍</h1><h2 id="开发速度"><a href="#开发速度" class="headerlink" title="开发速度"></a>开发速度</h2><p>编译器严格<br>（1）编译器只关注直接被引用的库（没有被引用的库编译器会报错）<br>（2）声明未使用的变量会报错，由类型检查<br>（3）内存管理由编译器处理</p>
+<h2 id="支持并发"><a href="#支持并发" class="headerlink" title="支持并发"></a>支持并发</h2><p>goroutine类似线程，但使用内存少于线程<br>通过内置的数据结构通道(channel)让用户在不同goroutine间同步发送消息，而不是让多个goroutine争夺同一个数据的使用权<br>goroutine使用通道发送数据&#96;&#96;&#96;go<br>package main</p>
+<p>import (<br>    “fmt”<br>    “sync”<br>)</p>
+<p>var wg sync.WaitGroup &#x2F;&#x2F; 定义一个 WaitGroup 对象，用于等待一组 goroutine 的结束</p>
+<p>func printer(c chan int) {<br>    for i :&#x3D; range c { &#x2F;&#x2F; 使用 for-range 循环读取 channel 中的数据，直到 channel 被关闭为止<br>        fmt.Printf(“receive i:%d “, i)<br>    }<br>    wg.Done() &#x2F;&#x2F; 计数减一<br>}</p>
+<p>func main() {<br>    c :&#x3D; make(chan int) &#x2F;&#x2F; 创建一个整型 channel</p>
+<pre><code>go printer(c) // 在新的 goroutine 中打印 channel 中的数据
 
-<p>jq还可以直接定位对应json中key的value</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat test.txt|jq .</span><br><span class="line">&#123;</span><br><span class="line">  &quot;foo&quot;: &#123;</span><br><span class="line">    &quot;bar&quot;: &#123;</span><br><span class="line">      &quot;baz&quot;: 123</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">cat test.txt|jq &quot;.foo&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;bar&quot;: &#123;</span><br><span class="line">    &quot;baz&quot;: 123</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+wg.Add(1) // 增加一个计数器，表示有一个 goroutine 在运行
 
-<h1 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h1><p>在file.h中找到xxx代表的含义</p>
-<p>In file.h</p>
-<p>#define xxx “hello world”</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
+for i := 1; i &lt; 10; i++ &#123;
+    c &lt;- i // 将数字写入 channel
+&#125;
 
-<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
+close(c) // 关闭 channel，通知 goroutine 停止阻塞并退出
+
+wg.Wait() // 等待所有 goroutine 完成
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">![image.png](https://cdn.nlark.com/yuque/0/2023/png/35882788/1683609910116-c2acd51c-e0fb-4522-b018-d89ae2755c03.png#averageHue=%23f3f3f3&amp;clientId=u890e47e2-2704-4&amp;from=paste&amp;height=217&amp;id=u332d5bd2&amp;originHeight=217&amp;originWidth=374&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=12300&amp;status=done&amp;style=none&amp;taskId=u820ead53-7268-494e-b410-b2207a3f9b5&amp;title=&amp;width=374)</span><br><span class="line">在两个goroutine间传输数据是同步的，在goroutine间安全传输数据的方法不需要任何锁和同步机制</span><br><span class="line">但是通道是不提供跨goroutine的数据访问保护机制：</span><br><span class="line">（1）传输数据是副本，goroutine各自持有副本修改是安全的</span><br><span class="line">（2）传输数据是指向数据的指针，读和写由不同的goroutine完成的，每个goroutine需要额外的同步动作</span><br><span class="line">## go语言的类型系统</span><br><span class="line">无继承的类型系统，支持面向对象开发</span><br><span class="line">### 接口</span><br><span class="line">（1）在java里，设计需要围绕接口展开，必须满足接口里的所有约束，需要显示声明这个类实现了接口</span><br><span class="line"></span><br><span class="line">- 首先定义了一个 Shape 接口，其中只包含一个 getArea() 方法。</span><br><span class="line">- 分别创建了 Circle 和 Rectangle 类，都实现了 Shape 接口，并实现了 getArea() 方法来计算它们的面积。</span><br><span class="line">- 在 main() 函数中，创建了一个 Circle 对象和一个 Rectangle 对象，并将它们作为 Shape 类型的参数传递给 getArea() 函数，以计算它们的面积。</span><br><span class="line">java使用接口```java</span><br><span class="line">interface Shape &#123;</span><br><span class="line">    double getArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Circle implements Shape &#123;</span><br><span class="line">    private double radius;</span><br><span class="line"></span><br><span class="line">    public Circle(double radius) &#123;</span><br><span class="line">        this.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return Math.PI * radius * radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Rectangle implements Shape &#123;</span><br><span class="line">    private double width, height;</span><br><span class="line"></span><br><span class="line">    public Rectangle(double width, double height) &#123;</span><br><span class="line">        this.width = width;</span><br><span class="line">        this.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return width * height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Shape c = new Circle(5);</span><br><span class="line">        Shape r = new Rectangle(3, 4);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;Circle area: &quot; + c.getArea());</span><br><span class="line">        System.out.println(&quot;Rectangle area: &quot; + r.getArea());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>（2）在go里</p>
+<ul>
+<li>定义了两个结构体类型 Circle 和 Rectangle，并为它们分别定义了 area() 方法来计算它们的面积。</li>
+</ul>
+<p>Circle类型的方法和Rectangle类型的方法<br>（go里的函数和方法不同：函数是独立的代码块，没有属于特定类型，可以直接通过函数名进行调用<br>方法是与某个类型绑定的函数，可以被该类型的值或指针调用。方法通常用于描述该类型的行为和操作，并且可以访问该类型的成员变量。方法的定义需要在函数名前指定一个接收者参数，表示该方法属于哪个类型）</p>
+<ul>
+<li>定义了一个 Shape 接口，其中只包含一个 area() 方法。</li>
+<li>在 getArea() 函数中，接收一个 Shape 类型的参数，并调用其 area() 方法来计算面积。</li>
+<li>在 main() 函数中，创建了一个 Circle 类型的变量和一个 Rectangle 类型的变量，并分别将它们作为参数传递给 getArea() 函数。</li>
+</ul>
+<p>Circle 和 Rectangle 结构体类型并没有显式地声明它们实现了 Shape 接口，但由于它们都定义了 area() 方法，因此它们隐式地满足了 Shape 接口的要求。这就体现了Go语言中的“鸭子类型”特点，即只要一个结构体类型具备某个方法或操作，那么它就可以被看作具有相应接口的能力，无需显式地声明实现了该接口。</p>
+<p>go使用接口&#96;&#96;&#96;go<br>type Circle struct {<br>    radius float64<br>}</p>
+<p>type Rectangle struct {<br>    width, height float64<br>}</p>
+<p>func (c Circle) area() float64 {<br>    return math.Pi * c.radius * c.radius<br>}</p>
+<p>func (r Rectangle) area() float64 {<br>    return r.width * r.height<br>}</p>
+<p>type Shape interface {<br>    area() float64<br>}</p>
+<p>func getArea(s Shape) float64 {<br>    return s.area()<br>}</p>
+<p>func main() {<br>    c :&#x3D; Circle{radius: 5}<br>    r :&#x3D; Rectangle{width: 3, height: 4}</p>
+<pre><code>fmt.Println(&quot;Circle area:&quot;, getArea(c))
+fmt.Println(&quot;Rectangle area:&quot;, getArea(r))
+</code></pre>
+<p>}</p>
+<pre><code>
+:::tips
+go online: [https://go.dev/play/](https://go.dev/play/)
+:::
+# 打包和工具链
+go语言的程序都会组织成若干组文件，每组文件被称为一个包
+包名：
+（1）使用包所在目录的名字 -&gt; 用户导入包的时候，能清晰知道包名
+（2）全小写 -&gt; 有利于开发时频繁输入包名
+（3）包名可以相同 -&gt; 导入包的时候使用全路径，可以区分同名的不同包
+### main包
+（1）所有用go语言编译的可执行程序必须有一个名叫main的包
+包名为main，一定也会有main函数，否则不会创建可执行文件 -&gt; main函数是程序入口
+main包 里的go 源文件 都会被编译为二进制可执行文件
+（2）不同目录下可以有多个 package main，但是同一目录下不能有多个 package main
+### 包导入
+import (
+&quot;fmt&quot;
+&quot;github.com/spf12/viper&quot; //远程导入
+myfmt &quot;mylib/fmt&quot;  //命名导入
+)
+通过go module管理包（以前是在gopath环境变量目录下管理包）
+go mod init modulename
+go mod tidy -&gt; 查找下载依赖包
+
+生成go.mod  go.sum
+### 函数init
+每个包可以有多个init函数，这些函数在程序执行开始的时候被调用 -&gt; 在main函数之前执行
+go语言要求不能导入不使用的包：
+如果有init函数，但是该包里的内容没有被main函数使用，则使用空白标识符作为包的别名：
+import (
+&quot;database/sql&quot;
+_ &quot;github.com/goinaction/code/test&quot;  //避免编译错误
+)
+
+### 使用go工具
+编译： go build demo.go
+清除编译生成文件： go clean
+检查代码： go vet demo.go
+代码格式化：go fmt demo.go
+
+# 数组，切片和映射
+## 数组
+长度固定，存储一段相同类型的元素的连续块
+### 创建和初始化
+声明后类型和长度不能改变
+var arry [5]int  -&gt; 声明时对应类型的零值来初始化
+var arry = [5]int&#123;1, 2, 3, 4, 5&#125; -&gt; 声明的时候初始化
+array := [5]int&#123;1,2,3,4,5&#125;  -&gt; 使用数组字面量声明数组
+array := [...]int&#123;1,2,3,4,5&#125;  -&gt; 自动计算声明数组长度
+array := [5]int&#123;1:10, 3:20&#125; -&gt; 声明数组，指定特定元素的值
+### 使用
+（1）访问
+array[2] = 25 -&gt; 访问数组元素，并修改对应索引元素的值
+（2）指针
+array := [5]*int -&gt; 仅声明未初始化 不能直接使用
+array := [5]*int&#123;&#125; -&gt; 声明并初始化为nil
+array := [5]*int&#123;0:new(int), 1:new(int)&#125; -&gt; 整型指针初始化索引0和1的数组元素
+（3）同类型互相赋值
+var array1 [5]int
+array2 := [5]int&#123;1,2,3,4,5&#125;
+array1 = array2 -&gt; correct
+对比:
+var array1 [4]int
+array1 = array2 -&gt; not correct
+### 多维数组
+var array [4][2]int
+### 函数间传递数组
+函数间传递变量，通过值传递，如果传递数组，会赋值整个数组的值  -&gt; 开销很大
+solution: 传递指针，指针大小8字节 （64位系统） -&gt; 有效利用内存
+## 切片
+围绕动态数组构建，按需增长减小。底层内存是在连续块中分配内存，对底层数组进行了抽象
+切片有三个字段的数据结构：
+（1）指向底层数组的指针
+（2）长度：切片访问的元素的个数 len函数
+（3）容量：切片允许增长到的元素个数 cap函数
+
+### 创建和初始化
+make和切片字面量
+:::tips
+make 函数主要用于创建和初始化某些类型的内置数据结构，例如 slice、map 和 channel
+:::
+slice := make([]int, 3, 5) -&gt; make 使用长度，容量初始化（容量可省略，此时长度和容量相同）
+切片能访问3个元素，底层数据拥有5个
+slice := make([]int, 3, 2) -&gt; make 使用长度大于容量，编译报错
+slice := []int&#123;1,2,3&#125;  -&gt; 切片字面量（不指定[]的值，基于初始化的元素个数确定长度和容量)
+数组和切片声明的区别：
+[]运算符里指定了值，创建的是数组 -&gt; slice := [3]int&#123;1,2,3&#125; -&gt; 三个元素的数组
+[]运算符里不指定值，创建的是切片 -&gt; slice := []int&#123;1,2,3&#125; -&gt; 长度容量都为3的切片
+声明空切片：
+slice : = make([]int, 0)
+slice := []int&#123;&#125;
+### 使用
+(1)共享底层数组的两个切片
+slice := []int&#123;10,20,30,40,50&#125;
+newSlice := slice[1:3]  -&gt; 用切片创建切片
+![image.png](https://cdn.nlark.com/yuque/0/2023/png/35882788/1683542263635-fed21eda-8c8c-458d-b97b-17e747c4e2e4.png#averageHue=%23ececec&amp;clientId=u0f4efc78-8401-4&amp;from=paste&amp;height=313&amp;id=Vu3Yo&amp;originHeight=470&amp;originWidth=707&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=48513&amp;status=done&amp;style=none&amp;taskId=u45c62aec-5319-438f-928a-2539d21562c&amp;title=&amp;width=471.3333333333333)
+新切片slice[i:j]的长度和容量, 底层数组的容量k
+长度：j-i
+容量：k-i
+修改切片内容 -&gt; newSlice[1] = 35 -&gt;slice第三个元素被修改为35
+
+(2)切片额外的容量
+（1）切片只能访问到长度内的元素
+（2）与切片的容量相关联的元素只能用于增长切片，在使用这部分元素前，要将其合并到切片长度里
+如果不能把这些合并到切片长度里，这些容量就没有用处（可使用append做合并）
+(3)切片增长
+append会创建新的底层数组，把现有的值赋值到新数组里，再追加新的值
+slice := []int&#123;10,20,30,40&#125;
+newSlice := append(slice, 50)
+newSlice有用全新的底层数组，这个数组是原来容量的两倍
+![image.png](https://cdn.nlark.com/yuque/0/2023/png/35882788/1683545240959-cb7b2b53-67b6-43bb-9b52-67db0fca4d43.png#averageHue=%23e8e8e8&amp;clientId=ucd1e287d-dac8-4&amp;from=paste&amp;height=338&amp;id=u866b7b7f&amp;originHeight=507&amp;originWidth=571&amp;originalType=binary&amp;ratio=1.5&amp;rotation=0&amp;showTitle=false&amp;size=52438&amp;status=done&amp;style=none&amp;taskId=u65ef4127-5305-463a-8c13-0a2b2403c04&amp;title=&amp;width=380.6666666666667)
+append只能处理底层数组的容量增长，容量小于1000，两倍增长。超过1000，增长因子1.25
+(4)创建切片的3个索引
+限制容量，为顶层数组提供保护，控制追加操作
+source := []string&#123;&quot;Apple&quot;, &quot;Orange&quot;, &quot;Plum&quot;, &#39;Banana&quot;, &#39;Grape&quot;&#125;
+slice := source[2:3:4]
+source[i:j:k]
+长度：j-i
+容量：k-i
+![image.png](https://cdn.nlark.com/yuque/0/2023/png/35882788/1683545705163-ec7be981-62ed-4abb-a9fe-d8ef9ffc8605.png#averageHue=%23ececec&amp;clientId=ucd1e287d-dac8-4&amp;from=paste&amp;height=299&amp;id=uc78cbe1e&amp;originHeight=448&amp;originWidth=695&amp;originalType=binary&amp;ratio=1.5&amp;rotation=0&amp;showTitle=false&amp;size=59162&amp;status=done&amp;style=none&amp;taskId=u8e52654b-442a-4d41-a19a-e6c8ccdfa1e&amp;title=&amp;width=463.3333333333333)
+(5)迭代切片: range
+for index, value := range slice&#123;
+&#125;
+range返回：迭代到的索引位置，对应位置元素的副本（副本无法取地址，使用该值变量的地址作为指向每个元素的指针地址是一样的：&amp;value的值是一样的 -&gt; 需要用&amp;slice[index]）
+不需要的值可以用占位符_表示忽略 -&gt; for _, value := range slice
+### 多维切片
+slice := [][]int&#123;&#123;10&#125;,&#123;20,30&#125;&#125;  可以利用创建复杂数据结构
+### 函数间传递切片
+切片以值得方式传递给函数，只复制切片本素，不复制底层数组，所以只需要24个字节：指针8个字节，长度和容量分别8字节。
+因此切片效率高，如果函数需要修改数据，传递回一份新得切片副本即可
+## 映射
+存储无序键值对
+### 创建和初始化
+使用make声明（key value都是string类型）
+dict := make(map[string]string)
+创建并初始化
+dict := map[string]string&#123;&quot;red&quot;:&quot;hello&quot;, &quot;yellow&quot;:&quot;world&quot;&#125;
+映射的键不能是切片，包含切片的类型，函数的结构类型
+dict := map[[]string]string&#123;&#125; -&gt; 编译报错
+可以作为映射的值
+dict := map[string][]string&#123;&#125; -&gt; ok
+### 使用
+为映射赋值
+dict := map[string]string&#123;&#125;
+dict[&quot;red&quot;] = &quot;hello&quot;
+
+未初始化的映射 -&gt; nil映射 -&gt; 赋值运行错误：nil映射不能用于存储键值对
+dict := map[string]string
+dict[&quot;red&quot;] = &quot;hello&quot;
+
+从映射获取值 
+value, exist := dict[&quot;red&quot;]  -&gt; 返回映射键对应的值和该值是否存在，如果键不存在，exist返回false
+value := dict[&quot;red&quot;]
+if value != &quot;&quot;        -&gt; 判断value是否是零值来看映射键是否存在
+
+range 迭代映射
+for key,value := range dict &#123;
+&#125;
+删除映射中的一项
+delete(dict, &quot;red&quot;)
+
+映射的增长没有容量限制：可通过len函数得到映射长度
+### 在函数间传递映射
+函数间传递映射不会制造错该映射的副本，如果对映射修改，所有对这个映射的引用都会察觉。特性与切片类似，传递给函数成本很小，不会复制底层的数据结构
+</code></pre>
 ]]></content>
       <categories>
-        <category>linux</category>
+        <category>go</category>
       </categories>
       <tags>
-        <tag>command</tag>
+        <tag>go in action</tag>
       </tags>
   </entry>
 </search>
