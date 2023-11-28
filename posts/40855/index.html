@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="go package," />
+  <meta name="keywords" content="typedef," />
 
 
 
@@ -86,20 +86,18 @@
 
 
 
-<meta name="description" content="问题环境：go versiongo version go1.19.3 windows&#x2F;amd64 需要在main.go里导入自己写的包  在main.go里调用tempconv.go 出现error: go run “d:\vsProject\gocode\main.go”main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go">
+<meta name="description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef函数形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针形式：typedef  返回类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go package 使用">
-<meta property="og:url" content="http://example.com/posts/51187/index.html">
+<meta property="og:title" content="typedef 函数与函数指针的使用">
+<meta property="og:url" content="http://example.com/posts/40855/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="问题环境：go versiongo version go1.19.3 windows&#x2F;amd64 需要在main.go里导入自己写的包  在main.go里调用tempconv.go 出现error: go run “d:\vsProject\gocode\main.go”main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go">
+<meta property="og:description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef函数形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针形式：typedef  返回类">
 <meta property="og:locale">
-<meta property="og:image" content="e:\hexo-blog\source\pic\goPackage.png">
-<meta property="article:published_time" content="2022-12-04T08:54:45.000Z">
-<meta property="article:modified_time" content="2022-12-05T06:39:12.484Z">
+<meta property="article:published_time" content="2022-12-06T06:51:34.000Z">
+<meta property="article:modified_time" content="2022-12-06T09:26:04.979Z">
 <meta property="article:author" content="Yeswc">
-<meta property="article:tag" content="go package">
+<meta property="article:tag" content="typedef">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="e:\hexo-blog\source\pic\goPackage.png">
 
 
 
@@ -129,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/posts/51187/"/>
+  <link rel="canonical" href="http://example.com/posts/40855/"/>
 
 
 
 
 
-  <title>go package 使用 | 好好学习</title>
+  <title>typedef 函数与函数指针的使用 | 好好学习</title>
   
 
 
@@ -296,7 +294,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/51187/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/40855/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -313,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">go package 使用</h1>
+          <h1 class="post-title" itemprop="name headline">typedef 函数与函数指针的使用</h1>
         
 
         <div class="post-meta">
@@ -327,8 +325,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-12-04T16:54:45+08:00">
-                2022-12-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-12-06T14:51:34+08:00">
+                2022-12-06
               </time>
             
 
@@ -350,8 +348,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c++</span>
                   </a>
                 </span>
 
@@ -386,7 +384,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  254
+                  658
                 </span>
               
 
@@ -402,7 +400,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -423,40 +421,33 @@
       
 
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>环境：go version<br>go version go1.19.3 windows&#x2F;amd64</p>
-<p>需要在main.go里导入自己写的包</p>
-<p><img src="E:\hexo-blog\source\pic\goPackage.png" alt="项目结构"></p>
-<p>在main.go里调用tempconv.go 出现error:</p>
-<p>go run “d:\vsProject\gocode\main.go”<br>main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
-<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><ul>
-<li><p>在go 1.11以前无法在除了root的目录下开发，1.11后提供了go mod来管理包</p>
-</li>
-<li><p>在同一目录下只能一个package</p>
-</li>
+        <p>函数名是该函数的入口地址</p>
+<p>函数指针：指向函数的指针，可以用来调用函数</p>
+<h1 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>形式：typedef  返回类型(新类型)(参数列表)</p>
+<p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
+<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
+<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>形式：typedef  返回类型(*新类型)(参数列表)</p>
+<p>（1）声明：新类型 变量</p>
+<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
+<li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
+<li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
 </ul>
-<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><h2 id="GO-ENV"><a href="#GO-ENV" class="headerlink" title="GO ENV"></a>GO ENV</h2><p>设置GO111MODULE</p>
-<p>on: 使用modules, 不会去gopath下查找</p>
-<p>off: 不支持modules, 去gopath下查找</p>
-<p>auto: 根据当前目录决定是否启动modules</p>
-<h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=off</span><br><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
+<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="winodows"><a href="#winodows" class="headerlink" title="winodows"></a>winodows</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set GO111MODULE=off</span><br><span class="line">set GO111MODULE=on</span><br></pre></td></tr></table></figure>
+<p>output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
 
-<p>或者设置系统环境变量</p>
-<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p>（1）关闭 go mod 模式：设置GO111MODULE off</p>
-<p>（2）go env查看当前的GOPATH,  将需要导入的tempconv.go放入$GOPATH&#x2F;src下</p>
-<p>note: 不建议这种方式，需要修改$GOPATH&#x2F;src</p>
-<h2 id="GO-MOD"><a href="#GO-MOD" class="headerlink" title="GO MOD"></a>GO MOD</h2><p>（1）打开 go mod 模式：设置GO111MODULE off</p>
-<p>（2）go mod init xx</p>
-<p>（3）import xxx&#x2F;filename</p>
-<p>go mod init gocode</p>
-<p>项目结构：</p>
-<p>gocode</p>
-<p>—-module&#x2F;tempconv.go</p>
-<p>—-main.go</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;gocode/module&quot;</span><br></pre></td></tr></table></figure>
-
-
+<h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
+<p>即别人函数调用过程中来回调你实现的函数</p>
+<p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
+<p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
+<p>（3）在callBack中调用helloWorld</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -475,7 +466,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/go-package/" rel="tag"><i class="fa fa-tag"></i> go package</a>
+            <a href="/tags/typedef/" rel="tag"><i class="fa fa-tag"></i> typedef</a>
           
         </div>
       
@@ -503,8 +494,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/44479/" rel="next" title="学习计划">
-                <i class="fa fa-chevron-left"></i> 学习计划
+              <a href="/posts/51187/" rel="next" title="go package 使用">
+                <i class="fa fa-chevron-left"></i> go package 使用
               </a>
             
           </div>
@@ -513,8 +504,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/40855/" rel="prev" title="typedef 函数与函数指针的使用">
-                typedef 函数与函数指针的使用 <i class="fa fa-chevron-right"></i>
+              <a href="/posts/50104/" rel="prev" title="acm">
+                acm <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -702,7 +693,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GO-ENV"><span class="nav-number">3.1.</span> <span class="nav-text">GO ENV</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">3.1.1.</span> <span class="nav-text">linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#winodows"><span class="nav-number">3.1.2.</span> <span class="nav-text">winodows</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">3.2.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GO-MOD"><span class="nav-number">3.3.</span> <span class="nav-text">GO MOD</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#typedef"><span class="nav-number">1.</span> <span class="nav-text">typedef</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88"><span class="nav-number">1.2.</span> <span class="nav-text">函数指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">回调函数</span></a></li></ol></div>
             
 
           </div>
