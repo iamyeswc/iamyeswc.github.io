@@ -86,12 +86,12 @@
 
 
 
-<meta name="description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef函数形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针形式：typedef  返回类">
+<meta name="description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef 函数 形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针 形式：typedef  返回类型(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="typedef 函数与函数指针的使用">
 <meta property="og:url" content="http://example.com/posts/40855/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef函数形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针形式：typedef  返回类">
+<meta property="og:description" content="函数名是该函数的入口地址 函数指针：指向函数的指针，可以用来调用函数 typedef 函数 形式：typedef  返回类型(新类型)(参数列表) （1）声明：新类型 *变量 (需要声明一个指针) （2）初始化：变量 &#x3D; 函数返回地址 （3）使用：变量（参数列表） 此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数 函数指针 形式：typedef  返回类型(">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-12-06T06:51:34.000Z">
 <meta property="article:modified_time" content="2022-12-06T09:26:04.979Z">
@@ -384,7 +384,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  658
+                  656
                 </span>
               
 
@@ -423,32 +423,35 @@
       
         <p>函数名是该函数的入口地址</p>
 <p>函数指针：指向函数的指针，可以用来调用函数</p>
-<h1 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>形式：typedef  返回类型(新类型)(参数列表)</p>
+<h1 id="typedef">typedef</h1>
+<h2 id="函数">函数</h2>
+<p>形式：typedef  返回类型(新类型)(参数列表)</p>
 <p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
-<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（2）初始化：变量 = 函数返回地址</p>
 <p>（3）使用：变量（参数列表）</p>
 <p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
-<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>形式：typedef  返回类型(*新类型)(参数列表)</p>
+<h2 id="函数指针">函数指针</h2>
+<p>形式：typedef  返回类型(*新类型)(参数列表)</p>
 <p>（1）声明：新类型 变量</p>
-<p>（2）初始化：变量 &#x3D; 函数返回地址</p>
+<p>（2）初始化：变量 = 函数返回地址</p>
 <p>（3）使用：变量（参数列表）</p>
 <p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
+<h2 id="区别">区别</h2>
+<ul>
 <li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
 <li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
 </ul>
-<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h1 id="例子">例子</h1>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>output：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
-
-<h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
+<h1 id="回调函数">回调函数</h1>
+<p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
 <p>即别人函数调用过程中来回调你实现的函数</p>
 <p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
 <p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
 <p>（3）在callBack中调用helloWorld</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -587,7 +590,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -598,7 +601,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -609,7 +612,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -648,23 +651,23 @@
 				  
 				  
 					<li class="recent_posts_li">
+					  <a href="/posts/63534/" title="test" target="_blank">test</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/posts/50141/" title="CVE版本" target="_blank">CVE版本</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/posts/850/" title="相同长度的轨道" target="_blank">相同长度的轨道</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/posts/14569/" title="防止爆仓" target="_blank">防止爆仓</a>
+					</li>
+				  
+					<li class="recent_posts_li">
 					  <a href="/posts/48147/" title="goinactionChapter5-9" target="_blank">goinactionChapter5-9</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/posts/26211/" title="slice 和 map 线程安全问题" target="_blank">slice 和 map 线程安全问题</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/posts/47251/" title="goinactionChapter1-4" target="_blank">goinactionChapter1-4</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/posts/50104/" title="acm" target="_blank">acm</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/posts/40855/" title="typedef 函数与函数指针的使用" target="_blank">typedef 函数与函数指针的使用</a>
 					</li>
 				  
 				</ul>
@@ -727,7 +730,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">15.1k</span>
+    <span title="Site words total count">19.7k</span>
   
 </div>
 <!--
