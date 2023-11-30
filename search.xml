@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>pipeline</title>
-    <url>/pipeline/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>使用pprof对go http service进行性能分析</title>
-    <url>/pprof/</url>
-    <content><![CDATA[<h2 id="代码应用">代码应用</h2>
-<p><strong>参考</strong>：<a href="https://github.com/gin-contrib/pprof">https://github.com/gin-contrib/pprof</a></p>
-<p>把pprof挂载到gin的路由器下有两种方法</p>
-<ul>
-<li>在gin的<code>跟路由</code>上注册pprof的路由<br>
-使用<code>pprof.Register(router)</code><br>
-下面创建的服务器的路由是<a href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…<br>
-则可以通过<a href="http://localhost:80/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/debug/pprof/来访问pprof首页</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">pprof.Register(router)</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>在gin的<code>指定路由</code>上注册pprof的路由<br>
-使用<code>pprof.Register(router)</code><br>
-下面创建的服务器的路由是<a href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…, pprof的路由挂载在了test路由下<br>
-则需要通过<a href="http://localhost:80/test/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/test/debug/pprof/来访问pprof首页</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">pprof.RouteRegister(v1Root)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>pprof的路由：</p>
-<p>[GIN-debug] GET    /debug/pprof/             --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/cmdline      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/profile      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] POST   /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/trace        --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/allocs       --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/block        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/goroutine    --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/heap         --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/mutex        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
-[GIN-debug] GET    /debug/pprof/threadcreate --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)</p>
+    <title>acm</title>
+    <url>/acm/</url>
+    <content><![CDATA[<h1 id="素数埃拉托色尼筛法">素数（埃拉托色尼筛法）</h1>
+<p>题目：给定一个数 n，打印所有小于或等于 n 的素数。</p>
+<p>素数是恰好有两个不同的自然数约数的自然数：数字1和它本身，则素数不可能有因数</p>
+<p>（1）2是最小的素数</p>
+<p>（2）2的倍数则不是素数，将2的倍数的数字都进行标记</p>
+<p>（3）按照这种方法标记所有数字，剩余没有标记的就是素数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PrimeNumer</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">	<span class="type">bool</span> prime[num + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">memset</span>(prime, <span class="literal">true</span>, num + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>; (i * i) &lt; (num + <span class="number">1</span>); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i] == <span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j = i * i; j &lt; (num + <span class="number">1</span>); j = j + i) &#123;</span><br><span class="line">				prime[j] = <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span> ; i &lt; num + <span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i])</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">PrimeNumer</span>(n);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output: 30以内的素数 2 3 5 7 11 13 17 19 23 29</p>
+<p>相关题目：给定两个整数 M 和 N，生成 M 和 N 之间的所有素数，包括 M 和 N。</p>
+<p>解决方法，把第二个循环中取素数的范围改为（M,N), 如果M&lt;2, 则取的范围是从（2，N)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> begin = <span class="built_in">max</span>(M, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = begin ; i &lt; N + <span class="number">1</span>; i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(prime[i])</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>geek link: <a href="https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1">https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1</a></p>
+<h1 id="模运算中的幂">模运算中的幂</h1>
+<p>给三个数 x, y and p, 计算(x^y) % p.</p>
+<p>（1）y如果是奇数，则把x先乘以res;</p>
+<p>最后一个y肯定是1，把之前的结果都乘给res</p>
+<p>（2）计算x^y时需要注意，如果x,y很大，取幂次方容易越界，导致结果为0</p>
+<p>因此每次计算结果需要取余后再进行下一次幂运算</p>
+<p>（2）y左移一位后，x取平方记录在原始值中</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">PowerInmod</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(y &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">//y如果是奇数，则把x先乘以res;</span></span><br><span class="line">        <span class="comment">//最后一个y肯定是1，把之前的结果都乘给res</span></span><br><span class="line">		<span class="keyword">if</span>(y % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">			res = (res * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//y左移一位，x乘以2，结果都保留在x中</span></span><br><span class="line">		<span class="comment">//y = y &gt;&gt; 1; 等价于下面这一行</span></span><br><span class="line">		y = y / <span class="number">2</span>;</span><br><span class="line">		x = (x * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">136</span>, y = <span class="number">926</span>, p = <span class="number">961</span>;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">PowerInmod</span>(x, y, p);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output:165</p>
+<h1 id="扩展欧几里得算法">扩展欧几里得算法</h1>
+<p>题目：找到整数系数 x 和 y，使得： ax + by = gcd(a, b)</p>
+<p>欧几里得算法：两个正整数的最大公约数等于较小的数和两数的余数的最大公约数</p>
+<p>gcd(a,b) = gcd(b%a, a)</p>
+<p>gcd(b%a, a) = b%a x1 + a y1</p>
+<p>ax + by = b%a x1 + a y1</p>
+<p>ax + by = (b-(b/a * a))x1 +  a y1</p>
+<p>ax + by = a (y1 - b/a x1) + b x1</p>
+<p>综上，</p>
+<p>x = (y1 - b/a x1)</p>
+<p>y =  x1</p>
+<p>每次递归求最大公约数的时候，更新x, y的值</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GcdExtend</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> *x, <span class="type">int</span> *y)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(a == <span class="number">0</span>) &#123;</span><br><span class="line">		*x = <span class="number">0</span>;</span><br><span class="line">		*y = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">int</span> x1, y1;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(b%a, a, &amp;x1, &amp;y1);</span><br><span class="line">	*x = (y1 - (b/a) * x1);</span><br><span class="line">	*y = x1;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">Gcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> gcd = <span class="built_in">GcdExtend</span>(a, b, &amp;x, &amp;y);</span><br><span class="line">	<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt; &#123;gcd, x, y&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(<span class="number">35</span>, <span class="number">15</span>, &amp;x, &amp;y);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output: 5</p>
 ]]></content>
       <categories>
-        <category>go</category>
+        <category>algorithm</category>
       </categories>
       <tags>
-        <tag>pprof</tag>
+        <tag>string</tag>
       </tags>
   </entry>
   <entry>
@@ -100,153 +100,233 @@
       </tags>
   </entry>
   <entry>
-    <title>相同长度的轨道</title>
-    <url>/sameLengthTrack/</url>
-    <content><![CDATA[<h2 id="说明">说明</h2>
-<p>您正在制作两条轨道并希望它们具有最大长度，并且两条轨道的长度必须相等。 现在，您有一堆可以焊接在一起的钢筋，钢筋无法切割，但并非所有钢筋都需要在此过程中耗尽。<br>
- <br>
-例如，如果钢筋的长度为 1、2 和 3，则可以将它们焊接在一起以形成长度为 6 的支撑。（单位为米。）<br>
- <br>
-返回轨道的最大可能长度，如果无法创建轨道，则返回 0。</p>
-<h2 id="示例1">示例1</h2>
+    <title>go in action chapter1-4</title>
+    <url>/goinactionChapter1-4/</url>
+    <content><![CDATA[<h2 id="go-语言介绍">Go 语言介绍</h2>
+<h3 id="开发速度">开发速度</h3>
+<p>编译器严格<br>
+（1）编译器只关注直接被引用的库（没有被引用的库编译器会报错）<br>
+（2）声明未使用的变量会报错，由类型检查<br>
+（3）内存管理由编译器处理</p>
+<h3 id="支持并发">支持并发</h3>
+<p>goroutine类似线程，但使用内存少于线程<br>
+通过内置的数据结构通道(channel)让用户在不同goroutine间同步发送消息，而不是让多个goroutine争夺同一个数据的使用权<br>
+goroutine使用通道发送数据</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;sync&quot;</span><br><span class="line">)</span><br><span class="line">var wg sync.WaitGroup // 定义一个 WaitGroup 对象，用于等待一组 goroutine 的结束</span><br><span class="line">func printer(c chan int) &#123;</span><br><span class="line">    for i: = range c &#123; // 使用 for-range 循环读取 channel 中的数据，直到 channel 被关闭为止</span><br><span class="line">        fmt.Printf(&quot;receive i:%d &quot;, i)</span><br><span class="line">    &#125;</span><br><span class="line">    wg.Done() // 计数减一</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">    c: = make(chan int) // 创建一个整型 channel</span><br><span class="line">    go printer(c) // 在新的 goroutine 中打印 channel 中的数据</span><br><span class="line">    wg.Add(1) // 增加一个计数器，表示有一个 goroutine 在运行</span><br><span class="line">    for i: = 1;i &lt; 10;i++&#123;</span><br><span class="line">        c &lt; -i // 将数字写入 channel</span><br><span class="line">    &#125;</span><br><span class="line">    close(c) // 关闭 channel，通知 goroutine 停止阻塞并退出</span><br><span class="line">    wg.Wait() // 等待所有 goroutine 完成</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/goinaction1.png" alt="image.png"><br>
+在两个goroutine间传输数据是同步的，在goroutine间安全传输数据的方法不需要任何锁和同步机制<br>
+但是通道是不提供跨goroutine的数据访问保护机制：<br>
+（1）传输数据是副本，goroutine各自持有副本修改是安全的<br>
+（2）传输数据是指向数据的指针，读和写由不同的goroutine完成的，每个goroutine需要额外的同步动作</p>
+<h3 id="go语言的类型系统">go语言的类型系统</h3>
+<p>无继承的类型系统，支持面向对象开发</p>
+<h4 id="接口">接口</h4>
+<p>（1）在java里，设计需要围绕接口展开，必须满足接口里的所有约束，需要显示声明这个类实现了接口</p>
 <ul>
-<li>输入：[1,2,3,6]</li>
-<li>输出：6</li>
-<li>解释：我们有两个不相交的子集 {1,2,3} 和 {6}，它们的和与 6 相同。</li>
+<li>首先定义了一个 Shape 接口，其中只包含一个 getArea() 方法。</li>
+<li>分别创建了 Circle 和 Rectangle 类，都实现了 Shape 接口，并实现了 getArea() 方法来计算它们的面积。</li>
+<li>在 main() 函数中，创建了一个 Circle 对象和一个 Rectangle 对象，并将它们作为 Shape 类型的参数传递给 getArea() 函数，以计算它们的面积。<br>
+java使用接口</li>
 </ul>
-<h2 id="示例2">示例2</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface Shape &#123;</span><br><span class="line">    double getArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Circle implements Shape &#123;</span><br><span class="line">    private double radius;</span><br><span class="line"></span><br><span class="line">    public Circle(double radius) &#123;</span><br><span class="line">        this.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return Math.PI * radius * radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Rectangle implements Shape &#123;</span><br><span class="line">    private double width;</span><br><span class="line">    private double height;</span><br><span class="line"></span><br><span class="line">    public Rectangle(double width, double height) &#123;</span><br><span class="line">        this.width = width;</span><br><span class="line">        this.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return width * height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Shape c = new Circle(5);</span><br><span class="line">        Shape r = new Rectangle(3, 4);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;Circle area: &quot; + c.getArea());</span><br><span class="line">        System.out.println(&quot;Rectangle area: &quot; + r.getArea());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）在go里</p>
 <ul>
-<li>输入：[1,2,3,4,5,6]</li>
-<li>输出：10</li>
-<li>解释：我们有两个不相交的子集 {2,3,5} 和 {4,6}，它们的和与 10 相同，并且留下了长度为 1 的条。</li>
+<li>定义了两个结构体类型 Circle 和 Rectangle，并为它们分别定义了 area() 方法来计算它们的面积。</li>
 </ul>
-<h2 id="示例3">示例3</h2>
+<p>Circle类型的方法和Rectangle类型的方法<br>
+（go里的函数和方法不同：函数是独立的代码块，没有属于特定类型，可以直接通过函数名进行调用<br>
+方法是与某个类型绑定的函数，可以被该类型的值或指针调用。方法通常用于描述该类型的行为和操作，并且可以访问该类型的成员变量。方法的定义需要在函数名前指定一个接收者参数，表示该方法属于哪个类型）</p>
 <ul>
-<li>
-<p>输入：[1,2]</p>
-</li>
-<li>
-<p>输出：0</p>
-</li>
-<li>
-<p>说明：无法创建轨迹，因此返回0。</p>
-<p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
-</li>
+<li>定义了一个 Shape 接口，其中只包含一个 area() 方法。</li>
+<li>在 getArea() 函数中，接收一个 Shape 类型的参数，并调用其 area() 方法来计算面积。</li>
+<li>在 main() 函数中，创建了一个 Circle 类型的变量和一个 Rectangle 类型的变量，并分别将它们作为参数传递给 getArea() 函数。</li>
 </ul>
-<h2 id="提示">提示</h2>
-<ul>
-<li>0 &lt;= 钢筋长度 &lt;= 140</li>
-<li>1 &lt;= 钢筋[i] &lt;= 1000</li>
-<li>总和(钢筋[i]) &lt;= 5000</li>
-</ul>
-<h2 id="解决方法">解决方法</h2>
-<ul>
-<li>c++版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;numeric&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">// dp 判断是否能划分成两个相等的子集</span><br><span class="line">bool canPartition(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	// 长度小于2肯定不能划分</span><br><span class="line">	if (nums.size() &lt; 2)</span><br><span class="line">	        return false;</span><br><span class="line">	// 如果和是奇数也不能被划分</span><br><span class="line">	int sum = accumulate(nums.begin(), nums.end(), 0);</span><br><span class="line">	if (sum &amp; 1)</span><br><span class="line">	        return false;</span><br><span class="line">	// 计算最大值，如果最大值大于均值，也不能被划分</span><br><span class="line">	int max = *max_element(nums.begin(), nums.end());</span><br><span class="line">	int target = sum / 2;</span><br><span class="line">	if (max &gt; target)</span><br><span class="line">	        return false;</span><br><span class="line">	// dp[i][j]从0~i里面取若干数的和是否等于j</span><br><span class="line">	vector&lt;vector&lt;int&gt;&gt; dp(nums.size(), vector&lt;int&gt;(target + 1, 0));</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		dp[i][0] = true;</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true;</span><br><span class="line">	// for循环i从第一个开始</span><br><span class="line">	for (int i = 1; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		int num = nums[i];</span><br><span class="line">		for (int j = 1; j &lt;= target; j++) &#123;</span><br><span class="line">			if (j &gt;= num) &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j - num];</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[nums.size() - 1][target];</span><br><span class="line">&#125;</span><br><span class="line">int sameLengthStack(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	int res = 0;</span><br><span class="line">	sort(nums.begin(), nums.end());</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		vector&lt;int&gt; newNums;</span><br><span class="line">		// 排序后每次都去掉最小的，看是否能划分成两个相等的子集</span><br><span class="line">		newNums.assign(nums.begin() + i, nums.end());</span><br><span class="line">		bool isCanPartition = canPartition(newNums);</span><br><span class="line">		if (isCanPartition) &#123;</span><br><span class="line">			int sum = accumulate(newNums.begin(), newNums.end(), 0);</span><br><span class="line">			res = sum / 2;</span><br><span class="line">			return res;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; nums &#123;</span><br><span class="line">		1, 2</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	int res = sameLengthStack(nums);</span><br><span class="line">	cout &lt;&lt; res &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>go版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func IsCanPartition(nums []int) bool &#123;</span><br><span class="line">	if len(nums) &lt; 2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	sumNum := CalculateSum(nums)</span><br><span class="line">	if sumNum%2 != 0 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	maxNum := nums[0]</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		if maxNum &lt; num &#123;</span><br><span class="line">			maxNum = num</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if maxNum &gt; sumNum/2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	target := sumNum / 2</span><br><span class="line">	//行数</span><br><span class="line">	dp := make([][]bool, len(nums))</span><br><span class="line">	//列数</span><br><span class="line">	for i := range dp &#123;</span><br><span class="line">		dp[i] = make([]bool, target+1)</span><br><span class="line">	&#125;</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		dp[i][0] = true</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		for j := 1; j &lt;= target; j++ &#123;</span><br><span class="line">			if j &gt; num &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j] || dp[i-1][j-num]</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[len(nums)-1][target]</span><br><span class="line">&#125;</span><br><span class="line">func CalculateSum(nums []int) int &#123;</span><br><span class="line">	sum := 0</span><br><span class="line">	for _, num := range nums &#123;</span><br><span class="line">		sum += num</span><br><span class="line">	&#125;</span><br><span class="line">	return sum</span><br><span class="line">&#125;</span><br><span class="line">func SameLengthStack(nums []int) int &#123;</span><br><span class="line">	sort.Slice(nums, func(i, j int) bool &#123;</span><br><span class="line">		return i &lt; j</span><br><span class="line">	&#125;)</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		numsEx := nums[i:]</span><br><span class="line">		if IsCanPartition(numsEx) &#123;</span><br><span class="line">			sum := CalculateSum(numsEx)</span><br><span class="line">			return sum / 2</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">func main() &#123;</span><br><span class="line">	var nums = []int&#123;1, 2&#125;</span><br><span class="line">	res := SameLengthStack(nums)</span><br><span class="line">	fmt.Println(res)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Circle 和 Rectangle 结构体类型并没有显式地声明它们实现了 Shape 接口，但由于它们都定义了 area() 方法，因此它们隐式地满足了 Shape 接口的要求。这就体现了Go语言中的“鸭子类型”特点，即只要一个结构体类型具备某个方法或操作，那么它就可以被看作具有相应接口的能力，无需显式地声明实现了该接口。</p>
+<p>go使用接口</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">type Circle struct &#123;</span><br><span class="line">    radius float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Rectangle struct &#123;</span><br><span class="line">    width, height float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func(c Circle) area() float64 &#123;</span><br><span class="line">    return math.Pi * c.radius * c.radius</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func(r Rectangle) area() float64 &#123;</span><br><span class="line">    return r.width * r.height</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Shape interface &#123;</span><br><span class="line">    area() float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func getArea(s Shape) float64 &#123;</span><br><span class="line">    return s.area()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    c: = Circle &#123;</span><br><span class="line">        radius: 5</span><br><span class="line">    &#125;</span><br><span class="line">    r: = Rectangle &#123;</span><br><span class="line">        width: 3,</span><br><span class="line">        height: 4</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;Circle area:&quot;, getArea(c))</span><br><span class="line">    fmt.Println(&quot;Rectangle area:&quot;, getArea(r))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>tips: go online: <a href="https://go.dev/play/">https://go.dev/play/</a></p>
+<h2 id="打包和工具链">打包和工具链</h2>
+<p>go语言的程序都会组织成若干组文件，每组文件被称为一个包<br>
+包名：<br>
+（1）使用包所在目录的名字 -&gt; 用户导入包的时候，能清晰知道包名<br>
+（2）全小写 -&gt; 有利于开发时频繁输入包名<br>
+（3）包名可以相同 -&gt; 导入包的时候使用全路径，可以区分同名的不同包</p>
+<h3 id="main包">main包</h3>
+<p>（1）所有用go语言编译的可执行程序必须有一个名叫main的包<br>
+包名为main，一定也会有main函数，否则不会创建可执行文件 -&gt; main函数是程序入口<br>
+main包 里的go 源文件 都会被编译为二进制可执行文件<br>
+（2）不同目录下可以有多个 package main，但是同一目录下不能有多个 package main</p>
+<h3 id="包导入">包导入</h3>
+<p>import (<br>
+“fmt”<br>
+“<a href="http://github.com/spf12/viper">github.com/spf12/viper</a>” //远程导入<br>
+myfmt “mylib/fmt”  //命名导入<br>
+)<br>
+通过go module管理包（以前是在gopath环境变量目录下管理包）<br>
+go mod init modulename<br>
+go mod tidy -&gt; 查找下载依赖包</p>
+<p>生成go.mod  go.sum</p>
+<h3 id="函数init">函数init</h3>
+<p>每个包可以有多个init函数，这些函数在程序执行开始的时候被调用 -&gt; 在main函数之前执行<br>
+go语言要求不能导入不使用的包：<br>
+如果有init函数，但是该包里的内容没有被main函数使用，则使用空白标识符作为包的别名：<br>
+import (<br>
+“database/sql”<br>
+_ “<a href="http://github.com/goinaction/code/test">github.com/goinaction/code/test</a>”  //避免编译错误<br>
+)</p>
+<h3 id="使用go工具">使用go工具</h3>
+<p>编译： go build demo.go<br>
+清除编译生成文件： go clean<br>
+检查代码： go vet demo.go<br>
+代码格式化：go fmt demo.go</p>
+<h2 id="数组以及切片和映射">数组以及切片和映射</h2>
+<h3 id="数组">数组</h3>
+<p>长度固定，存储一段相同类型的元素的连续块</p>
+<h4 id="数组创建和初始化">数组创建和初始化</h4>
+<p>声明后类型和长度不能改变</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var arry [5]int  -&gt; 声明时对应类型的零值来初始化</span><br><span class="line">var arry = [5]int&#123;1, 2, 3, 4, 5&#125; -&gt; 声明的时候初始化</span><br><span class="line">array := [5]int&#123;1,2,3,4,5&#125;  -&gt; 使用数组字面量声明数组</span><br><span class="line">array := [...]int&#123;1,2,3,4,5&#125;  -&gt; 自动计算声明数组长度</span><br><span class="line">array := [5]int&#123;1:10, 3:20&#125; -&gt; 声明数组，指定特定元素的值</span><br></pre></td></tr></table></figure>
+<h4 id="使用数组">使用数组</h4>
+<p>（1）访问</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">array[2] = 25 -&gt; 访问数组元素，并修改对应索引元素的值</span><br></pre></td></tr></table></figure>
+<p>（2）指针</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">array := [5]*int -&gt; 仅声明未初始化 不能直接使用</span><br><span class="line">array := [5]*int&#123;&#125; -&gt; 声明并初始化为nil</span><br><span class="line">array := [5]*int&#123;0:new(int), 1:new(int)&#125; -&gt; 整型指针初始化索引0和1的数组元素</span><br></pre></td></tr></table></figure>
+<p>（3）同类型互相赋值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var array1 [5]int</span><br><span class="line">array2 := [5]int&#123;1,2,3,4,5&#125;</span><br><span class="line">array1 = array2 -&gt; correct</span><br><span class="line">对比:</span><br><span class="line">var array1 [4]int</span><br><span class="line">array1 = array2 -&gt; not correct</span><br></pre></td></tr></table></figure>
+<h4 id="多维数组">多维数组</h4>
+<p>var array [4][2]int</p>
+<h4 id="函数间传递数组">函数间传递数组</h4>
+<p>函数间传递变量，通过值传递，如果传递数组，会赋值整个数组的值  -&gt; 开销很大<br>
+solution: 传递指针，指针大小8字节 （64位系统） -&gt; 有效利用内存</p>
+<h3 id="切片">切片</h3>
+<p>围绕动态数组构建，按需增长减小。底层内存是在连续块中分配内存，对底层数组进行了抽象<br>
+切片有三个字段的数据结构：<br>
+（1）指向底层数组的指针<br>
+（2）长度：切片访问的元素的个数 len函数<br>
+（3）容量：切片允许增长到的元素个数 cap函数</p>
+<h4 id="切片创建和初始化">切片创建和初始化</h4>
+<p>make和切片字面量<br>
+tips : make 函数主要用于创建和初始化某些类型的内置数据结构，例如 slice、map 和 channel</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := make([]int, 3, 5) -&gt; make 使用长度，容量初始化（容量可省略，此时长度和容量相同）</span><br><span class="line">切片能访问3个元素，底层数据拥有5个</span><br><span class="line">slice := make([]int, 3, 2) -&gt; make 使用长度大于容量，编译报错</span><br><span class="line">slice := []int&#123;1,2,3&#125;  -&gt; 切片字面量（不指定[]的值，基于初始化的元素个数确定长度和容量)</span><br></pre></td></tr></table></figure>
+<p>数组和切片声明的区别：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]运算符里指定了值，创建的是数组 -&gt; slice := [3]int&#123;1,2,3&#125; -&gt; 三个元素的数组</span><br><span class="line">[]运算符里不指定值，创建的是切片 -&gt; slice := []int&#123;1,2,3&#125; -&gt; 长度容量都为3的切片</span><br></pre></td></tr></table></figure>
+<p>声明空切片：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice : = make([]int, 0)</span><br><span class="line">slice := []int&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用切片">使用切片</h4>
+<p>(1)共享底层数组的两个切片</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := []int&#123;10,20,30,40,50&#125;</span><br><span class="line">newSlice := slice[1:3]  -&gt; 用切片创建切片</span><br></pre></td></tr></table></figure>
+<p><img src="/images/goinaction2.png" alt="image.png"><br>
+新切片slice[i:j]的长度和容量, 底层数组的容量k<br>
+长度：j-i<br>
+容量：k-i<br>
+修改切片内容 -&gt; newSlice[1] = 35 -&gt;slice第三个元素被修改为35</p>
+<p>(2)切片额外的容量<br>
+1）切片只能访问到长度内的元素<br>
+2）与切片的容量相关联的元素只能用于增长切片，在使用这部分元素前，要将其合并到切片长度里<br>
+如果不能把这些合并到切片长度里，这些容量就没有用处（可使用append做合并）</p>
+<p>(3)切片增长<br>
+append会创建新的底层数组，把现有的值赋值到新数组里，再追加新的值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := []int&#123;10,20,30,40&#125;</span><br><span class="line">newSlice := append(slice, 50)</span><br></pre></td></tr></table></figure>
+<p>newSlice有用全新的底层数组，这个数组是原来容量的两倍<br>
+<img src="/images/goinaction3.png" alt="image.png"><br>
+append只能处理底层数组的容量增长，容量小于1000，两倍增长。超过1000，增长因子1.25</p>
+<p>(4)创建切片的3个索引<br>
+限制容量，为顶层数组提供保护，控制追加操作</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source := []string&#123;&quot;Apple&quot;, &quot;Orange&quot;, &quot;Plum&quot;, &#x27;Banana&quot;, &#x27;Grape&quot;&#125;</span><br><span class="line">slice := source[2:3:4]</span><br><span class="line">source[i:j:k]</span><br><span class="line">长度：j-i</span><br><span class="line">容量：k-i</span><br></pre></td></tr></table></figure>
+<p><img src="/images/goinaction4.png" alt="image.png"><br>
+(5)迭代切片: range<br>
+for index, value := range slice{<br>
+}<br>
+range返回：迭代到的索引位置，对应位置元素的副本（副本无法取地址，使用该值变量的地址作为指向每个元素的指针地址是一样的：&amp;value的值是一样的 -&gt; 需要用&amp;slice[index]）<br>
+不需要的值可以用占位符_表示忽略 -&gt; for _, value := range slice</p>
+<h4 id="多维切片">多维切片</h4>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := [][]int&#123;&#123;10&#125;,&#123;20,30&#125;&#125;  可以利用创建复杂数据结构</span><br></pre></td></tr></table></figure>
+<h4 id="函数间传递切片">函数间传递切片</h4>
+<p>切片以值得方式传递给函数，只复制切片本素，不复制底层数组，所以只需要24个字节：指针8个字节，长度和容量分别8字节。<br>
+因此切片效率高，如果函数需要修改数据，传递回一份新得切片副本即可</p>
+<h3 id="映射">映射</h3>
+<p>存储无序键值对</p>
+<h4 id="映射创建和初始化">映射创建和初始化</h4>
+<p>使用make声明（key value都是string类型）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := make(map[string]string)</span><br></pre></td></tr></table></figure>
+<p>创建并初始化</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string&#123;&quot;red&quot;:&quot;hello&quot;, &quot;yellow&quot;:&quot;world&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>映射的键不能是切片，包含切片的类型，函数的结构类型</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[[]string]string&#123;&#125; -&gt; 编译报错</span><br></pre></td></tr></table></figure>
+<p>可以作为映射的值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string][]string&#123;&#125; -&gt; ok</span><br></pre></td></tr></table></figure>
+<h4 id="使用映射">使用映射</h4>
+<p>为映射赋值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string&#123;&#125;</span><br><span class="line">dict[&quot;red&quot;] = &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+<p>未初始化的映射 -&gt; nil映射 -&gt; 赋值运行错误：nil映射不能用于存储键值对</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string</span><br><span class="line">dict[&quot;red&quot;] = &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+<p>从映射获取值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">value, exist := dict[&quot;red&quot;]  -&gt; 返回映射键对应的值和该值是否存在，如果键不存在，exist返回false</span><br><span class="line">value := dict[&quot;red&quot;]</span><br><span class="line">if value != &quot;&quot;        -&gt; 判断value是否是零值来看映射键是否存在</span><br></pre></td></tr></table></figure>
+<p>range 迭代映射</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for key,value := range dict &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除映射中的一项</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete(dict, &quot;red&quot;)</span><br></pre></td></tr></table></figure>
+<p>映射的增长没有容量限制：可通过len函数得到映射长度</p>
+<h4 id="在函数间传递映射">在函数间传递映射</h4>
+<p>函数间传递映射不会制造错该映射的副本，如果对映射修改，所有对这个映射的引用都会察觉。特性与切片类似，传递给函数成本很小，不会复制底层的数据结构</p>
 ]]></content>
       <categories>
-        <category>algorithm</category>
+        <category>go</category>
       </categories>
       <tags>
-        <tag>backpack</tag>
+        <tag>go in action</tag>
       </tags>
   </entry>
   <entry>
-    <title>防止爆仓</title>
-    <url>/preventLiquidation/</url>
-    <content><![CDATA[<h2 id="说明">说明</h2>
-<p>你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。</p>
-<p>给你一个整数数组 repos ，其中：</p>
-<ul>
-<li>repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。</li>
-<li>repos[i] == 0 表示第 i 天没有仓库有货物入库，你可以选择 一个 货运车队清空这个仓库的全部货物。</li>
-</ul>
-<p>请返回一个数组 ans ，满足：</p>
-<p>ans.length == repos.length</p>
-<ul>
-<li>
-<p>如果 repos[i] &gt; 0 ，那么<code>ans[i] == -1</code> 。</p>
-</li>
-<li>
-<p>如果 repos<code>[i] == 0</code> ，<code>ans[i]</code> 是你第 i 天选择清空的仓库。</p>
-<p>如果有多种可行解，请返回它们中的 任意一个<br>
-如果没办法阻止爆仓，请返回一个 空的数组 。</p>
-<p>请注意，如果你选择清空一个装满货物的仓库，它会变成一个空的仓库。但如果你选择清空一个空的仓库，那么将无事发生。</p>
-</li>
-</ul>
-<h2 id="示例1">示例1</h2>
+    <title>go package 使用</title>
+    <url>/goPackage/</url>
+    <content><![CDATA[<h1 id="问题">问题</h1>
+<p>环境：go version<br>
+go version go1.19.3 windows/amd64</p>
+<p>需要在main.go里导入自己写的包</p>
+<p><img src="/images/goPackage.png" alt="项目结构"></p>
+<p>在main.go里调用tempconv.go 出现error:</p>
+<p>go run “d:\vsProject\gocode\main.go”<br>
+main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
+<h1 id="原因">原因</h1>
 <ul>
 <li>
-<p>输入：repos = <code>[1,2,3,4]</code></p>
+<p>在go 1.11以前无法在除了root的目录下开发，1.11后提供了go mod来管理包</p>
 </li>
 <li>
-<p>输出：<code>[-1,-1,-1,-1]</code></p>
-</li>
-<li>
-<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
-<p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
-<p>第三天后，满仓的仓库包括 <code>[1,2,3]</code></p>
-<p>第四天后，满仓的仓库包括 <code>[1,2,3,4]</code></p>
-<p>没有哪一天你可以清空任何仓库，也没有仓库会发生爆仓。</p>
+<p>在同一目录下只能一个package</p>
 </li>
 </ul>
-<h2 id="示例2">示例2</h2>
-<ul>
-<li>
-<p>输入：repos = <code>[1,2,0,0,2,1]</code></p>
-</li>
-<li>
-<p>输出：<code>[-1,-1,2,1,-1,-1]</code></p>
-</li>
-<li>
-<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
-<p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
-<p>第三天后，我们清空仓库 2 。所以剩下满仓的仓库包括<br>
-<code>[1]</code></p>
-<p>第四天后，我们清空仓库 1 。所以暂时没有满仓的仓库了。</p>
-<p>第五天后，满仓的仓库包括 <code>[2]</code>。</p>
-<p>第六天后，满仓的仓库包括 <code>[1,2]</code>。</p>
-<p>可以看出，这个方案下不会有爆仓发生。同时，<code>[-1,-1,1,2,-1,-1]</code> 也是另一个可行的没有爆仓的方案。</p>
-</li>
-</ul>
-<h2 id="示例3">示例3</h2>
-<ul>
-<li>
-<p>输入：repos = <code>[1,2,0,1,2]</code></p>
-</li>
-<li>
-<p>输出：<code>[]</code></p>
-</li>
-<li>
-<p>解释：第二天后，满仓的仓库包括 <code>[1,2]</code>。我们可以在第三天清空一个仓库。</p>
-<p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
-</li>
-</ul>
-<h2 id="提示">提示</h2>
-<ul>
-<li><code>1 &lt;= repos.length &lt;= 105</code></li>
-<li><code>0 &lt;= repos[i] &lt;= 109</code></li>
-</ul>
-<h2 id="解决方法">解决方法</h2>
-<ul>
-<li>c++版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">vector&lt;int&gt; preventOverFlow(vector&lt;int&gt; repos) &#123;</span><br><span class="line">	int days = repos.size();</span><br><span class="line">	// 存储仓库内的货物，1：有， 0：无</span><br><span class="line">	unordered_map&lt;int, int&gt; warehouses;</span><br><span class="line">	vector&lt;int&gt; result(days, -1);</span><br><span class="line">	for (int i = 0; i &lt; days; i++) &#123;</span><br><span class="line">		// 当前天需要放货物到仓库，判断仓库是否可放</span><br><span class="line">		if (repos[i] &gt; 0) &#123;</span><br><span class="line">			// 仓库内有货物，不能放，溢出了</span><br><span class="line">			if (warehouses.count(repos[i]) &gt; 0 &amp;&amp; warehouses[repos[i]] &gt; 0) &#123;</span><br><span class="line">				return &#123;</span><br><span class="line">				&#125;</span><br><span class="line">				;</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				// 仓库内无货物，能放，入库</span><br><span class="line">				warehouses[repos[i]]++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			// 当天可以选择一个仓库入库，选择后面需要放东西的仓库, 并且该仓库里有东西</span><br><span class="line">			for (int j = i + 1; j &lt; days; j++) &#123;</span><br><span class="line">				if (repos[j] &gt; 0 &amp;&amp; warehouses.count(repos[j]) &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0) &#123;</span><br><span class="line">					result[i] = repos[j];</span><br><span class="line">					warehouses[repos[j]]--;</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; repos = &#123;</span><br><span class="line">		1, 2, 0, 0, 2, 1</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	vector&lt;int&gt; result = preventOverFlow(repos);</span><br><span class="line">	if (result.empty()) &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[&quot;;</span><br><span class="line">		for (int i = 0; i &lt; result.size(); i++) &#123;</span><br><span class="line">			cout &lt;&lt; result[i];</span><br><span class="line">			if (i &lt; result.size() - 1) &#123;</span><br><span class="line">				cout &lt;&lt; &quot;,&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		cout &lt;&lt; &quot;]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>go版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">func preventOverflow(repos []int) []int &#123;</span><br><span class="line">	days := len(repos)</span><br><span class="line">	result := make([]int, days)</span><br><span class="line">	for i := range result &#123;</span><br><span class="line">		result[i] = -1</span><br><span class="line">	&#125;</span><br><span class="line">	//存储仓库的货物，1：有， 0：没有</span><br><span class="line">	warehouses := make(map[int]int)</span><br><span class="line">	//遍历每天</span><br><span class="line">	for i := 0; i &lt; days; i++ &#123;</span><br><span class="line">		//需要存货物到仓库</span><br><span class="line">		if repos[i] &gt; 0 &#123;</span><br><span class="line">			//该仓库有货物, 溢出</span><br><span class="line">			if warehouses[repos[i]] &gt; 0 &#123;</span><br><span class="line">				return []int&#123;&#125;</span><br><span class="line">			&#125; else &#123; //没有货物，直接存货物</span><br><span class="line">				warehouses[repos[i]]++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123; //不需要存货物到仓库， 可以出库：找到下一个需要存货物的仓库出库，并且该仓库里有货物</span><br><span class="line">			for j := i + 1; j &lt; days; j++ &#123;</span><br><span class="line">				if repos[j] &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0 &#123;</span><br><span class="line">					result[i] = repos[j]</span><br><span class="line">					warehouses[repos[j]]--</span><br><span class="line">					break //找到就不找了</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	var repos = []int&#123;1, 2, 0, 0, 2, 1&#125;</span><br><span class="line">	result := preventOverflow(repos)</span><br><span class="line">	fmt.Print(&quot;[&quot;)</span><br><span class="line">	for i := 0; i &lt; len(result); i++ &#123;</span><br><span class="line">		fmt.Print(result[i])</span><br><span class="line">		if i &lt; len(result)-1 &#123;</span><br><span class="line">			fmt.Print(&quot;,&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Print(&quot;]&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="解决方法">解决方法</h1>
+<h2 id="go-env">GO ENV</h2>
+<p>设置GO111MODULE</p>
+<p>on: 使用modules, 不会去gopath下查找</p>
+<p>off: 不支持modules, 去gopath下查找</p>
+<p>auto: 根据当前目录决定是否启动modules</p>
+<h3 id="linux">linux</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export GO111MODULE=off</span><br><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
+<h3 id="winodows">winodows</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set GO111MODULE=off</span><br><span class="line">set GO111MODULE=on</span><br></pre></td></tr></table></figure>
+<p>或者设置系统环境变量</p>
+<h2 id="gopath">GOPATH</h2>
+<p>（1）关闭 go mod 模式：设置GO111MODULE off</p>
+<p>（2）go env查看当前的GOPATH,  将需要导入的tempconv.go放入$GOPATH/src下</p>
+<p>note: 不建议这种方式，需要修改$GOPATH/src</p>
+<h2 id="go-mod">GO MOD</h2>
+<p>（1）打开 go mod 模式：设置GO111MODULE off</p>
+<p>（2）go mod init xx</p>
+<p>（3）import xxx/filename</p>
+<p>go mod init gocode</p>
+<p>项目结构：</p>
+<p>gocode</p>
+<p>----module/tempconv.go</p>
+<p>----main.go</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &quot;gocode/module&quot;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>algorithm</category>
+        <category>go</category>
       </categories>
       <tags>
-        <tag>dp</tag>
+        <tag>go package</tag>
       </tags>
   </entry>
   <entry>
@@ -689,321 +769,229 @@ map线程不安全不能成功运行<br>
       </tags>
   </entry>
   <entry>
-    <title>go in action chapter1-4</title>
-    <url>/goinactionChapter1-4/</url>
-    <content><![CDATA[<h2 id="go-语言介绍">Go 语言介绍</h2>
-<h3 id="开发速度">开发速度</h3>
-<p>编译器严格<br>
-（1）编译器只关注直接被引用的库（没有被引用的库编译器会报错）<br>
-（2）声明未使用的变量会报错，由类型检查<br>
-（3）内存管理由编译器处理</p>
-<h3 id="支持并发">支持并发</h3>
-<p>goroutine类似线程，但使用内存少于线程<br>
-通过内置的数据结构通道(channel)让用户在不同goroutine间同步发送消息，而不是让多个goroutine争夺同一个数据的使用权<br>
-goroutine使用通道发送数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;sync&quot;</span><br><span class="line">)</span><br><span class="line">var wg sync.WaitGroup // 定义一个 WaitGroup 对象，用于等待一组 goroutine 的结束</span><br><span class="line">func printer(c chan int) &#123;</span><br><span class="line">    for i: = range c &#123; // 使用 for-range 循环读取 channel 中的数据，直到 channel 被关闭为止</span><br><span class="line">        fmt.Printf(&quot;receive i:%d &quot;, i)</span><br><span class="line">    &#125;</span><br><span class="line">    wg.Done() // 计数减一</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">    c: = make(chan int) // 创建一个整型 channel</span><br><span class="line">    go printer(c) // 在新的 goroutine 中打印 channel 中的数据</span><br><span class="line">    wg.Add(1) // 增加一个计数器，表示有一个 goroutine 在运行</span><br><span class="line">    for i: = 1;i &lt; 10;i++&#123;</span><br><span class="line">        c &lt; -i // 将数字写入 channel</span><br><span class="line">    &#125;</span><br><span class="line">    close(c) // 关闭 channel，通知 goroutine 停止阻塞并退出</span><br><span class="line">    wg.Wait() // 等待所有 goroutine 完成</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/goinaction1.png" alt="image.png"><br>
-在两个goroutine间传输数据是同步的，在goroutine间安全传输数据的方法不需要任何锁和同步机制<br>
-但是通道是不提供跨goroutine的数据访问保护机制：<br>
-（1）传输数据是副本，goroutine各自持有副本修改是安全的<br>
-（2）传输数据是指向数据的指针，读和写由不同的goroutine完成的，每个goroutine需要额外的同步动作</p>
-<h3 id="go语言的类型系统">go语言的类型系统</h3>
-<p>无继承的类型系统，支持面向对象开发</p>
-<h4 id="接口">接口</h4>
-<p>（1）在java里，设计需要围绕接口展开，必须满足接口里的所有约束，需要显示声明这个类实现了接口</p>
+    <title>linux 常用命令</title>
+    <url>/linuxCommand/</url>
+    <content><![CDATA[<h1 id="vim">vim</h1>
+<p>切换不同文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
+<p>dd 删除一行</p>
+<p>gg dG 删除所有</p>
+<h1 id="docker">docker</h1>
+<p>main command</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
+<p>debug contaniner</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
+<h1 id="json">json</h1>
+<p>把一个json文件在terminal pretty查看</p>
+<p>(1) 使用python tool</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
+<p>(2) 使用jq 解析工具</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
+<p>jq还可以直接定位对应json中key的value</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat test.txt|jq .</span><br><span class="line">&#123;</span><br><span class="line">  &quot;foo&quot;: &#123;</span><br><span class="line">    &quot;bar&quot;: &#123;</span><br><span class="line">      &quot;baz&quot;: 123</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">cat test.txt|jq &quot;.foo&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;bar&quot;: &#123;</span><br><span class="line">    &quot;baz&quot;: 123</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="cut">cut</h1>
+<p>在file.h中找到xxx代表的含义</p>
+<p>In file.h</p>
+<p>#define xxx “hello world”</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
+<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>command</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用pprof对go http service进行性能分析</title>
+    <url>/pprof/</url>
+    <content><![CDATA[<h2 id="代码应用">代码应用</h2>
+<p><strong>参考</strong>：<a href="https://github.com/gin-contrib/pprof">https://github.com/gin-contrib/pprof</a></p>
+<p>把pprof挂载到gin的路由器下有两种方法</p>
 <ul>
-<li>首先定义了一个 Shape 接口，其中只包含一个 getArea() 方法。</li>
-<li>分别创建了 Circle 和 Rectangle 类，都实现了 Shape 接口，并实现了 getArea() 方法来计算它们的面积。</li>
-<li>在 main() 函数中，创建了一个 Circle 对象和一个 Rectangle 对象，并将它们作为 Shape 类型的参数传递给 getArea() 函数，以计算它们的面积。<br>
-java使用接口</li>
+<li>在gin的<code>跟路由</code>上注册pprof的路由<br>
+使用<code>pprof.Register(router)</code><br>
+下面创建的服务器的路由是<a href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…<br>
+则可以通过<a href="http://localhost:80/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/debug/pprof/来访问pprof首页</a></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface Shape &#123;</span><br><span class="line">    double getArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Circle implements Shape &#123;</span><br><span class="line">    private double radius;</span><br><span class="line"></span><br><span class="line">    public Circle(double radius) &#123;</span><br><span class="line">        this.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return Math.PI * radius * radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Rectangle implements Shape &#123;</span><br><span class="line">    private double width;</span><br><span class="line">    private double height;</span><br><span class="line"></span><br><span class="line">    public Rectangle(double width, double height) &#123;</span><br><span class="line">        this.width = width;</span><br><span class="line">        this.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getArea() &#123;</span><br><span class="line">        return width * height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Shape c = new Circle(5);</span><br><span class="line">        Shape r = new Rectangle(3, 4);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;Circle area: &quot; + c.getArea());</span><br><span class="line">        System.out.println(&quot;Rectangle area: &quot; + r.getArea());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>（2）在go里</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">pprof.Register(router)</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>定义了两个结构体类型 Circle 和 Rectangle，并为它们分别定义了 area() 方法来计算它们的面积。</li>
+<li>在gin的<code>指定路由</code>上注册pprof的路由<br>
+使用<code>pprof.Register(router)</code><br>
+下面创建的服务器的路由是<a href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…, pprof的路由挂载在了test路由下<br>
+则需要通过<a href="http://localhost:80/test/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/test/debug/pprof/来访问pprof首页</a></li>
 </ul>
-<p>Circle类型的方法和Rectangle类型的方法<br>
-（go里的函数和方法不同：函数是独立的代码块，没有属于特定类型，可以直接通过函数名进行调用<br>
-方法是与某个类型绑定的函数，可以被该类型的值或指针调用。方法通常用于描述该类型的行为和操作，并且可以访问该类型的成员变量。方法的定义需要在函数名前指定一个接收者参数，表示该方法属于哪个类型）</p>
-<ul>
-<li>定义了一个 Shape 接口，其中只包含一个 area() 方法。</li>
-<li>在 getArea() 函数中，接收一个 Shape 类型的参数，并调用其 area() 方法来计算面积。</li>
-<li>在 main() 函数中，创建了一个 Circle 类型的变量和一个 Rectangle 类型的变量，并分别将它们作为参数传递给 getArea() 函数。</li>
-</ul>
-<p>Circle 和 Rectangle 结构体类型并没有显式地声明它们实现了 Shape 接口，但由于它们都定义了 area() 方法，因此它们隐式地满足了 Shape 接口的要求。这就体现了Go语言中的“鸭子类型”特点，即只要一个结构体类型具备某个方法或操作，那么它就可以被看作具有相应接口的能力，无需显式地声明实现了该接口。</p>
-<p>go使用接口</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">type Circle struct &#123;</span><br><span class="line">    radius float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Rectangle struct &#123;</span><br><span class="line">    width, height float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func(c Circle) area() float64 &#123;</span><br><span class="line">    return math.Pi * c.radius * c.radius</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func(r Rectangle) area() float64 &#123;</span><br><span class="line">    return r.width * r.height</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Shape interface &#123;</span><br><span class="line">    area() float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func getArea(s Shape) float64 &#123;</span><br><span class="line">    return s.area()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    c: = Circle &#123;</span><br><span class="line">        radius: 5</span><br><span class="line">    &#125;</span><br><span class="line">    r: = Rectangle &#123;</span><br><span class="line">        width: 3,</span><br><span class="line">        height: 4</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;Circle area:&quot;, getArea(c))</span><br><span class="line">    fmt.Println(&quot;Rectangle area:&quot;, getArea(r))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>tips: go online: <a href="https://go.dev/play/">https://go.dev/play/</a></p>
-<h2 id="打包和工具链">打包和工具链</h2>
-<p>go语言的程序都会组织成若干组文件，每组文件被称为一个包<br>
-包名：<br>
-（1）使用包所在目录的名字 -&gt; 用户导入包的时候，能清晰知道包名<br>
-（2）全小写 -&gt; 有利于开发时频繁输入包名<br>
-（3）包名可以相同 -&gt; 导入包的时候使用全路径，可以区分同名的不同包</p>
-<h3 id="main包">main包</h3>
-<p>（1）所有用go语言编译的可执行程序必须有一个名叫main的包<br>
-包名为main，一定也会有main函数，否则不会创建可执行文件 -&gt; main函数是程序入口<br>
-main包 里的go 源文件 都会被编译为二进制可执行文件<br>
-（2）不同目录下可以有多个 package main，但是同一目录下不能有多个 package main</p>
-<h3 id="包导入">包导入</h3>
-<p>import (<br>
-“fmt”<br>
-“<a href="http://github.com/spf12/viper">github.com/spf12/viper</a>” //远程导入<br>
-myfmt “mylib/fmt”  //命名导入<br>
-)<br>
-通过go module管理包（以前是在gopath环境变量目录下管理包）<br>
-go mod init modulename<br>
-go mod tidy -&gt; 查找下载依赖包</p>
-<p>生成go.mod  go.sum</p>
-<h3 id="函数init">函数init</h3>
-<p>每个包可以有多个init函数，这些函数在程序执行开始的时候被调用 -&gt; 在main函数之前执行<br>
-go语言要求不能导入不使用的包：<br>
-如果有init函数，但是该包里的内容没有被main函数使用，则使用空白标识符作为包的别名：<br>
-import (<br>
-“database/sql”<br>
-_ “<a href="http://github.com/goinaction/code/test">github.com/goinaction/code/test</a>”  //避免编译错误<br>
-)</p>
-<h3 id="使用go工具">使用go工具</h3>
-<p>编译： go build demo.go<br>
-清除编译生成文件： go clean<br>
-检查代码： go vet demo.go<br>
-代码格式化：go fmt demo.go</p>
-<h2 id="数组以及切片和映射">数组以及切片和映射</h2>
-<h3 id="数组">数组</h3>
-<p>长度固定，存储一段相同类型的元素的连续块</p>
-<h4 id="数组创建和初始化">数组创建和初始化</h4>
-<p>声明后类型和长度不能改变</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var arry [5]int  -&gt; 声明时对应类型的零值来初始化</span><br><span class="line">var arry = [5]int&#123;1, 2, 3, 4, 5&#125; -&gt; 声明的时候初始化</span><br><span class="line">array := [5]int&#123;1,2,3,4,5&#125;  -&gt; 使用数组字面量声明数组</span><br><span class="line">array := [...]int&#123;1,2,3,4,5&#125;  -&gt; 自动计算声明数组长度</span><br><span class="line">array := [5]int&#123;1:10, 3:20&#125; -&gt; 声明数组，指定特定元素的值</span><br></pre></td></tr></table></figure>
-<h4 id="使用数组">使用数组</h4>
-<p>（1）访问</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">array[2] = 25 -&gt; 访问数组元素，并修改对应索引元素的值</span><br></pre></td></tr></table></figure>
-<p>（2）指针</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">array := [5]*int -&gt; 仅声明未初始化 不能直接使用</span><br><span class="line">array := [5]*int&#123;&#125; -&gt; 声明并初始化为nil</span><br><span class="line">array := [5]*int&#123;0:new(int), 1:new(int)&#125; -&gt; 整型指针初始化索引0和1的数组元素</span><br></pre></td></tr></table></figure>
-<p>（3）同类型互相赋值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var array1 [5]int</span><br><span class="line">array2 := [5]int&#123;1,2,3,4,5&#125;</span><br><span class="line">array1 = array2 -&gt; correct</span><br><span class="line">对比:</span><br><span class="line">var array1 [4]int</span><br><span class="line">array1 = array2 -&gt; not correct</span><br></pre></td></tr></table></figure>
-<h4 id="多维数组">多维数组</h4>
-<p>var array [4][2]int</p>
-<h4 id="函数间传递数组">函数间传递数组</h4>
-<p>函数间传递变量，通过值传递，如果传递数组，会赋值整个数组的值  -&gt; 开销很大<br>
-solution: 传递指针，指针大小8字节 （64位系统） -&gt; 有效利用内存</p>
-<h3 id="切片">切片</h3>
-<p>围绕动态数组构建，按需增长减小。底层内存是在连续块中分配内存，对底层数组进行了抽象<br>
-切片有三个字段的数据结构：<br>
-（1）指向底层数组的指针<br>
-（2）长度：切片访问的元素的个数 len函数<br>
-（3）容量：切片允许增长到的元素个数 cap函数</p>
-<h4 id="切片创建和初始化">切片创建和初始化</h4>
-<p>make和切片字面量<br>
-tips : make 函数主要用于创建和初始化某些类型的内置数据结构，例如 slice、map 和 channel</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := make([]int, 3, 5) -&gt; make 使用长度，容量初始化（容量可省略，此时长度和容量相同）</span><br><span class="line">切片能访问3个元素，底层数据拥有5个</span><br><span class="line">slice := make([]int, 3, 2) -&gt; make 使用长度大于容量，编译报错</span><br><span class="line">slice := []int&#123;1,2,3&#125;  -&gt; 切片字面量（不指定[]的值，基于初始化的元素个数确定长度和容量)</span><br></pre></td></tr></table></figure>
-<p>数组和切片声明的区别：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]运算符里指定了值，创建的是数组 -&gt; slice := [3]int&#123;1,2,3&#125; -&gt; 三个元素的数组</span><br><span class="line">[]运算符里不指定值，创建的是切片 -&gt; slice := []int&#123;1,2,3&#125; -&gt; 长度容量都为3的切片</span><br></pre></td></tr></table></figure>
-<p>声明空切片：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice : = make([]int, 0)</span><br><span class="line">slice := []int&#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="使用切片">使用切片</h4>
-<p>(1)共享底层数组的两个切片</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := []int&#123;10,20,30,40,50&#125;</span><br><span class="line">newSlice := slice[1:3]  -&gt; 用切片创建切片</span><br></pre></td></tr></table></figure>
-<p><img src="/images/goinaction2.png" alt="image.png"><br>
-新切片slice[i:j]的长度和容量, 底层数组的容量k<br>
-长度：j-i<br>
-容量：k-i<br>
-修改切片内容 -&gt; newSlice[1] = 35 -&gt;slice第三个元素被修改为35</p>
-<p>(2)切片额外的容量<br>
-1）切片只能访问到长度内的元素<br>
-2）与切片的容量相关联的元素只能用于增长切片，在使用这部分元素前，要将其合并到切片长度里<br>
-如果不能把这些合并到切片长度里，这些容量就没有用处（可使用append做合并）</p>
-<p>(3)切片增长<br>
-append会创建新的底层数组，把现有的值赋值到新数组里，再追加新的值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := []int&#123;10,20,30,40&#125;</span><br><span class="line">newSlice := append(slice, 50)</span><br></pre></td></tr></table></figure>
-<p>newSlice有用全新的底层数组，这个数组是原来容量的两倍<br>
-<img src="/images/goinaction3.png" alt="image.png"><br>
-append只能处理底层数组的容量增长，容量小于1000，两倍增长。超过1000，增长因子1.25</p>
-<p>(4)创建切片的3个索引<br>
-限制容量，为顶层数组提供保护，控制追加操作</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source := []string&#123;&quot;Apple&quot;, &quot;Orange&quot;, &quot;Plum&quot;, &#x27;Banana&quot;, &#x27;Grape&quot;&#125;</span><br><span class="line">slice := source[2:3:4]</span><br><span class="line">source[i:j:k]</span><br><span class="line">长度：j-i</span><br><span class="line">容量：k-i</span><br></pre></td></tr></table></figure>
-<p><img src="/images/goinaction4.png" alt="image.png"><br>
-(5)迭代切片: range<br>
-for index, value := range slice{<br>
-}<br>
-range返回：迭代到的索引位置，对应位置元素的副本（副本无法取地址，使用该值变量的地址作为指向每个元素的指针地址是一样的：&amp;value的值是一样的 -&gt; 需要用&amp;slice[index]）<br>
-不需要的值可以用占位符_表示忽略 -&gt; for _, value := range slice</p>
-<h4 id="多维切片">多维切片</h4>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slice := [][]int&#123;&#123;10&#125;,&#123;20,30&#125;&#125;  可以利用创建复杂数据结构</span><br></pre></td></tr></table></figure>
-<h4 id="函数间传递切片">函数间传递切片</h4>
-<p>切片以值得方式传递给函数，只复制切片本素，不复制底层数组，所以只需要24个字节：指针8个字节，长度和容量分别8字节。<br>
-因此切片效率高，如果函数需要修改数据，传递回一份新得切片副本即可</p>
-<h3 id="映射">映射</h3>
-<p>存储无序键值对</p>
-<h4 id="映射创建和初始化">映射创建和初始化</h4>
-<p>使用make声明（key value都是string类型）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := make(map[string]string)</span><br></pre></td></tr></table></figure>
-<p>创建并初始化</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string&#123;&quot;red&quot;:&quot;hello&quot;, &quot;yellow&quot;:&quot;world&quot;&#125;</span><br></pre></td></tr></table></figure>
-<p>映射的键不能是切片，包含切片的类型，函数的结构类型</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[[]string]string&#123;&#125; -&gt; 编译报错</span><br></pre></td></tr></table></figure>
-<p>可以作为映射的值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string][]string&#123;&#125; -&gt; ok</span><br></pre></td></tr></table></figure>
-<h4 id="使用映射">使用映射</h4>
-<p>为映射赋值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string&#123;&#125;</span><br><span class="line">dict[&quot;red&quot;] = &quot;hello&quot;</span><br></pre></td></tr></table></figure>
-<p>未初始化的映射 -&gt; nil映射 -&gt; 赋值运行错误：nil映射不能用于存储键值对</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dict := map[string]string</span><br><span class="line">dict[&quot;red&quot;] = &quot;hello&quot;</span><br></pre></td></tr></table></figure>
-<p>从映射获取值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">value, exist := dict[&quot;red&quot;]  -&gt; 返回映射键对应的值和该值是否存在，如果键不存在，exist返回false</span><br><span class="line">value := dict[&quot;red&quot;]</span><br><span class="line">if value != &quot;&quot;        -&gt; 判断value是否是零值来看映射键是否存在</span><br></pre></td></tr></table></figure>
-<p>range 迭代映射</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for key,value := range dict &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>删除映射中的一项</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete(dict, &quot;red&quot;)</span><br></pre></td></tr></table></figure>
-<p>映射的增长没有容量限制：可通过len函数得到映射长度</p>
-<h4 id="在函数间传递映射">在函数间传递映射</h4>
-<p>函数间传递映射不会制造错该映射的副本，如果对映射修改，所有对这个映射的引用都会察觉。特性与切片类似，传递给函数成本很小，不会复制底层的数据结构</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">pprof.RouteRegister(v1Root)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>pprof的路由：</p>
+<p>[GIN-debug] GET    /debug/pprof/             --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/cmdline      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/profile      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] POST   /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/trace        --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/allocs       --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/block        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/goroutine    --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/heap         --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/mutex        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/threadcreate --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)</p>
 ]]></content>
       <categories>
         <category>go</category>
       </categories>
       <tags>
-        <tag>go in action</tag>
+        <tag>pprof</tag>
       </tags>
   </entry>
   <entry>
-    <title>acm</title>
-    <url>/acm/</url>
-    <content><![CDATA[<h1 id="素数埃拉托色尼筛法">素数（埃拉托色尼筛法）</h1>
-<p>题目：给定一个数 n，打印所有小于或等于 n 的素数。</p>
-<p>素数是恰好有两个不同的自然数约数的自然数：数字1和它本身，则素数不可能有因数</p>
-<p>（1）2是最小的素数</p>
-<p>（2）2的倍数则不是素数，将2的倍数的数字都进行标记</p>
-<p>（3）按照这种方法标记所有数字，剩余没有标记的就是素数</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PrimeNumer</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">	<span class="type">bool</span> prime[num + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">memset</span>(prime, <span class="literal">true</span>, num + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>; (i * i) &lt; (num + <span class="number">1</span>); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i] == <span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j = i * i; j &lt; (num + <span class="number">1</span>); j = j + i) &#123;</span><br><span class="line">				prime[j] = <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span> ; i &lt; num + <span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(prime[i])</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">PrimeNumer</span>(n);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>output: 30以内的素数 2 3 5 7 11 13 17 19 23 29</p>
-<p>相关题目：给定两个整数 M 和 N，生成 M 和 N 之间的所有素数，包括 M 和 N。</p>
-<p>解决方法，把第二个循环中取素数的范围改为（M,N), 如果M&lt;2, 则取的范围是从（2，N)</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> begin = <span class="built_in">max</span>(M, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = begin ; i &lt; N + <span class="number">1</span>; i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(prime[i])</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>geek link: <a href="https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1">https://practice.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1</a></p>
-<h1 id="模运算中的幂">模运算中的幂</h1>
-<p>给三个数 x, y and p, 计算(x^y) % p.</p>
-<p>（1）y如果是奇数，则把x先乘以res;</p>
-<p>最后一个y肯定是1，把之前的结果都乘给res</p>
-<p>（2）计算x^y时需要注意，如果x,y很大，取幂次方容易越界，导致结果为0</p>
-<p>因此每次计算结果需要取余后再进行下一次幂运算</p>
-<p>（2）y左移一位后，x取平方记录在原始值中</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">PowerInmod</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(y &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">//y如果是奇数，则把x先乘以res;</span></span><br><span class="line">        <span class="comment">//最后一个y肯定是1，把之前的结果都乘给res</span></span><br><span class="line">		<span class="keyword">if</span>(y % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">			res = (res * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//y左移一位，x乘以2，结果都保留在x中</span></span><br><span class="line">		<span class="comment">//y = y &gt;&gt; 1; 等价于下面这一行</span></span><br><span class="line">		y = y / <span class="number">2</span>;</span><br><span class="line">		x = (x * x) % p; <span class="comment">//先取余是为了如果x,y很大，取幂次方容易越界，导致结果为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">136</span>, y = <span class="number">926</span>, p = <span class="number">961</span>;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">PowerInmod</span>(x, y, p);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>output:165</p>
-<h1 id="扩展欧几里得算法">扩展欧几里得算法</h1>
-<p>题目：找到整数系数 x 和 y，使得： ax + by = gcd(a, b)</p>
-<p>欧几里得算法：两个正整数的最大公约数等于较小的数和两数的余数的最大公约数</p>
-<p>gcd(a,b) = gcd(b%a, a)</p>
-<p>gcd(b%a, a) = b%a x1 + a y1</p>
-<p>ax + by = b%a x1 + a y1</p>
-<p>ax + by = (b-(b/a * a))x1 +  a y1</p>
-<p>ax + by = a (y1 - b/a x1) + b x1</p>
-<p>综上，</p>
-<p>x = (y1 - b/a x1)</p>
-<p>y =  x1</p>
-<p>每次递归求最大公约数的时候，更新x, y的值</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GcdExtend</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> *x, <span class="type">int</span> *y)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(a == <span class="number">0</span>) &#123;</span><br><span class="line">		*x = <span class="number">0</span>;</span><br><span class="line">		*y = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">int</span> x1, y1;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(b%a, a, &amp;x1, &amp;y1);</span><br><span class="line">	*x = (y1 - (b/a) * x1);</span><br><span class="line">	*y = x1;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">Gcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> gcd = <span class="built_in">GcdExtend</span>(a, b, &amp;x, &amp;y);</span><br><span class="line">	<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt; &#123;gcd, x, y&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="type">int</span> res = <span class="built_in">GcdExtend</span>(<span class="number">35</span>, <span class="number">15</span>, &amp;x, &amp;y);</span><br><span class="line">	cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>output: 5</p>
+    <title>防止爆仓</title>
+    <url>/preventLiquidation/</url>
+    <content><![CDATA[<h2 id="说明">说明</h2>
+<p>你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。</p>
+<p>给你一个整数数组 repos ，其中：</p>
+<ul>
+<li>repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。</li>
+<li>repos[i] == 0 表示第 i 天没有仓库有货物入库，你可以选择 一个 货运车队清空这个仓库的全部货物。</li>
+</ul>
+<p>请返回一个数组 ans ，满足：</p>
+<p>ans.length == repos.length</p>
+<ul>
+<li>
+<p>如果 repos[i] &gt; 0 ，那么<code>ans[i] == -1</code> 。</p>
+</li>
+<li>
+<p>如果 repos<code>[i] == 0</code> ，<code>ans[i]</code> 是你第 i 天选择清空的仓库。</p>
+<p>如果有多种可行解，请返回它们中的 任意一个<br>
+如果没办法阻止爆仓，请返回一个 空的数组 。</p>
+<p>请注意，如果你选择清空一个装满货物的仓库，它会变成一个空的仓库。但如果你选择清空一个空的仓库，那么将无事发生。</p>
+</li>
+</ul>
+<h2 id="示例1">示例1</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,3,4]</code></p>
+</li>
+<li>
+<p>输出：<code>[-1,-1,-1,-1]</code></p>
+</li>
+<li>
+<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
+<p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
+<p>第三天后，满仓的仓库包括 <code>[1,2,3]</code></p>
+<p>第四天后，满仓的仓库包括 <code>[1,2,3,4]</code></p>
+<p>没有哪一天你可以清空任何仓库，也没有仓库会发生爆仓。</p>
+</li>
+</ul>
+<h2 id="示例2">示例2</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,0,0,2,1]</code></p>
+</li>
+<li>
+<p>输出：<code>[-1,-1,2,1,-1,-1]</code></p>
+</li>
+<li>
+<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
+<p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
+<p>第三天后，我们清空仓库 2 。所以剩下满仓的仓库包括<br>
+<code>[1]</code></p>
+<p>第四天后，我们清空仓库 1 。所以暂时没有满仓的仓库了。</p>
+<p>第五天后，满仓的仓库包括 <code>[2]</code>。</p>
+<p>第六天后，满仓的仓库包括 <code>[1,2]</code>。</p>
+<p>可以看出，这个方案下不会有爆仓发生。同时，<code>[-1,-1,1,2,-1,-1]</code> 也是另一个可行的没有爆仓的方案。</p>
+</li>
+</ul>
+<h2 id="示例3">示例3</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,0,1,2]</code></p>
+</li>
+<li>
+<p>输出：<code>[]</code></p>
+</li>
+<li>
+<p>解释：第二天后，满仓的仓库包括 <code>[1,2]</code>。我们可以在第三天清空一个仓库。</p>
+<p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
+</li>
+</ul>
+<h2 id="提示">提示</h2>
+<ul>
+<li><code>1 &lt;= repos.length &lt;= 105</code></li>
+<li><code>0 &lt;= repos[i] &lt;= 109</code></li>
+</ul>
+<h2 id="解决方法">解决方法</h2>
+<ul>
+<li>c++版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">vector&lt;int&gt; preventOverFlow(vector&lt;int&gt; repos) &#123;</span><br><span class="line">	int days = repos.size();</span><br><span class="line">	// 存储仓库内的货物，1：有， 0：无</span><br><span class="line">	unordered_map&lt;int, int&gt; warehouses;</span><br><span class="line">	vector&lt;int&gt; result(days, -1);</span><br><span class="line">	for (int i = 0; i &lt; days; i++) &#123;</span><br><span class="line">		// 当前天需要放货物到仓库，判断仓库是否可放</span><br><span class="line">		if (repos[i] &gt; 0) &#123;</span><br><span class="line">			// 仓库内有货物，不能放，溢出了</span><br><span class="line">			if (warehouses.count(repos[i]) &gt; 0 &amp;&amp; warehouses[repos[i]] &gt; 0) &#123;</span><br><span class="line">				return &#123;</span><br><span class="line">				&#125;</span><br><span class="line">				;</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				// 仓库内无货物，能放，入库</span><br><span class="line">				warehouses[repos[i]]++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			// 当天可以选择一个仓库入库，选择后面需要放东西的仓库, 并且该仓库里有东西</span><br><span class="line">			for (int j = i + 1; j &lt; days; j++) &#123;</span><br><span class="line">				if (repos[j] &gt; 0 &amp;&amp; warehouses.count(repos[j]) &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0) &#123;</span><br><span class="line">					result[i] = repos[j];</span><br><span class="line">					warehouses[repos[j]]--;</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; repos = &#123;</span><br><span class="line">		1, 2, 0, 0, 2, 1</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	vector&lt;int&gt; result = preventOverFlow(repos);</span><br><span class="line">	if (result.empty()) &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[&quot;;</span><br><span class="line">		for (int i = 0; i &lt; result.size(); i++) &#123;</span><br><span class="line">			cout &lt;&lt; result[i];</span><br><span class="line">			if (i &lt; result.size() - 1) &#123;</span><br><span class="line">				cout &lt;&lt; &quot;,&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		cout &lt;&lt; &quot;]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>go版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">func preventOverflow(repos []int) []int &#123;</span><br><span class="line">	days := len(repos)</span><br><span class="line">	result := make([]int, days)</span><br><span class="line">	for i := range result &#123;</span><br><span class="line">		result[i] = -1</span><br><span class="line">	&#125;</span><br><span class="line">	//存储仓库的货物，1：有， 0：没有</span><br><span class="line">	warehouses := make(map[int]int)</span><br><span class="line">	//遍历每天</span><br><span class="line">	for i := 0; i &lt; days; i++ &#123;</span><br><span class="line">		//需要存货物到仓库</span><br><span class="line">		if repos[i] &gt; 0 &#123;</span><br><span class="line">			//该仓库有货物, 溢出</span><br><span class="line">			if warehouses[repos[i]] &gt; 0 &#123;</span><br><span class="line">				return []int&#123;&#125;</span><br><span class="line">			&#125; else &#123; //没有货物，直接存货物</span><br><span class="line">				warehouses[repos[i]]++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123; //不需要存货物到仓库， 可以出库：找到下一个需要存货物的仓库出库，并且该仓库里有货物</span><br><span class="line">			for j := i + 1; j &lt; days; j++ &#123;</span><br><span class="line">				if repos[j] &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0 &#123;</span><br><span class="line">					result[i] = repos[j]</span><br><span class="line">					warehouses[repos[j]]--</span><br><span class="line">					break //找到就不找了</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	var repos = []int&#123;1, 2, 0, 0, 2, 1&#125;</span><br><span class="line">	result := preventOverflow(repos)</span><br><span class="line">	fmt.Print(&quot;[&quot;)</span><br><span class="line">	for i := 0; i &lt; len(result); i++ &#123;</span><br><span class="line">		fmt.Print(result[i])</span><br><span class="line">		if i &lt; len(result)-1 &#123;</span><br><span class="line">			fmt.Print(&quot;,&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Print(&quot;]&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>algorithm</category>
       </categories>
       <tags>
-        <tag>string</tag>
+        <tag>dp</tag>
       </tags>
   </entry>
   <entry>
-    <title>typedef 函数与函数指针的使用</title>
-    <url>/typedefFunc/</url>
-    <content><![CDATA[<p>函数名是该函数的入口地址</p>
-<p>函数指针：指向函数的指针，可以用来调用函数</p>
-<h2 id="typedef">typedef</h2>
-<h3 id="函数">函数</h3>
-<p>形式：typedef  返回类型(新类型)(参数列表)</p>
-<p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
-<p>（2）初始化：变量 = 函数返回地址</p>
-<p>（3）使用：变量（参数列表）</p>
-<p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
-<h3 id="函数指针">函数指针</h3>
-<p>形式：typedef  返回类型(*新类型)(参数列表)</p>
-<p>（1）声明：新类型 变量</p>
-<p>（2）初始化：变量 = 函数返回地址</p>
-<p>（3）使用：变量（参数列表）</p>
-<p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
-<h3 id="区别">区别</h3>
+    <title>相同长度的轨道</title>
+    <url>/sameLengthTrack/</url>
+    <content><![CDATA[<h2 id="说明">说明</h2>
+<p>您正在制作两条轨道并希望它们具有最大长度，并且两条轨道的长度必须相等。 现在，您有一堆可以焊接在一起的钢筋，钢筋无法切割，但并非所有钢筋都需要在此过程中耗尽。<br>
+ <br>
+例如，如果钢筋的长度为 1、2 和 3，则可以将它们焊接在一起以形成长度为 6 的支撑。（单位为米。）<br>
+ <br>
+返回轨道的最大可能长度，如果无法创建轨道，则返回 0。</p>
+<h2 id="示例1">示例1</h2>
 <ul>
-<li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
-<li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
+<li>输入：[1,2,3,6]</li>
+<li>输出：6</li>
+<li>解释：我们有两个不相交的子集 {1,2,3} 和 {6}，它们的和与 6 相同。</li>
 </ul>
-<h2 id="例子">例子</h2>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>output：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
-<h2 id="回调函数">回调函数</h2>
-<p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
-<p>即别人函数调用过程中来回调你实现的函数</p>
-<p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
-<p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
-<p>（3）在callBack中调用helloWorld</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>c++</category>
-      </categories>
-      <tags>
-        <tag>typedef</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>go package 使用</title>
-    <url>/goPackage/</url>
-    <content><![CDATA[<h1 id="问题">问题</h1>
-<p>环境：go version<br>
-go version go1.19.3 windows/amd64</p>
-<p>需要在main.go里导入自己写的包</p>
-<p><img src="/images/goPackage.png" alt="项目结构"></p>
-<p>在main.go里调用tempconv.go 出现error:</p>
-<p>go run “d:\vsProject\gocode\main.go”<br>
-main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
-<h1 id="原因">原因</h1>
+<h2 id="示例2">示例2</h2>
+<ul>
+<li>输入：[1,2,3,4,5,6]</li>
+<li>输出：10</li>
+<li>解释：我们有两个不相交的子集 {2,3,5} 和 {4,6}，它们的和与 10 相同，并且留下了长度为 1 的条。</li>
+</ul>
+<h2 id="示例3">示例3</h2>
 <ul>
 <li>
-<p>在go 1.11以前无法在除了root的目录下开发，1.11后提供了go mod来管理包</p>
+<p>输入：[1,2]</p>
 </li>
 <li>
-<p>在同一目录下只能一个package</p>
+<p>输出：0</p>
+</li>
+<li>
+<p>说明：无法创建轨迹，因此返回0。</p>
+<p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
 </li>
 </ul>
-<h1 id="解决方法">解决方法</h1>
-<h2 id="go-env">GO ENV</h2>
-<p>设置GO111MODULE</p>
-<p>on: 使用modules, 不会去gopath下查找</p>
-<p>off: 不支持modules, 去gopath下查找</p>
-<p>auto: 根据当前目录决定是否启动modules</p>
-<h3 id="linux">linux</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export GO111MODULE=off</span><br><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
-<h3 id="winodows">winodows</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set GO111MODULE=off</span><br><span class="line">set GO111MODULE=on</span><br></pre></td></tr></table></figure>
-<p>或者设置系统环境变量</p>
-<h2 id="gopath">GOPATH</h2>
-<p>（1）关闭 go mod 模式：设置GO111MODULE off</p>
-<p>（2）go env查看当前的GOPATH,  将需要导入的tempconv.go放入$GOPATH/src下</p>
-<p>note: 不建议这种方式，需要修改$GOPATH/src</p>
-<h2 id="go-mod">GO MOD</h2>
-<p>（1）打开 go mod 模式：设置GO111MODULE off</p>
-<p>（2）go mod init xx</p>
-<p>（3）import xxx/filename</p>
-<p>go mod init gocode</p>
-<p>项目结构：</p>
-<p>gocode</p>
-<p>----module/tempconv.go</p>
-<p>----main.go</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &quot;gocode/module&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="提示">提示</h2>
+<ul>
+<li>0 &lt;= 钢筋长度 &lt;= 140</li>
+<li>1 &lt;= 钢筋[i] &lt;= 1000</li>
+<li>总和(钢筋[i]) &lt;= 5000</li>
+</ul>
+<h2 id="解决方法">解决方法</h2>
+<ul>
+<li>c++版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;numeric&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">// dp 判断是否能划分成两个相等的子集</span><br><span class="line">bool canPartition(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	// 长度小于2肯定不能划分</span><br><span class="line">	if (nums.size() &lt; 2)</span><br><span class="line">	        return false;</span><br><span class="line">	// 如果和是奇数也不能被划分</span><br><span class="line">	int sum = accumulate(nums.begin(), nums.end(), 0);</span><br><span class="line">	if (sum &amp; 1)</span><br><span class="line">	        return false;</span><br><span class="line">	// 计算最大值，如果最大值大于均值，也不能被划分</span><br><span class="line">	int max = *max_element(nums.begin(), nums.end());</span><br><span class="line">	int target = sum / 2;</span><br><span class="line">	if (max &gt; target)</span><br><span class="line">	        return false;</span><br><span class="line">	// dp[i][j]从0~i里面取若干数的和是否等于j</span><br><span class="line">	vector&lt;vector&lt;int&gt;&gt; dp(nums.size(), vector&lt;int&gt;(target + 1, 0));</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		dp[i][0] = true;</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true;</span><br><span class="line">	// for循环i从第一个开始</span><br><span class="line">	for (int i = 1; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		int num = nums[i];</span><br><span class="line">		for (int j = 1; j &lt;= target; j++) &#123;</span><br><span class="line">			if (j &gt;= num) &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j - num];</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[nums.size() - 1][target];</span><br><span class="line">&#125;</span><br><span class="line">int sameLengthStack(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	int res = 0;</span><br><span class="line">	sort(nums.begin(), nums.end());</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		vector&lt;int&gt; newNums;</span><br><span class="line">		// 排序后每次都去掉最小的，看是否能划分成两个相等的子集</span><br><span class="line">		newNums.assign(nums.begin() + i, nums.end());</span><br><span class="line">		bool isCanPartition = canPartition(newNums);</span><br><span class="line">		if (isCanPartition) &#123;</span><br><span class="line">			int sum = accumulate(newNums.begin(), newNums.end(), 0);</span><br><span class="line">			res = sum / 2;</span><br><span class="line">			return res;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; nums &#123;</span><br><span class="line">		1, 2</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	int res = sameLengthStack(nums);</span><br><span class="line">	cout &lt;&lt; res &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>go版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func IsCanPartition(nums []int) bool &#123;</span><br><span class="line">	if len(nums) &lt; 2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	sumNum := CalculateSum(nums)</span><br><span class="line">	if sumNum%2 != 0 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	maxNum := nums[0]</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		if maxNum &lt; num &#123;</span><br><span class="line">			maxNum = num</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if maxNum &gt; sumNum/2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	target := sumNum / 2</span><br><span class="line">	//行数</span><br><span class="line">	dp := make([][]bool, len(nums))</span><br><span class="line">	//列数</span><br><span class="line">	for i := range dp &#123;</span><br><span class="line">		dp[i] = make([]bool, target+1)</span><br><span class="line">	&#125;</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		dp[i][0] = true</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		for j := 1; j &lt;= target; j++ &#123;</span><br><span class="line">			if j &gt; num &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j] || dp[i-1][j-num]</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[len(nums)-1][target]</span><br><span class="line">&#125;</span><br><span class="line">func CalculateSum(nums []int) int &#123;</span><br><span class="line">	sum := 0</span><br><span class="line">	for _, num := range nums &#123;</span><br><span class="line">		sum += num</span><br><span class="line">	&#125;</span><br><span class="line">	return sum</span><br><span class="line">&#125;</span><br><span class="line">func SameLengthStack(nums []int) int &#123;</span><br><span class="line">	sort.Slice(nums, func(i, j int) bool &#123;</span><br><span class="line">		return i &lt; j</span><br><span class="line">	&#125;)</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		numsEx := nums[i:]</span><br><span class="line">		if IsCanPartition(numsEx) &#123;</span><br><span class="line">			sum := CalculateSum(numsEx)</span><br><span class="line">			return sum / 2</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">func main() &#123;</span><br><span class="line">	var nums = []int&#123;1, 2&#125;</span><br><span class="line">	res := SameLengthStack(nums)</span><br><span class="line">	fmt.Println(res)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>go</category>
+        <category>algorithm</category>
       </categories>
       <tags>
-        <tag>go package</tag>
+        <tag>backpack</tag>
       </tags>
   </entry>
   <entry>
@@ -1109,38 +1097,45 @@ main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
       </tags>
   </entry>
   <entry>
-    <title>linux 常用命令</title>
-    <url>/linuxCommand/</url>
-    <content><![CDATA[<h1 id="vim">vim</h1>
-<p>切换不同文件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:e filename </span><br></pre></td></tr></table></figure>
-<p>dd 删除一行</p>
-<p>gg dG 删除所有</p>
-<h1 id="docker">docker</h1>
-<p>main command</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull 拉image</span><br><span class="line">docker run 跑image</span><br><span class="line">docker ps 查看当前运行的image</span><br><span class="line">docker stop 停止container</span><br><span class="line">docker rm 删除container</span><br></pre></td></tr></table></figure>
-<p>debug contaniner</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs [-f]  查看container的log</span><br><span class="line">docker exec -it containerId /bin/bash 进入容器  使用/bin/sh进入后,直接显示的是#，而使用/bin/bash直接显示的是root@xxxx:/#</span><br><span class="line">docker stat 查看容器资源的使用情况，CPU、内存、网络 I/O等</span><br><span class="line">docker inspect 查看容器控制的各种结构的详细信息</span><br></pre></td></tr></table></figure>
-<h1 id="json">json</h1>
-<p>把一个json文件在terminal pretty查看</p>
-<p>(1) 使用python tool</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | python3 -m json.tool </span><br></pre></td></tr></table></figure>
-<p>(2) 使用jq 解析工具</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat [file] | jq .</span><br></pre></td></tr></table></figure>
-<p>jq还可以直接定位对应json中key的value</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat test.txt|jq .</span><br><span class="line">&#123;</span><br><span class="line">  &quot;foo&quot;: &#123;</span><br><span class="line">    &quot;bar&quot;: &#123;</span><br><span class="line">      &quot;baz&quot;: 123</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">cat test.txt|jq &quot;.foo&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;bar&quot;: &#123;</span><br><span class="line">    &quot;baz&quot;: 123</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h1 id="cut">cut</h1>
-<p>在file.h中找到xxx代表的含义</p>
-<p>In file.h</p>
-<p>#define xxx “hello world”</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep xxx file.h | cut -d &#x27;&quot;&#x27; -f2</span><br></pre></td></tr></table></figure>
-<p>输出hello world，命令类似split用法，f1(#define xxx ) f2(hello world)</p>
+    <title>typedef 函数与函数指针的使用</title>
+    <url>/typedefFunc/</url>
+    <content><![CDATA[<p>函数名是该函数的入口地址</p>
+<p>函数指针：指向函数的指针，可以用来调用函数</p>
+<h2 id="typedef">typedef</h2>
+<h3 id="函数">函数</h3>
+<p>形式：typedef  返回类型(新类型)(参数列表)</p>
+<p>（1）声明：新类型 *变量 (需要声明一个指针)</p>
+<p>（2）初始化：变量 = 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是一个指针，则可以指向一个函数的入口地址。可以将函数名赋值给该指针，来调用函数</p>
+<h3 id="函数指针">函数指针</h3>
+<p>形式：typedef  返回类型(*新类型)(参数列表)</p>
+<p>（1）声明：新类型 变量</p>
+<p>（2）初始化：变量 = 函数返回地址</p>
+<p>（3）使用：变量（参数列表）</p>
+<p>此时的变量是直接就是一个指向函数的指针，可以将函数名赋值给该指针，来调用函数</p>
+<h3 id="区别">区别</h3>
+<ul>
+<li>typedef  函数: 就是重新定义了一个函数类型，如果需要调用则需要声明指向该函数类型的指针</li>
+<li>typedef  函数指针: 是重新定义了一个指向函数类型的指针，要调用函数直接使用即可</li>
+</ul>
+<h2 id="例子">例子</h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*funPoint_t)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(<span class="type">function_t</span>)</span><span class="params">(<span class="type">char</span> c)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f0</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f0, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f1</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;f1, c = %c\n&quot;</span>, c); <span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    funPoint_t fp;<span class="comment">//fp是一个指向一个函数类型（返回的是int，参数是char）的函数指针</span></span><br><span class="line">    <span class="type">function_t</span> *fn;<span class="comment">//function_t是函数类型，所以fn是指向此函数类型的指针</span></span><br><span class="line"></span><br><span class="line">    fp = f0;</span><br><span class="line">    ret = <span class="built_in">fp</span>(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line"></span><br><span class="line">    fn = f1;</span><br><span class="line">    ret = <span class="built_in">fn</span>(<span class="string">&#x27;x&#x27;</span>);<span class="comment">//通过函数指针调用函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f0, c = a</span><br><span class="line">f1, c = x</span><br></pre></td></tr></table></figure>
+<h2 id="回调函数">回调函数</h2>
+<p>含义：使用者实现一个函数，将该函数作为参数传给调用者的函数中，由调用者的函数在运行时来调用的函数。</p>
+<p>即别人函数调用过程中来回调你实现的函数</p>
+<p>（1）定义了一个函数指针类型：helloWorldFunc （函数指针类型可以直接使用，因为它直接指向了函数的入口地址）</p>
+<p>（2）将helloWorld作为参数传给callBack方法，其中callBack的第一个参数是一个函数指针类型</p>
+<p>（3）在callBack中调用helloWorld</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*helloWorldFunc)</span><span class="params">(string buffer)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloWorld</span><span class="params">(string buffer)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;string is:%s&quot;</span>, buffer.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callBack</span><span class="params">(helloWorldFunc fp, string s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!s.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="built_in">fp</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> *args[])</span></span>&#123;</span><br><span class="line">	string s = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    <span class="comment">//helloWorldFunc fp = helloWorld;</span></span><br><span class="line">    <span class="comment">//callBack(fp, s);</span></span><br><span class="line">    <span class="comment">//上面两行等价于下面这一行</span></span><br><span class="line">	<span class="built_in">callBack</span>(helloWorld, s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>linux</category>
+        <category>c++</category>
       </categories>
       <tags>
-        <tag>command</tag>
+        <tag>typedef</tag>
       </tags>
   </entry>
 </search>
