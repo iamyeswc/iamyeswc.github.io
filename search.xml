@@ -936,57 +936,6 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
       </tags>
   </entry>
   <entry>
-    <title>test</title>
-    <url>/posts/63534/</url>
-    <content><![CDATA[<h2 id="说明">说明</h2>
-<p>您正在制作两条轨道并希望它们具有最大长度，并且两条轨道的长度必须相等。 现在，您有一堆可以焊接在一起的钢筋，钢筋无法切割，但并非所有钢筋都需要在此过程中耗尽。<br>
- <br>
-例如，如果钢筋的长度为 1、2 和 3，则可以将它们焊接在一起以形成长度为 6 的支撑。（单位为米。）<br>
- <br>
-返回轨道的最大可能长度，如果无法创建轨道，则返回 0。</p>
-<h2 id="示例1">示例1</h2>
-<ul>
-<li>输入：[1,2,3,6]</li>
-<li>输出：6</li>
-<li>解释：我们有两个不相交的子集 {1,2,3} 和 {6}，它们的和与 6 相同。</li>
-</ul>
-<h2 id="示例2">示例2</h2>
-<ul>
-<li>输入：[1,2,3,4,5,6]</li>
-<li>输出：10</li>
-<li>解释：我们有两个不相交的子集 {2,3,5} 和 {4,6}，它们的和与 10 相同，并且留下了长度为 1 的条。</li>
-</ul>
-<h2 id="示例3">示例3</h2>
-<ul>
-<li>
-<p>输入：[1,2]</p>
-</li>
-<li>
-<p>输出：0</p>
-</li>
-<li>
-<p>说明：无法创建轨迹，因此返回0。</p>
-<p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
-</li>
-</ul>
-<h2 id="提示">提示</h2>
-<ul>
-<li>0 &lt;= 钢筋长度 &lt;= 140</li>
-<li>1 &lt;= 钢筋[i] &lt;= 1000</li>
-<li>总和(钢筋[i]) &lt;= 5000</li>
-</ul>
-<h2 id="解决方法">解决方法</h2>
-<ul>
-<li>c++版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;numeric&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">// dp 判断是否能划分成两个相等的子集</span><br><span class="line">bool canPartition(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	// 长度小于2肯定不能划分</span><br><span class="line">	if (nums.size() &lt; 2)</span><br><span class="line">	        return false;</span><br><span class="line">	// 如果和是奇数也不能被划分</span><br><span class="line">	int sum = accumulate(nums.begin(), nums.end(), 0);</span><br><span class="line">	if (sum &amp; 1)</span><br><span class="line">	        return false;</span><br><span class="line">	// 计算最大值，如果最大值大于均值，也不能被划分</span><br><span class="line">	int max = *max_element(nums.begin(), nums.end());</span><br><span class="line">	int target = sum / 2;</span><br><span class="line">	if (max &gt; target)</span><br><span class="line">	        return false;</span><br><span class="line">	// dp[i][j]从0~i里面取若干数的和是否等于j</span><br><span class="line">	vector&lt;vector&lt;int&gt;&gt; dp(nums.size(), vector&lt;int&gt;(target + 1, 0));</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		dp[i][0] = true;</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true;</span><br><span class="line">	// for循环i从第一个开始</span><br><span class="line">	for (int i = 1; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		int num = nums[i];</span><br><span class="line">		for (int j = 1; j &lt;= target; j++) &#123;</span><br><span class="line">			if (j &gt;= num) &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j - num];</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i - 1][j - 1];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[nums.size() - 1][target];</span><br><span class="line">&#125;</span><br><span class="line">int sameLengthStack(vector&lt;int&gt; nums) &#123;</span><br><span class="line">	int res = 0;</span><br><span class="line">	sort(nums.begin(), nums.end());</span><br><span class="line">	for (int i = 0; i &lt; nums.size(); i++) &#123;</span><br><span class="line">		vector&lt;int&gt; newNums;</span><br><span class="line">		// 排序后每次都去掉最小的，看是否能划分成两个相等的子集</span><br><span class="line">		newNums.assign(nums.begin() + i, nums.end());</span><br><span class="line">		bool isCanPartition = canPartition(newNums);</span><br><span class="line">		if (isCanPartition) &#123;</span><br><span class="line">			int sum = accumulate(newNums.begin(), newNums.end(), 0);</span><br><span class="line">			res = sum / 2;</span><br><span class="line">			return res;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; nums &#123;</span><br><span class="line">		1, 2</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	int res = sameLengthStack(nums);</span><br><span class="line">	cout &lt;&lt; res &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>go版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func IsCanPartition(nums []int) bool &#123;</span><br><span class="line">	if len(nums) &lt; 2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	sumNum := CalculateSum(nums)</span><br><span class="line">	if sumNum%2 != 0 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	maxNum := nums[0]</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		if maxNum &lt; num &#123;</span><br><span class="line">			maxNum = num</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if maxNum &gt; sumNum/2 &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	target := sumNum / 2</span><br><span class="line">	//行数</span><br><span class="line">	dp := make([][]bool, len(nums))</span><br><span class="line">	//列数</span><br><span class="line">	for i := range dp &#123;</span><br><span class="line">		dp[i] = make([]bool, target+1)</span><br><span class="line">	&#125;</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		dp[i][0] = true</span><br><span class="line">	&#125;</span><br><span class="line">	dp[0][nums[0]] = true</span><br><span class="line">	for i := 1; i &lt; len(nums); i++ &#123;</span><br><span class="line">		num := nums[i]</span><br><span class="line">		for j := 1; j &lt;= target; j++ &#123;</span><br><span class="line">			if j &gt; num &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j] || dp[i-1][j-num]</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				dp[i][j] = dp[i-1][j]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return dp[len(nums)-1][target]</span><br><span class="line">&#125;</span><br><span class="line">func CalculateSum(nums []int) int &#123;</span><br><span class="line">	sum := 0</span><br><span class="line">	for _, num := range nums &#123;</span><br><span class="line">		sum += num</span><br><span class="line">	&#125;</span><br><span class="line">	return sum</span><br><span class="line">&#125;</span><br><span class="line">func SameLengthStack(nums []int) int &#123;</span><br><span class="line">	sort.Slice(nums, func(i, j int) bool &#123;</span><br><span class="line">		return i &lt; j</span><br><span class="line">	&#125;)</span><br><span class="line">	for i := 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">		numsEx := nums[i:]</span><br><span class="line">		if IsCanPartition(numsEx) &#123;</span><br><span class="line">			sum := CalculateSum(numsEx)</span><br><span class="line">			return sum / 2</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 1,2,3,6 -&gt; 6</span><br><span class="line">// 1,2,3,4,5,6 -&gt; 10</span><br><span class="line">// 1,2 -&gt; 0</span><br><span class="line">func main() &#123;</span><br><span class="line">	var nums = []int&#123;1, 2&#125;</span><br><span class="line">	res := SameLengthStack(nums)</span><br><span class="line">	fmt.Println(res)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-]]></content>
-  </entry>
-  <entry>
     <title>学习计划</title>
     <url>/posts/44479/</url>
     <content><![CDATA[<h1 id="学习计划">学习计划</h1>
@@ -1128,6 +1077,49 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
       </categories>
       <tags>
         <tag>typedef</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用pprof对go http service进行性能分析</title>
+    <url>/posts/50713/</url>
+    <content><![CDATA[<h2 id="代码" tabindex="-1">代码</h2>
+<p><strong>参考</strong>：<a href="https://github.com/gin-contrib/pprof">https://github.com/gin-contrib/pprof</a></p>
+<p>把pprof挂载到gin的路由器下有两种方法</p>
+<ul>
+<li>在gin的<code>跟路由</code>上注册pprof的路由<br>
+使用<code>pprof.Register(router)</code><br>
+下面创建的服务器的路由是http://localhost:80/ui/test/…<br>
+则可以通过http://localhost:80/debug/pprof/来访问pprof首页</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">pprof.Register(router)</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在gin的<code>指定路由</code>上注册pprof的路由<br>
+使用<code>pprof.Register(router)</code><br>
+下面创建的服务器的路由是http://localhost:80/ui/test/…, pprof的路由挂载在了test路由下<br>
+则需要通过http://localhost:80/test/debug/pprof/来访问pprof首页</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">pprof.RouteRegister(v1Root)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>pprof的路由：</p>
+<p>[GIN-debug] GET    /debug/pprof/             --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/cmdline      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/profile      --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] POST   /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/symbol       --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/trace        --&gt; <a href="http://github.com/gin-gonic/gin.WrapF.func1">github.com/gin-gonic/gin.WrapF.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/allocs       --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/block        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/goroutine    --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/heap         --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/mutex        --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
+[GIN-debug] GET    /debug/pprof/threadcreate --&gt; <a href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)</p>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>pprof</tag>
       </tags>
   </entry>
 </search>
