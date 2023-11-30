@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -89,7 +89,7 @@
 <meta name="description" content="Go语言的类型系统 用户定义的类型 struct创建结构类型 123456type user struct &amp;#123;    name       string    email      string    ext        int    privileged bool&amp;#125; （1）使用 var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="goinactionChapter5-9">
-<meta property="og:url" content="http://example.com/posts/48147/index.html">
+<meta property="og:url" content="http://example.com/goinactionChapter5-9/index.html">
 <meta property="og:site_name" content="好好学习">
 <meta property="og:description" content="Go语言的类型系统 用户定义的类型 struct创建结构类型 123456type user struct &amp;#123;    name       string    email      string    ext        int    privileged bool&amp;#125; （1）使用 var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化">
 <meta property="og:locale">
@@ -121,7 +121,7 @@
 <meta property="og:image" content="http://example.com/images/goinaction33.png">
 <meta property="og:image" content="http://example.com/images/goinaction34.png">
 <meta property="article:published_time" content="2023-03-09T05:48:09.000Z">
-<meta property="article:modified_time" content="2023-11-28T10:02:48.856Z">
+<meta property="article:modified_time" content="2023-11-30T05:37:03.912Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="go in action">
 <meta name="twitter:card" content="summary">
@@ -133,9 +133,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '',
-    scheme: 'Gemini',
+    scheme: 'Pisces',
     version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -155,7 +155,7 @@
 
 
 
-  <link rel="canonical" href="http://example.com/posts/48147/"/>
+  <link rel="canonical" href="http://example.com/goinactionChapter5-9/"/>
 
 
 
@@ -322,7 +322,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/48147/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/goinactionChapter5-9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -449,9 +449,9 @@
       
 
       
-        <h1 id="go语言的类型系统" tabindex="-1">Go语言的类型系统</h1>
-<h2 id="用户定义的类型" tabindex="-1">用户定义的类型</h2>
-<h3 id="struct创建结构类型" tabindex="-1">struct创建结构类型</h3>
+        <h1 id="go语言的类型系统">Go语言的类型系统</h1>
+<h2 id="用户定义的类型">用户定义的类型</h2>
+<h3 id="struct创建结构类型">struct创建结构类型</h3>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>（1）使用<br>
 var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>
@@ -470,14 +470,14 @@ lisa := user{“lisa”, “<a href="mailto:lisa@email.com">lisa@email.com</a>�
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>初始化person字段是使用结构字面量创建了user类型的值</p>
-<h3 id="基于已有的类型作为新类型的类型说明" tabindex="-1">基于已有的类型，作为新类型的类型说明</h3>
+<h3 id="基于已有的类型作为新类型的类型说明">基于已有的类型，作为新类型的类型说明</h3>
 <p>Duration in time package<br>
 <img src="/images/goinaction10.png" alt="image.png"><br>
 int64是Duration的基础类型，但是go不认为int64和Duration是同一类型。Duration是一个独立的类型，编译器不会做隐式转换</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Duration <span class="type">int64</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> dur Duration</span><br><span class="line">    dur = <span class="type">int64</span>(<span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译报错：<br>
 cannot use int64(1000) (constant 1000 of type int64) as Duration value in assignment</p>
-<h2 id="方法" tabindex="-1">方法</h2>
+<h2 id="方法">方法</h2>
 <p>方法是给用户定义的类型添加新的行为，在关键字func和方法名之间增加了一个参数<br>
 函数有接收者，就被称为方法</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Sample program to show how to declare methods and how the Go</span></span><br><span class="line"><span class="comment">// compiler supports them.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// user defines a user in the program.</span></span><br><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name  <span class="type">string</span></span><br><span class="line">    email <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// notify implements a method with a value receiver.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u user)</span></span> notify() &#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Sending User Email To %s&lt;%s&gt;\n&quot;</span>,</span><br><span class="line">        u.name,</span><br><span class="line">        u.email)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// changeEmail implements a method with a pointer receiver.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *user)</span></span> changeEmail(email <span class="type">string</span>) &#123;</span><br><span class="line">    u.email = email</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// main is the entry point for the application.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// Values of type user can be used to call methods</span></span><br><span class="line">    <span class="comment">// declared with a value receiver.</span></span><br><span class="line">    bill := user&#123;<span class="string">&quot;Bill&quot;</span>, <span class="string">&quot;bill@email.com&quot;</span>&#125;</span><br><span class="line">    bill.notify()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Pointers of type user can also be used to call methods</span></span><br><span class="line">    <span class="comment">// declared with a value receiver.</span></span><br><span class="line">    lisa := &amp;user&#123;<span class="string">&quot;Lisa&quot;</span>, <span class="string">&quot;lisa@email.com&quot;</span>&#125;</span><br><span class="line">    lisa.notify()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Values of type user can be used to call methods</span></span><br><span class="line">    <span class="comment">// declared with a pointer receiver.</span></span><br><span class="line">    bill.changeEmail(<span class="string">&quot;bill@newdomain.com&quot;</span>)</span><br><span class="line">    bill.notify()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Pointers of type user can be used to call methods</span></span><br><span class="line">    <span class="comment">// declared with a pointer receiver.</span></span><br><span class="line">    lisa.changeEmail(<span class="string">&quot;lisa@newdomain.com&quot;</span>)</span><br><span class="line">    lisa.notify()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -509,12 +509,12 @@ go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a h
 适用于创建新的值<br>
 (2）指针接收者：调用时使用实际值来执行<br>
 适用于修改当前值</p>
-<h2 id="类型的本质" tabindex="-1">类型的本质</h2>
+<h2 id="类型的本质">类型的本质</h2>
 <p>关注值的本质</p>
-<h3 id="内置类型" tabindex="-1">内置类型</h3>
+<h3 id="内置类型">内置类型</h3>
 <p>数值类型，字符串类型，布尔类型<br>
 把这些类型的值传递给方法或者函数时，传递的是对应值的副本</p>
-<h3 id="引用类型" tabindex="-1">引用类型</h3>
+<h3 id="引用类型">引用类型</h3>
 <p>切片，映射，通道，接口，函数类型(type MyFunc func(int, int) int<br>
 )<br>
 引用类型都包含一组独特的字段，用于管理底层数据结构。因此通过复制来传递一个引用类型的副本，本质是共享底层数据结构</p>
@@ -523,15 +523,15 @@ go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a h
 </ul>
 <p>(1)因为未命名类型没有独立的命名空间，无法与其他代码分开管理。<br>
 (2)应该使用具名类型来管理代码并添加方法。当我们声明一个结构体或接口时，我们可以向其中添加方法，以便更好地管理该类型的行为。这些方法只能在类型所属的包中使用，并且必须通过该类型来调用</p>
-<h3 id="结构类型" tabindex="-1">结构类型</h3>
+<h3 id="结构类型">结构类型</h3>
 <p>结构类型用来描述一组数据值，这组值得本质可以是原始的，也可以是非原始的</p>
-<h4 id="原始的类型的结构类型" tabindex="-1">原始的类型的结构类型</h4>
+<h4 id="原始的类型的结构类型">原始的类型的结构类型</h4>
 <p>time package里的Time类型是原始的<br>
 <img src="/images/goinaction11.png" alt="image.png"><br>
 <img src="/images/goinaction12.png" alt="image.png"></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Add returns the time t+d.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t Time)</span></span> Add(d Duration) Time &#123;</span><br><span class="line">    dsec := <span class="type">int64</span>(d / <span class="number">1e9</span>)</span><br><span class="line">    nsec := t.nsec() + <span class="type">int32</span>(d%<span class="number">1e9</span>)</span><br><span class="line">    <span class="keyword">if</span> nsec &gt;= <span class="number">1e9</span> &#123;</span><br><span class="line">        dsec++</span><br><span class="line">        nsec -= <span class="number">1e9</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> nsec &lt; <span class="number">0</span> &#123;</span><br><span class="line">        dsec--</span><br><span class="line">        nsec += <span class="number">1e9</span></span><br><span class="line">    &#125;</span><br><span class="line">    t.wall = t.wall&amp;^nsecMask | <span class="type">uint64</span>(nsec) <span class="comment">// update nsec</span></span><br><span class="line">    t.addSec(dsec)</span><br><span class="line">    <span class="keyword">if</span> t.wall&amp;hasMonotonic != <span class="number">0</span> &#123;</span><br><span class="line">        te := t.ext + <span class="type">int64</span>(d)</span><br><span class="line">        <span class="keyword">if</span> d &lt; <span class="number">0</span> &amp;&amp; te &gt; t.ext || d &gt; <span class="number">0</span> &amp;&amp; te &lt; t.ext &#123;</span><br><span class="line">            <span class="comment">// Monotonic clock reading now out of range; degrade to wall-only.</span></span><br><span class="line">            t.stripMono()</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            t.ext = te</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Time类型的方法，使用值接收者，传入Time值得副本，返回了方法内得Time值得副本</p>
-<h4 id="非原始的类型的结构类型" tabindex="-1">非原始的类型的结构类型</h4>
+<h4 id="非原始的类型的结构类型">非原始的类型的结构类型</h4>
 <p>os package里的File类型是非原始的<br>
 <img src="/images/goinaction13.png" alt="image.png"><br>
 <img src="/images/goinaction14.png" alt="image.png"><br>
@@ -546,7 +546,7 @@ File类型使用了嵌入的指针，指向未公开的类型，这层额外的�
 <p>总结：<br>
 （1）即使函数或者方法没有直接改变非原始得值得状态，依旧应该使用共享得方式传递，因为对应类型得数据是非原始得，应该总是被共享，而不是复制</p>
 <p>（2）使用值接收者还是指针接收者，不应该由方法是否修改了接收到得值来决定，应该基于类型的本质（除了让类型值符合接口的时候）</p>
-<h3 id="接口" tabindex="-1">接口</h3>
+<h3 id="接口">接口</h3>
 <p>多态： 代码可以更具类型的具体实现采取不同行为的能力<br>
 如果一个类型实现了某个接口，所有使用这个接口的地方，都可以支持这种类型的值<br>
 eg：</p>
@@ -560,7 +560,7 @@ eg：</p>
 （2）用户定义的类型实现了某个接口类型声明的一组方法，那么这个用户定义的类型的值就可以赋给这个接口类型的值<br>
 （3）对接口值方法的调用会执行接口值里存储的用户定义的类型的值的对应的方法 -&gt; 任何用户定义的类型都可以实现任何接口 -&gt; 对接口值方法的调用就是一种多态</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// notifier 是一个接口类型，表示可以向外部发送通知</span></span><br><span class="line"><span class="keyword">type</span> notifier <span class="keyword">interface</span> &#123;</span><br><span class="line">    notify()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// user 是一个结构体类型，表示用户</span></span><br><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 notifier 接口的 notify 方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u user)</span></span> notify() &#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Sending notification to user %s\n&quot;</span>, u.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 声明一个 notifier 类型变量 n，赋值为一个 user 类型变量</span></span><br><span class="line">    <span class="keyword">var</span> n notifier</span><br><span class="line">    n = user&#123;<span class="string">&quot;Bill&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用 notifier 接口中定义的 notify 方法，输出 &quot;Sending notification to user Bill&quot;</span></span><br><span class="line">    n.notify()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="将实体值赋值给接口" tabindex="-1">将实体值赋值给接口</h4>
+<h4 id="将实体值赋值给接口">将实体值赋值给接口</h4>
 <p>var n notifier<br>
 n = user{“Bill”}<br>
 user类型值赋值后接口变量的值的内部布局：<br>
@@ -568,13 +568,13 @@ notifier是一个两个字长度的数据结构<br>
 第一个是指向内部表（iTable）的指针 ： 包含<strong>已存储的值的类型的信息</strong>和与这个值关联的一组方法<br>
 第二个是一个指向所存储值的指针<br>
 <img src="/images/goinaction17.png" alt="image.png"></p>
-<h4 id="将实体指针赋值给接口" tabindex="-1">将实体指针赋值给接口</h4>
+<h4 id="将实体指针赋值给接口">将实体指针赋值给接口</h4>
 <p>var n notifier<br>
 n = &amp;user{“Bill”}<br>
 第一个是指向内部表（iTable）的指针 ：<strong>存储一个指向保存的类型的指针</strong>和与这个值关联的一组方法<br>
 第二个是一个指向所存储值的指针<br>
 <img src="/images/goinaction18.png" alt="image.png"></p>
-<h4 id="方法集" tabindex="-1">方法集</h4>
+<h4 id="方法集">方法集</h4>
 <p>方法集定义了接口的接受规则，定义了一组关联到给定类型的值或者指针的方法<br>
 <img src="/images/goinaction19.png" alt="image.png"><br>
 （1）如果使用指针接收者来实现一个接口，那么只有指向该类型的指针才能实现对应的接口<br>
@@ -592,7 +592,7 @@ duration(42)返回的值是右值，当调用指针接收者的方法时，编�
 左值和右值：最重要区别就是是否可以被寻址<br>
 可以被寻址的是左值，既可以出现在赋值号左边也可以出现在右边；<br>
 不可以被寻址的即为右值，比如函数返回值、字面值、常量值等等，只能出现在赋值号右边。</p>
-<h3 id="嵌入类型" tabindex="-1">嵌入类型</h3>
+<h3 id="嵌入类型">嵌入类型</h3>
 <p>(1)允许用户扩展或修改已有类型的行为，将已有的类型直接声明在新的结构类型里<br>
 (2)被嵌入的类型被称为新的外部类型的内部类型<br>
 (3)通过嵌入类型，与外部类型相关的标识符会提升到外部类型上</p>
@@ -614,7 +614,7 @@ ad.notify() -&gt; 调用外部类型admin的方法</p>
 <p>总结：<br>
 （1）外部类型实现了和内部类型同名的方法，则内部类型的实现就不会被提升<br>
 （2）但是内部类型的值一直在，可以直接访问内部类型的值，来访问没有被提升的内部类型实现的方法</p>
-<h3 id="公开或未公开的标识符" tabindex="-1">公开或未公开的标识符</h3>
+<h3 id="公开或未公开的标识符">公开或未公开的标识符</h3>
 <p>go语言支持从包里公开或者隐藏标识符<br>
 标识符名字以<strong>小写</strong>字母开头：标识符未公开，包外的代码<strong>不可见</strong><br>
 标识符名字以<strong>大写</strong>字母开头：标识符公开，包外的代码<strong>可见</strong></p>
@@ -636,8 +636,8 @@ New 工厂函数创建了未公开类型的值，将这个值返回给调用者�
 <li>虽然内部类型是未公开的，但是内部类型里声明的字段是公开的</li>
 <li>内部类型的标识符提升到外部类型，这些公开的字段可以通过外部类型访问到</li>
 </ul>
-<h1 id="并发" tabindex="-1">并发</h1>
-<h2 id="并发与并行" tabindex="-1">并发与并行</h2>
+<h1 id="并发">并发</h1>
+<h2 id="并发与并行">并发与并行</h2>
 <p>go语言里的并发是指能让某个函数独立于其他函数运行的能力。<br>
 当一个函数创建为goroutine时，Go会将其视为一个独立的工作单元。</p>
 <p><img src="/images/goinaction21-0.png" alt="image.png"><img src="/images/goinaction21-1.png" alt="image.png"></p>
@@ -653,9 +653,9 @@ New 工厂函数创建了未公开类型的值，将这个值返回给调用者�
 goroutine并行，需要多于一个逻辑处理器，可以在不同的线程上运行<br>
 一个逻辑处理器和两个逻辑处理器的区别：<br>
 <img src="/images/goinaction22-0.png" alt="image.png"><img src="/images/goinaction22-1.png" alt="image.png"></p>
-<h2 id="goroutine" tabindex="-1">goroutine</h2>
-<h3 id="goroutine并发" tabindex="-1">goroutine并发</h3>
-<h4 id="一个逻辑处理器并发运行多个goroutine" tabindex="-1">一个逻辑处理器并发运行多个goroutine</h4>
+<h2 id="goroutine">goroutine</h2>
+<h3 id="goroutine并发">goroutine并发</h3>
+<h4 id="一个逻辑处理器并发运行多个goroutine">一个逻辑处理器并发运行多个goroutine</h4>
 <ul>
 <li>runtime.GOMAXPROCS(1) 设置逻辑处理器数量是1</li>
 <li>WaitGroup是一个计数信号量，用来记录并维护运行的goroutine</li>
@@ -667,7 +667,7 @@ goroutine并行，需要多于一个逻辑处理器，可以在不同的线程�
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This sample program demonstrates how the goroutine scheduler</span></span><br><span class="line"><span class="comment">// will time slice goroutines on a single thread.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;runtime&quot;</span></span><br><span class="line">    <span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// wg is used to wait for the program to finish.</span></span><br><span class="line"><span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// main is the entry point for all Go programs.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// Allocate 1 logical processors for the scheduler to use.</span></span><br><span class="line">    runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add a count of two, one for each goroutine.</span></span><br><span class="line">    wg.Add(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create two goroutines.</span></span><br><span class="line">    fmt.Println(<span class="string">&quot;Create Goroutines&quot;</span>)</span><br><span class="line">    <span class="keyword">go</span> printPrime(<span class="string">&quot;A&quot;</span>)</span><br><span class="line">    <span class="keyword">go</span> printPrime(<span class="string">&quot;B&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wait for the goroutines to finish.</span></span><br><span class="line">    fmt.Println(<span class="string">&quot;Waiting To Finish&quot;</span>)</span><br><span class="line">    wg.Wait()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    fmt.Println(<span class="string">&quot;Terminating Program&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// printPrime displays prime numbers for the first 5000 numbers.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printPrime</span><span class="params">(prefix <span class="type">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Schedule the call to Done to tell main we are done.</span></span><br><span class="line">    <span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">next:</span><br><span class="line">    <span class="keyword">for</span> outer := <span class="number">2</span>; outer &lt; <span class="number">5000</span>; outer++ &#123;</span><br><span class="line">        <span class="keyword">for</span> inner := <span class="number">2</span>; inner &lt; outer; inner++ &#123;</span><br><span class="line">            <span class="keyword">if</span> outer%inner == <span class="number">0</span> &#123;</span><br><span class="line">                <span class="keyword">continue</span> next</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        fmt.Printf(<span class="string">&quot;%s:%d\n&quot;</span>, prefix, outer)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">&quot;Completed&quot;</span>, prefix)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><img src="/images/goinaction24.png" alt="image.png"><br>
 调度器切换两个goroutine</p>
-<h3 id="goroutine并行" tabindex="-1">goroutine并行</h3>
+<h3 id="goroutine并行">goroutine并行</h3>
 <p>import runtime<br>
 runtime.GOMAXPROCS(runtime.NumCPU())</p>
 <ul>
@@ -675,7 +675,7 @@ runtime.GOMAXPROCS(runtime.NumCPU())</p>
 <li>修改调度器使用的逻辑处理器的数量 -&gt; 为每个可用的物理处理器创建一个逻辑处理器</li>
 <li>有多个逻辑处理器 且 可以同时让每个逻辑处理器运行在一个可用的物理处理器上， goroutine才会并行运行</li>
 </ul>
-<h3 id="竞争状态" tabindex="-1">竞争状态</h3>
+<h3 id="竞争状态">竞争状态</h3>
 <p>两个goroutine没有互相同步（互斥锁，通道，条件锁）下，访问某个共享的资源，并试图读写这个资源，就会处于互相竞争的状态</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This sample program demonstrates how to create race</span></span><br><span class="line"><span class="comment">// conditions in our programs. We don&#x27;t want to do this.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;runtime&quot;</span></span><br><span class="line">    <span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    <span class="comment">// counter is a variable incremented by all goroutines.</span></span><br><span class="line">    counter <span class="type">int</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// wg is used to wait for the program to finish.</span></span><br><span class="line">    wg sync.WaitGroup</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// main is the entry point for all Go programs.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// Add a count of two, one for each goroutine.</span></span><br><span class="line">    wg.Add(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create two goroutines.</span></span><br><span class="line">    <span class="keyword">go</span> incCounter(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">go</span> incCounter(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wait for the goroutines to finish.</span></span><br><span class="line">    wg.Wait()</span><br><span class="line">    fmt.Println(<span class="string">&quot;Final Counter:&quot;</span>, counter)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// incCounter increments the package level counter variable.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incCounter</span><span class="params">(id <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Schedule the call to Done to tell main we are done.</span></span><br><span class="line">    <span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> count := <span class="number">0</span>; count &lt; <span class="number">2</span>; count++ &#123;</span><br><span class="line">        <span class="comment">// Capture the value of Counter.</span></span><br><span class="line">        value := counter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// Yield the thread and be placed back in queue.</span></span><br><span class="line">        runtime.Gosched()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// Increment our local value of Counter.</span></span><br><span class="line">        value++</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// Store the value back into Counter.</span></span><br><span class="line">        counter = value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><img src="/images/goinaction25.png" alt="image.png"></p>
@@ -687,9 +687,9 @@ runtime.GOMAXPROCS(runtime.NumCPU())</p>
 <p>go build -race<br>
 ./test //运行<br>
 <img src="/images/goinaction26.png" alt="image.png"></p>
-<h3 id="锁住共享资源" tabindex="-1">锁住共享资源</h3>
+<h3 id="锁住共享资源">锁住共享资源</h3>
 <p>同步机制 : 对共享资源加锁</p>
-<h4 id="原子函数" tabindex="-1">原子函数</h4>
+<h4 id="原子函数">原子函数</h4>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incCounter</span><span class="params">(id <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Schedule the call to Done to tell main we are done.</span></span><br><span class="line">    <span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> count := <span class="number">0</span>; count &lt; <span class="number">2</span>; count++ &#123;</span><br><span class="line">        <span class="comment">// Safely Add One To Counter.</span></span><br><span class="line">        atomic.AddInt64(&amp;counter, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// Yield the thread and be placed back in queue.</span></span><br><span class="line">        runtime.Gosched()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>atmoic</p>
 <ul>
@@ -697,10 +697,10 @@ runtime.GOMAXPROCS(runtime.NumCPU())</p>
 <li>LoadInt64安全读整型值</li>
 <li>StoreInt64安全写整型值</li>
 </ul>
-<h4 id="互斥锁" tabindex="-1">互斥锁</h4>
+<h4 id="互斥锁">互斥锁</h4>
 <p>在代码上创建一个临界区，保证同一时间只有一个goroutine可以执行这个临界区代码</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incCounter</span><span class="params">(id <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Schedule the call to Done to tell main we are done.</span></span><br><span class="line">    <span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> count := <span class="number">0</span>; count &lt; <span class="number">2</span>; count++ &#123;</span><br><span class="line">        <span class="comment">// Only allow one goroutine through this</span></span><br><span class="line">        <span class="comment">// critical section at a time.</span></span><br><span class="line">        mutex.Lock()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Capture the value of counter.</span></span><br><span class="line">            value := counter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// Yield the thread and be placed back in queue.</span></span><br><span class="line">            runtime.Gosched()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// Increment our local value of counter.</span></span><br><span class="line">            value++</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// Store the value back into counter.</span></span><br><span class="line">            counter = value</span><br><span class="line">        &#125;</span><br><span class="line">        mutex.Unlock()</span><br><span class="line">        <span class="comment">// Release the lock and allow any</span></span><br><span class="line">        <span class="comment">// waiting goroutine through.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="通道" tabindex="-1">通道</h4>
+<h4 id="通道">通道</h4>
 <p>可以在goroutine间做同步</p>
 <ul>
 <li>使用make创建通道(参数chan+允许通道交换的类型）</li>
@@ -722,9 +722,9 @@ close(chan) 关闭通道后，goroutine依然可以从通道接收数据，但�
 <li>从通道接收值</li>
 </ul>
 <p>value := &lt;- buffered</p>
-<h1 id="标准库" tabindex="-1">标准库</h1>
-<h2 id="记录日志" tabindex="-1">记录日志</h2>
-<h3 id="log包" tabindex="-1">log包</h3>
+<h1 id="标准库">标准库</h1>
+<h2 id="记录日志">记录日志</h2>
+<h3 id="log包">log包</h3>
 <ul>
 <li>设置日志的前缀 ：log.SetPrefix(&quot;TRACE: &quot;)</li>
 <li>设置写到日志项的信息 ： log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)</li>
@@ -738,23 +738,23 @@ log包是多goroutine安全的，多个goroutine可以调用来自同一个日�
 log.Logger内部维护了互斥锁mutex<br>
 <img src="/images/goinaction31.png" alt="image.png"><br>
 <img src="/images/goinaction32.png" alt="image.png"></p>
-<h3 id="定制的日志记录器" tabindex="-1">定制的日志记录器</h3>
+<h3 id="定制的日志记录器">定制的日志记录器</h3>
 <p>需要创建Logger类型值</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This sample program demonstrates how to create customized loggers.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;io&quot;</span></span><br><span class="line">    <span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">    <span class="string">&quot;log&quot;</span></span><br><span class="line">    <span class="string">&quot;os&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    Trace   *log.Logger <span class="comment">// Just about anything</span></span><br><span class="line">    Info    *log.Logger <span class="comment">// Important information</span></span><br><span class="line">    Warning *log.Logger <span class="comment">// Be concerned</span></span><br><span class="line">    Error   *log.Logger <span class="comment">// Critical problem</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    file, err := os.OpenFile(<span class="string">&quot;errors.txt&quot;</span>,</span><br><span class="line">        os.O_CREATE|os.O_WRONLY|os.O_APPEND, <span class="number">0666</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalln(<span class="string">&quot;Failed to open error log file:&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Trace = log.New(ioutil.Discard,</span><br><span class="line">        <span class="string">&quot;TRACE: &quot;</span>,</span><br><span class="line">        log.Ldate|log.Ltime|log.Lshortfile)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Info = log.New(os.Stdout,</span><br><span class="line">        <span class="string">&quot;INFO: &quot;</span>,</span><br><span class="line">        log.Ldate|log.Ltime|log.Lshortfile)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Warning = log.New(os.Stdout,</span><br><span class="line">        <span class="string">&quot;WARNING: &quot;</span>,</span><br><span class="line">        log.Ldate|log.Ltime|log.Lshortfile)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Error = log.New(io.MultiWriter(file, os.Stderr),</span><br><span class="line">        <span class="string">&quot;ERROR: &quot;</span>,</span><br><span class="line">        log.Ldate|log.Ltime|log.Lshortfile)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Trace.Println(<span class="string">&quot;I have something standard to say&quot;</span>)</span><br><span class="line">    Info.Println(<span class="string">&quot;Special Information&quot;</span>)</span><br><span class="line">    Warning.Println(<span class="string">&quot;There is something you need to know about&quot;</span>)</span><br><span class="line">    Error.Println(<span class="string">&quot;Something has failed&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="编码解码" tabindex="-1">编码/解码</h2>
-<h3 id="解码json" tabindex="-1">解码json</h3>
+<h2 id="编码解码">编码/解码</h2>
+<h3 id="解码json">解码json</h3>
 <p>http.Get() ，json unmarshal和 shouldbindjson（gin 框架中的 JSON 请求参数解析器，可以将客户端发送的 JSON 数据解析成 Go 结构体类型）都是将 JSON 数据解码为 Go 结构体的方法，但它们之间存在一些差异。</p>
-<h4 id="jsonnewdecoderrespbodydecodeampgr" tabindex="-1">json.NewDecoder(resp.Body).Decode(&amp;gr)</h4>
+<h4 id="jsonnewdecoderrespbodydecodeampgr">json.NewDecoder(resp.Body).Decode(&amp;gr)</h4>
 <p>使用了 json.Decoder 类型来处理 JSON 数据，并允许我们从输入流中逐步读取数据。这对于处理大型 JSON 数据或需要实时处理输入数据的情况非常有用。例如，在以下示例中，我们使用 http.Response 中的 Body 字段并使用 json.Decoder 类型从输入流中逐步读取 JSON 数据：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    resp, err := http.Get(<span class="string">&quot;https://jsonplaceholder.typicode.com/users/1&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">defer</span> resp.Body.Close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> user User</span><br><span class="line">    decoder := json.NewDecoder(resp.Body)</span><br><span class="line">    <span class="keyword">if</span> err := decoder.Decode(&amp;user); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(user.Name, user.Age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="jsonunmarshaldata-ampgr" tabindex="-1">json.Unmarshal(data, &amp;gr)</h4>
+<h4 id="jsonunmarshaldata-ampgr">json.Unmarshal(data, &amp;gr)</h4>
 <p>函数接受一个字节数组或字符串作为输入，将其解析为指定类型的结构体，并将结果存储在传入的结构体变量中。例如，在以下示例中，我们使用 json.Unmarshal() 将 JSON 数据解码为 Person 结构体：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    data := []<span class="type">byte</span>(<span class="string">`&#123;&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30&#125;`</span>)</span><br><span class="line">    <span class="keyword">var</span> person Person</span><br><span class="line">    err := json.Unmarshal(data, &amp;person)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(person.Name, person.Age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>var c map[string]interface{}<br>
 err := json.Unmarshal([]byte(JSON), &amp;c)<br>
 如果反序列化到map变量，值是interface{}类型（map[string]interface{})[“home”]）<br>
 原因：JSON 的数据类型是动态的，可以是字符串、数字、布尔值、数组、对象等多种类型，而在 Go 中 map 的值类型必须是固定的。因此，在将 JSON 数据反序列化为 Go map 变量时，需要将值类型设置为 interface{} 类型，以容纳任何可能的 JSON 数据类型。</p>
-<h4 id="gin框架中的shouldbindjson" tabindex="-1">Gin框架中的ShouldBindJSON()</h4>
+<h4 id="gin框架中的shouldbindjson">Gin框架中的ShouldBindJSON()</h4>
 <p>一个 Gin 框架提供的函数，用于将 HTTP 请求正文中的 JSON 数据绑定到指定的结构体中。如果请求正文中的 JSON 数据无法绑定到结构体，ShouldBindJSON() 会返回一个错误。例如，在以下示例中，我们使用 ShouldBindJSON() 将请求正文中的 JSON 数据绑定到 Person 结构体：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    r := gin.Default()</span><br><span class="line">    r.POST(<span class="string">&quot;/person&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">        <span class="keyword">var</span> person Person</span><br><span class="line">        <span class="keyword">if</span> err := c.ShouldBindJSON(&amp;person); err != <span class="literal">nil</span> &#123;</span><br><span class="line">            c.JSON(http.StatusBadRequest, gin.H&#123;<span class="string">&quot;error&quot;</span>: err.Error()&#125;)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        c.JSON(http.StatusOK, person)</span><br><span class="line">    &#125;)</span><br><span class="line">    r.Run(<span class="string">&quot;:8080&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在上面的示例中，我们定义了一个名为 Person 的结构体类型，并使用 Gin 框架创建了一个 HTTP POST 路由来处理 JSON 数据。在路由处理程序中，我们使用 ShouldBindJSON() 函数将请求正文中的 JSON 数据绑定到 Person 结构体。如果绑定失败，则返回一个错误响应</p>
@@ -771,24 +771,24 @@ Age  int    <code>json:&quot;age&quot;</code><br>
 <img src="/images/goinaction33.png" alt="image.png"><br>
 <img src="/images/goinaction34.png" alt="image.png"><br>
 x.(T) 将接口类型转换为目标类型</p>
-<h3 id="编码json" tabindex="-1">编码json</h3>
+<h3 id="编码json">编码json</h3>
 <p>json.NewEncoder()、json.Marshal() 和 Gin 框架中的 JSON() 函数都是用于将 Go 结构体类型编码为 JSON 数据的方法，但它们之间存在一些差异。</p>
-<h4 id="jsonnewencoder" tabindex="-1">json.NewEncoder()：</h4>
+<h4 id="jsonnewencoder">json.NewEncoder()：</h4>
 <p>使用 json.Encoder 类型将 Go 结构体类型编码为 JSON 数据，并允许我们逐步写入输出流。这对于需要实时处理输出数据或处理大型 JSON 数据的情况非常有用。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    person := Person&#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">30</span>&#125;</span><br><span class="line">    encoder := json.NewEncoder(os.Stdout)</span><br><span class="line">    <span class="keyword">if</span> err := encoder.Encode(person); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在以上示例中，我们定义了一个名为 Person 的结构体类型，包含两个属性：Name 和 Age。然后，我们使用 json.NewEncoder() 将 Person 结构体类型编码为 JSON 数据，并将其输出到标准输出流中。</p>
-<h4 id="jsonmarshal" tabindex="-1">json.Marshal()</h4>
+<h4 id="jsonmarshal">json.Marshal()</h4>
 <p>将 Go 结构体类型编码为 JSON 数据，并将其作为字节数组返回。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    person := Person&#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">30</span>&#125;</span><br><span class="line">    data, err := json.Marshal(person)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="type">string</span>(data))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在以上示例中，我们定义了一个名为 Person 的结构体类型，包含两个属性：Name 和 Age。然后，我们使用 json.Marshal() 将 Person 结构体类型编码为 JSON 数据，并将其存储在 data 变量中，最后打印 data 变量的内容。</p>
-<h4 id="gin-框架中的-json-函数" tabindex="-1">Gin 框架中的 JSON() 函数</h4>
+<h4 id="gin-框架中的-json-函数">Gin 框架中的 JSON() 函数</h4>
 <p>将 Go 结构体类型编码为 JSON 数据，并将其发送回客户端作为 HTTP 响应。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Age  <span class="type">int</span>    <span class="string">`json:&quot;age&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    r := gin.Default()</span><br><span class="line">    r.GET(<span class="string">&quot;/person&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">        person := Person&#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">30</span>&#125;</span><br><span class="line">        c.JSON(http.StatusOK, person)</span><br><span class="line">    &#125;)</span><br><span class="line">    r.Run(<span class="string">&quot;:8080&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在以上示例中，我们使用 Gin 框架创建了一个 HTTP GET 路由来处理请求，并使用 JSON() 函数将 Person 结构体类型编码为 JSON 数据，并将其作为响应发送回客户端。<br>
 对比：<br>
 c.PureJSON() 是一个函数，用于将一个结构体或 map 转换为 JSON 格式的字符串，并将其作为 HTTP 响应返回给客户端。与 c.JSON() 方法不同的是，c.PureJSON() 不会对数据进行 HTML 转义。这意味着如果您需要在 JSON 中包含特殊字符（例如 &lt;, &gt;, &amp;），则可以使用 c.PureJSON() 来避免这些字符被转义为 HTML 实体</p>
 <p>总的来说，json.NewEncoder()、json.Marshal() 和 Gin 框架中的 JSON() 函数都是用于将 Go 结构体类型编码为 JSON 数据的方法。其中，json.NewEncoder() 对于处理大型 JSON 数据或需要实时处理输出数据的情况非常有用，而 json.Marshal() 则直接返回编码后的 JSON 字符串，而 Gin 框架中的 JSON() 函数则直接将编码后的 JSON 数据作为响应发送给客户端</p>
-<h2 id="输入和输出" tabindex="-1">输入和输出</h2>
+<h2 id="输入和输出">输入和输出</h2>
 <p>只要实现了io.Writer和io.Reader两个接口，都可以使用io包提供的所有功能，也可以用于其他包里接收这两个接口的函数及方法</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span> &#123;</span><br><span class="line">    Read(p []<span class="type">byte</span>) (n <span class="type">int</span>, err <span class="type">error</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</span><br><span class="line">    Write(p []<span class="type">byte</span>) (n <span class="type">int</span>, err <span class="type">error</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -796,7 +796,7 @@ c.PureJSON() 是一个函数，用于将一个结构体或 map 转换为 JSON �
 <p>func Fprintf(w io.Writer, format string, a …any) (n int, err error)<br>
 Buffer实现了Writer方法 所以可以传入Fprintf函数里<br>
 func (b *Buffer) Write(p []byte) (n int, err error)</p>
-<h1 id="测试和性能" tabindex="-1">测试和性能</h1>
+<h1 id="测试和性能">测试和性能</h1>
 <p>需要遵守的规定</p>
 <ul>
 <li>go语言测试工具只会认为_test.go结尾的文件是测试文件</li>
@@ -809,8 +809,6 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
 <p>go test -v xxx_test.go<br>
 (-v 需要加入冗余选项）</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">package listing01</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">import</span> <span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="string">&quot;testing&quot;</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">func <span class="title">TestDownload</span><span class="params">(t *testing.T)</span></span></span><br></pre></td></tr></table></figure>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>
@@ -856,7 +854,7 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/26211/" rel="next" title="slice 和 map 线程安全问题">
+              <a href="/goinactionSliceMap/" rel="next" title="slice 和 map 线程安全问题">
                 <i class="fa fa-chevron-left"></i> slice 和 map 线程安全问题
               </a>
             
@@ -866,7 +864,7 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/14569/" rel="prev" title="防止爆仓">
+              <a href="/preventLiquidation/" rel="prev" title="防止爆仓">
                 防止爆仓 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -949,7 +947,7 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1010,23 +1008,23 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
 				  
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/50713/" title="使用pprof对go http service进行性能分析" target="_blank">使用pprof对go http service进行性能分析</a>
+					  <a href="/pipeline/" title="pipeline" target="_blank">pipeline</a>
 					</li>
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/50141/" title="CVE版本" target="_blank">CVE版本</a>
+					  <a href="/pprof/" title="使用pprof对go http service进行性能分析" target="_blank">使用pprof对go http service进行性能分析</a>
 					</li>
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/850/" title="相同长度的轨道" target="_blank">相同长度的轨道</a>
+					  <a href="/cveVersion/" title="CVE版本" target="_blank">CVE版本</a>
 					</li>
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/14569/" title="防止爆仓" target="_blank">防止爆仓</a>
+					  <a href="/sameLengthTrack/" title="相同长度的轨道" target="_blank">相同长度的轨道</a>
 					</li>
 				  
 					<li class="recent_posts_li">
-					  <a href="/posts/48147/" title="goinactionChapter5-9" target="_blank">goinactionChapter5-9</a>
+					  <a href="/preventLiquidation/" title="防止爆仓" target="_blank">防止爆仓</a>
 					</li>
 				  
 				</ul>
@@ -1102,7 +1100,7 @@ func (b *Buffer) Write(p []byte) (n int, err error)</p>
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
 
 -->
 
