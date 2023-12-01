@@ -86,15 +86,15 @@
 
 
 
-<meta name="description" content="说明 CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。 Linux kernel包含了很多个发行版本，比如6.x.y,5.x.y,4.x.y,3.x.y等不同分支的发行版本，每个版本发行后都可能会有安">
+<meta name="description" content="说明CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。 Linux kernel包含了很多个发行版本，比如6.x.y,5.x.y,4.x.y,3.x.y等不同分支的发行版本，每个版本发行后都可能会有安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE版本">
 <meta property="og:url" content="http://example.com/cveVersion/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="说明 CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。 Linux kernel包含了很多个发行版本，比如6.x.y,5.x.y,4.x.y,3.x.y等不同分支的发行版本，每个版本发行后都可能会有安">
+<meta property="og:description" content="说明CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。 Linux kernel包含了很多个发行版本，比如6.x.y,5.x.y,4.x.y,3.x.y等不同分支的发行版本，每个版本发行后都可能会有安全">
 <meta property="og:locale">
-<meta property="article:published_time" content="2023-10-25T05:52:47.000Z">
-<meta property="article:modified_time" content="2023-11-30T05:37:03.880Z">
+<meta property="article:published_time" content="2023-10-25T13:52:47.000Z">
+<meta property="article:modified_time" content="2023-12-01T10:04:14.213Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="string">
 <meta name="twitter:card" content="summary">
@@ -325,7 +325,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-10-25T13:52:47+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-10-25T13:52:47+00:00">
                 2023-10-25
               </time>
             
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-11-30T13:37:03+08:00">
-                2023-11-30
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-01T10:04:14+00:00">
+                2023-12-01
               </time>
             
           </span>
@@ -412,7 +412,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  8
                 </span>
               
             </div>
@@ -433,34 +433,28 @@
       
 
       
-        <h2 id="%E8%AF%B4%E6%98%8E" tabindex="-1">说明</h2>
-<p>CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。</p>
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>CVE 是 通用漏洞披露 (Common Vulnerabilities and Exposures)的英文缩写，列出了已公开的各种计算机缺陷，每一个CVE包括CVE ID(例如:CVE-2019-1234567”)、安全漏洞的描述和相关参考资料。</p>
 <p>Linux kernel包含了很多个发行版本，比如6.x.y,5.x.y,4.x.y,3.x.y等不同分支的发行版本，每个版本发行后都可能会有安全缺陷。现在需要写一个程序来统计某一个特定Linux kernel版本存在哪些安全缺陷(CVE)，并按照严重程度的分数从高到低输出。</p>
-<h2 id="%E7%A4%BA%E4%BE%8B" tabindex="-1">示例</h2>
-<p>输入1:Linux kernel的CVE信息，假定每条CVE 信息内容格式如下: CVE ID#CVE Score#影响的版本范围#修复的版本</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>输入1:Linux kernel的CVE信息，假定每条CVE 信息内容格式如下: CVE ID#CVE Score#影响的版本范围#修复的版本</p>
 <p>其中CVE ID格式“CVE-2019-1234567”</p>
-<p>假如CVE Score是0到1000的整数<br>
-影响的版本范围“起始版本-最后版本”<br>
-修复的版本具体修复的某些版本号，如有多个版本用;隔开</p>
+<p>假如CVE Score是0到1000的整数<br>影响的版本范围“起始版本-最后版本”<br>修复的版本具体修复的某些版本号，如有多个版本用;隔开</p>
 <p>比如:</p>
 <p>CVE-2021-3744#55#4.12.0-5.15.0#4.14.249;5.14.10;5.4.141</p>
 <p>CVE-2022-4382#64#5.3.0-6.2.0#5.10.165;5.4.230;6.1.8</p>
 <p>CVE-2023-0469#56#5.19.0-6.1.5#6.0.11</p>
-<p>…</p>
+<p>……</p>
 <p>输入2: 需要查询的Linux kernel的版本号。</p>
 <p>比如: 6.1.4</p>
 <p>输出:要的版本受到影的CVE ID，并按照重程度的分数从高到低排列。</p>
 <p>如:CVE-2022-4382,CVE-2023-0469</p>
-<h2 id="%E6%8F%90%E7%A4%BA" tabindex="-1">提示</h2>
-<p>(1)CVE-2021-3744#55#4.12.0-5.15.0#4.14.249;5.14.10;5.4.141</p>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>(1)CVE-2021-3744#55#4.12.0-5.15.0#4.14.249;5.14.10;5.4.141</p>
 <p>表示CVE ID是CVE-2021-3744，严重程度分数55，受影的kernel版本包含从4.12.0到5.15.0之的所有版本，修复的版本:4.14.249和5.14.10和5.4.141三个版本。</p>
 <p>(2)影响的版本范围: 比如4.12.0-5.15.0表示4.12.0和5.15.0版本本身以及两个版本之间的所有版本都受影响，其它的版本则都不受影响。</p>
-<p>修复的版本说明: 比如CVE-2021-3744修复的版本4.14.249和5.14.10和5.4.141三个版本，4.14.249表示在4.14分支上，249和249以后的版本都修复了，但是在 4.15/5.*/6.*等分支上需要看其他的具体修复版本信息。</p>
-<p>(3)影响的版本号，修复的版本号，版本号的格式:z.x.y(其中z可能是3/4/5/6,x和y大于等于0的任意整数)。</p>
+<p>修复的版本说明: 比如CVE-2021-3744修复的版本4.14.249和5.14.10和5.4.141三个版本，4.14.249表示在4.14分支上，249和249以后的版本都修复了，但是在 4.15&#x2F;5.*&#x2F;6.*等分支上需要看其他的具体修复版本信息。</p>
+<p>(3)影响的版本号，修复的版本号，版本号的格式:z.x.y(其中z可能是3&#x2F;4&#x2F;5&#x2F;6,x和y大于等于0的任意整数)。</p>
 <p>(4)假定严重程度的分数CVE Score的不会重复。</p>
 <p>(5)目前输入1中没有输入完整的Linux kernel的CVE信息，假定每个case输入CVE信息条目数不会超1000，每条信息字符串的长度不会超1000。</p>
-<h2 id="%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95" tabindex="-1">解决方法</h2>
-<p>1.把输入得cve字符串解析到每部分：</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>1.把输入得cve字符串解析到每部分：</p>
 <p>Cveid</p>
 <p>Cvescore</p>
 <p>Kernelversion</p>
@@ -471,12 +465,11 @@
 <li>c++版本</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;tuple&gt;</span><br><span class="line">#include &lt;map&gt;</span><br><span class="line">#include &lt;sstream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">using CVE = tuple&lt;string, string, string&gt;;</span><br><span class="line">template &lt;typename Sequence, typename Seperator&gt;</span><br><span class="line">Sequence &amp;split(Sequence &amp;res, const string splitStr, const Seperator sep) &#123;</span><br><span class="line">	istringstream iss(splitStr);</span><br><span class="line">	// 从iss里读数据，读到sep的时候放到s中</span><br><span class="line">	for (string s; getline(iss, s, sep);) &#123;</span><br><span class="line">		typename Sequence::value_type val;</span><br><span class="line">		istringstream isss(s);</span><br><span class="line">		isss &gt;&gt; val;</span><br><span class="line">		// res.insert(res.end(), val);</span><br><span class="line">		res.push_back(val);</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line">bool inFixed(string fixedVersion, string version) &#123;</span><br><span class="line">	vector&lt;string&gt; fixed;</span><br><span class="line">	split(fixed, fixedVersion, &#x27;;&#x27;);</span><br><span class="line">	vector&lt;int&gt; needCompare;</span><br><span class="line">	split(needCompare, version, &#x27;.&#x27;);</span><br><span class="line">	for (auto fix : fixed) &#123;</span><br><span class="line">		vector&lt;int&gt; tmpFix;</span><br><span class="line">		split(tmpFix, fix, &#x27;.&#x27;);</span><br><span class="line">		if (tmpFix[0] == needCompare[0] &amp;&amp; tmpFix[1] == needCompare[1] &amp;&amp; tmpFix[2] &lt;= needCompare[2]) &#123;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br><span class="line">bool inAffected(string affectedVersion, string version) &#123;</span><br><span class="line">	vector&lt;int&gt; start, end, needCompare;</span><br><span class="line">	vector&lt;string&gt; affected;</span><br><span class="line">	split(affected, affectedVersion, &#x27;-&#x27;);</span><br><span class="line">	split(start, affected[0], &#x27;.&#x27;);</span><br><span class="line">	split(end, affected[1], &#x27;.&#x27;);</span><br><span class="line">	split(needCompare, version, &#x27;.&#x27;);</span><br><span class="line">	return start &lt;= needCompare &amp;&amp; needCompare &lt;= end;</span><br><span class="line">&#125;</span><br><span class="line">vector&lt;string&gt; solution(vector&lt;string&gt; str, string version) &#123;</span><br><span class="line">	map&lt;int, CVE&gt; testCVE;</span><br><span class="line">	for (auto s : str) &#123;</span><br><span class="line">		vector&lt;string&gt; item;</span><br><span class="line">		split(item, s, &#x27;#&#x27;);</span><br><span class="line">		string id = item[0];</span><br><span class="line">		int score = stoi(item[1]);</span><br><span class="line">		string ver = item[2];</span><br><span class="line">		string fix = item[3];</span><br><span class="line">		testCVE[score] = make_tuple(id, ver, fix);</span><br><span class="line">	&#125;</span><br><span class="line">	// 反向： rbegin, rend</span><br><span class="line">	// map 有序</span><br><span class="line">	vector&lt;string&gt; res;</span><br><span class="line">	for (auto iter = testCVE.rbegin(); iter != testCVE.rend(); iter++) &#123;</span><br><span class="line">		if (inAffected(get&lt;1&gt;(iter-&gt;second), version) &amp;&amp; !inFixed(get&lt;2&gt;(iter-&gt;second), version)) &#123;</span><br><span class="line">			res.push_back(get&lt;0&gt;(iter-&gt;second));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;string&gt; str = &#123;</span><br><span class="line">		&quot;CVE-2021-3744#55#4.12.0-5.15.0#4.14.249;5.14.10;5.4.141&quot;,</span><br><span class="line">		                          &quot;CVE-2022-4382#64#5.3.0-6.2.0#5.10.165;5.4.230;6.1.8&quot;,</span><br><span class="line">		                          &quot;CVE-2023-0469#56#5.19.0-6.1.5#6.0.11&quot;</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	string testVersion = &quot;6.1.4&quot;;</span><br><span class="line">	vector&lt;string&gt; res = solution(str, testVersion);</span><br><span class="line">	for (auto v : res) &#123;</span><br><span class="line">		cout &lt;&lt; v &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>go版本</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sort&quot;</span><br><span class="line">	&quot;strconv&quot;</span><br><span class="line">	&quot;strings&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type CVE struct &#123;</span><br><span class="line">	ID      string</span><br><span class="line">	Score   int</span><br><span class="line">	Version string</span><br><span class="line">	Fix     string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func split(splitStr string, sep string) []string &#123;</span><br><span class="line">	return strings.Split(splitStr, string(sep))</span><br><span class="line">&#125;</span><br><span class="line">func solution(testStr []string, testVersion string) []string &#123;</span><br><span class="line">	testCVE := []CVE&#123;&#125;</span><br><span class="line">	for _, val := range testStr &#123;</span><br><span class="line">		datapart := split(val, &quot;#&quot;)</span><br><span class="line">		id := datapart[0]</span><br><span class="line">		score, _ := strconv.Atoi(datapart[1])</span><br><span class="line">		version := datapart[2]</span><br><span class="line">		fix := datapart[3]</span><br><span class="line">		testCVE = append(testCVE, CVE&#123;id, score, version, fix&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Slice(testCVE, func(i, j int) bool &#123;</span><br><span class="line">		return testCVE[i].Score &gt; testCVE[j].Score</span><br><span class="line">	&#125;)</span><br><span class="line">	res := []string&#123;&#125;</span><br><span class="line">	for _, val := range testCVE &#123;</span><br><span class="line">		iter := val</span><br><span class="line">		if inAffected(iter.Version, testVersion) &amp;&amp; !inFixed(iter.Fix, testVersion) &#123;</span><br><span class="line">			res = append(res, iter.ID)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br><span class="line">func inFixed(version, testVersion string) bool &#123;</span><br><span class="line">	datapart := split(version, &quot;;&quot;)</span><br><span class="line">	test := split(testVersion, &quot;.&quot;)</span><br><span class="line">	for _, val := range datapart &#123;</span><br><span class="line">		num := val</span><br><span class="line">		numpart := split(num, &quot;.&quot;)</span><br><span class="line">		if numpart[0] == test[0] &amp;&amp; numpart[1] == test[1] &#123;</span><br><span class="line">			tmp1, _ := strconv.Atoi(numpart[2])</span><br><span class="line">			tmp2, _ := strconv.Atoi(test[2])</span><br><span class="line">			if tmp1 &lt;= tmp2 &#123;</span><br><span class="line">				return true</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line">func inAffected(version, testVersion string) bool &#123;</span><br><span class="line">	datapart := split(version, &quot;-&quot;)</span><br><span class="line">	start := split(datapart[0], &quot;.&quot;)</span><br><span class="line">	end := split(datapart[1], &quot;.&quot;)</span><br><span class="line">	test := split(testVersion, &quot;.&quot;)</span><br><span class="line">	for i := 0; i &lt; len(test); i++ &#123;</span><br><span class="line">		startNum, _ := strconv.Atoi(start[i])</span><br><span class="line">		endNum, _ := strconv.Atoi(end[i])</span><br><span class="line">		testNum, _ := strconv.Atoi(test[i])</span><br><span class="line">		if startNum &lt;= testNum &amp;&amp; testNum &lt;= endNum &#123;</span><br><span class="line">			return true</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	testStr := []string&#123;</span><br><span class="line">		&quot;CVE-2021-3744#55#4.12.0-5.15.0#4.14.249;5.14.10;5.4.141&quot;,</span><br><span class="line">		&quot;CVE-2022-4382#64#5.3.0-6.2.0#5.10.165;5.4.230;6.1.8&quot;,</span><br><span class="line">		&quot;CVE-2023-0469#56#5.19.0-6.1.5#6.0.11&quot;,</span><br><span class="line">	&#125;</span><br><span class="line">	res := solution(testStr, &quot;6.1.4&quot;)</span><br><span class="line">	for _, val := range res &#123;</span><br><span class="line">		fmt.Println(val)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>
@@ -755,7 +748,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">27.2k</span>
+    <span title="Site words total count">27.5k</span>
   
 </div>
 <!--
