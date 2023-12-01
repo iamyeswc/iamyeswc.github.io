@@ -433,7 +433,7 @@
       
 
       
-        <h2 id="说明">说明</h2>
+        <h2 id="%E8%AF%B4%E6%98%8E" tabindex="-1">说明</h2>
 <p>你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。</p>
 <p>给你一个整数数组 repos ，其中：</p>
 <ul>
@@ -453,7 +453,7 @@
 <p>请注意，如果你选择清空一个装满货物的仓库，它会变成一个空的仓库。但如果你选择清空一个空的仓库，那么将无事发生。</p>
 </li>
 </ul>
-<h2 id="示例1">示例1</h2>
+<h2 id="%E7%A4%BA%E4%BE%8B1" tabindex="-1">示例1</h2>
 <ul>
 <li>
 <p>输入：repos = <code>[1,2,3,4]</code></p>
@@ -469,7 +469,7 @@
 <p>没有哪一天你可以清空任何仓库，也没有仓库会发生爆仓。</p>
 </li>
 </ul>
-<h2 id="示例2">示例2</h2>
+<h2 id="%E7%A4%BA%E4%BE%8B2" tabindex="-1">示例2</h2>
 <ul>
 <li>
 <p>输入：repos = <code>[1,2,0,0,2,1]</code></p>
@@ -488,7 +488,7 @@
 <p>可以看出，这个方案下不会有爆仓发生。同时，<code>[-1,-1,1,2,-1,-1]</code> 也是另一个可行的没有爆仓的方案。</p>
 </li>
 </ul>
-<h2 id="示例3">示例3</h2>
+<h2 id="%E7%A4%BA%E4%BE%8B3" tabindex="-1">示例3</h2>
 <ul>
 <li>
 <p>输入：repos = <code>[1,2,0,1,2]</code></p>
@@ -501,12 +501,12 @@
 <p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
 </li>
 </ul>
-<h2 id="提示">提示</h2>
+<h2 id="%E6%8F%90%E7%A4%BA" tabindex="-1">提示</h2>
 <ul>
 <li><code>1 &lt;= repos.length &lt;= 105</code></li>
 <li><code>0 &lt;= repos[i] &lt;= 109</code></li>
 </ul>
-<h2 id="解决方法">解决方法</h2>
+<h2 id="%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95" tabindex="-1">解决方法</h2>
 <ul>
 <li>c++版本</li>
 </ul>
@@ -515,6 +515,8 @@
 <li>go版本</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">func preventOverflow(repos []int) []int &#123;</span><br><span class="line">	days := len(repos)</span><br><span class="line">	result := make([]int, days)</span><br><span class="line">	for i := range result &#123;</span><br><span class="line">		result[i] = -1</span><br><span class="line">	&#125;</span><br><span class="line">	//存储仓库的货物，1：有， 0：没有</span><br><span class="line">	warehouses := make(map[int]int)</span><br><span class="line">	//遍历每天</span><br><span class="line">	for i := 0; i &lt; days; i++ &#123;</span><br><span class="line">		//需要存货物到仓库</span><br><span class="line">		if repos[i] &gt; 0 &#123;</span><br><span class="line">			//该仓库有货物, 溢出</span><br><span class="line">			if warehouses[repos[i]] &gt; 0 &#123;</span><br><span class="line">				return []int&#123;&#125;</span><br><span class="line">			&#125; else &#123; //没有货物，直接存货物</span><br><span class="line">				warehouses[repos[i]]++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123; //不需要存货物到仓库， 可以出库：找到下一个需要存货物的仓库出库，并且该仓库里有货物</span><br><span class="line">			for j := i + 1; j &lt; days; j++ &#123;</span><br><span class="line">				if repos[j] &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0 &#123;</span><br><span class="line">					result[i] = repos[j]</span><br><span class="line">					warehouses[repos[j]]--</span><br><span class="line">					break //找到就不找了</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	var repos = []int&#123;1, 2, 0, 0, 2, 1&#125;</span><br><span class="line">	result := preventOverflow(repos)</span><br><span class="line">	fmt.Print(&quot;[&quot;)</span><br><span class="line">	for i := 0; i &lt; len(result); i++ &#123;</span><br><span class="line">		fmt.Print(result[i])</span><br><span class="line">		if i &lt; len(result)-1 &#123;</span><br><span class="line">			fmt.Print(&quot;,&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Print(&quot;]&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>

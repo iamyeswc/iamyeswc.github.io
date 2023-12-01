@@ -433,21 +433,21 @@
       
 
       
-        <h2 id="代码应用">代码应用</h2>
+        <h2 id="%E4%BB%A3%E7%A0%81%E5%BA%94%E7%94%A8" tabindex="-1">代码应用</h2>
 <p><strong>参考</strong>：<a target="_blank" rel="noopener" href="https://github.com/gin-contrib/pprof">https://github.com/gin-contrib/pprof</a></p>
 <p>把pprof挂载到gin的路由器下有两种方法</p>
 <ul>
 <li>在gin的<code>跟路由</code>上注册pprof的路由<br>
 使用<code>pprof.Register(router)</code><br>
-下面创建的服务器的路由是<a target="_blank" rel="noopener" href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…<br>
-则可以通过<a target="_blank" rel="noopener" href="http://localhost:80/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/debug/pprof/来访问pprof首页</a></li>
+下面创建的服务器的路由是http://localhost:80/ui/test/…<br>
+则可以通过http://localhost:80/debug/pprof/来访问pprof首页</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">pprof.Register(router)</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>在gin的<code>指定路由</code>上注册pprof的路由<br>
 使用<code>pprof.Register(router)</code><br>
-下面创建的服务器的路由是<a target="_blank" rel="noopener" href="http://localhost:80/ui/test/">http://localhost:80/ui/test/</a>…, pprof的路由挂载在了test路由下<br>
-则需要通过<a target="_blank" rel="noopener" href="http://localhost:80/test/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/test/debug/pprof/来访问pprof首页</a></li>
+下面创建的服务器的路由是http://localhost:80/ui/test/…, pprof的路由挂载在了test路由下<br>
+则需要通过http://localhost:80/test/debug/pprof/来访问pprof首页</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">pprof.RouteRegister(v1Root)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>pprof的路由：</p>
@@ -463,6 +463,8 @@
 [GIN-debug] GET    /debug/pprof/heap         --&gt; <a target="_blank" rel="noopener" href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
 [GIN-debug] GET    /debug/pprof/mutex        --&gt; <a target="_blank" rel="noopener" href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)<br>
 [GIN-debug] GET    /debug/pprof/threadcreate --&gt; <a target="_blank" rel="noopener" href="http://github.com/gin-gonic/gin.WrapH.func1">github.com/gin-gonic/gin.WrapH.func1</a> (4 handlers)</p>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>

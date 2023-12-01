@@ -435,7 +435,7 @@
       
 
       
-        <h1 id="问题">问题</h1>
+        <h1 id="%E9%97%AE%E9%A2%98" tabindex="-1">问题</h1>
 <p>环境：go version<br>
 go version go1.19.3 windows/amd64</p>
 <p>需要在main.go里导入自己写的包</p>
@@ -443,7 +443,7 @@ go version go1.19.3 windows/amd64</p>
 <p>在main.go里调用tempconv.go 出现error:</p>
 <p>go run “d:\vsProject\gocode\main.go”<br>
 main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
-<h1 id="原因">原因</h1>
+<h1 id="%E5%8E%9F%E5%9B%A0" tabindex="-1">原因</h1>
 <ul>
 <li>
 <p>在go 1.11以前无法在除了root的目录下开发，1.11后提供了go mod来管理包</p>
@@ -452,22 +452,22 @@ main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
 <p>在同一目录下只能一个package</p>
 </li>
 </ul>
-<h1 id="解决方法">解决方法</h1>
-<h2 id="go-env">GO ENV</h2>
+<h1 id="%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95" tabindex="-1">解决方法</h1>
+<h2 id="go-env" tabindex="-1">GO ENV</h2>
 <p>设置GO111MODULE</p>
 <p>on: 使用modules, 不会去gopath下查找</p>
 <p>off: 不支持modules, 去gopath下查找</p>
 <p>auto: 根据当前目录决定是否启动modules</p>
-<h3 id="linux">linux</h3>
+<h3 id="linux" tabindex="-1">linux</h3>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=off</span><br><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
-<h3 id="winodows">winodows</h3>
+<h3 id="winodows" tabindex="-1">winodows</h3>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set GO111MODULE=off</span><br><span class="line">set GO111MODULE=on</span><br></pre></td></tr></table></figure>
 <p>或者设置系统环境变量</p>
-<h2 id="gopath">GOPATH</h2>
+<h2 id="gopath" tabindex="-1">GOPATH</h2>
 <p>（1）关闭 go mod 模式：设置GO111MODULE off</p>
 <p>（2）go env查看当前的GOPATH,  将需要导入的tempconv.go放入$GOPATH/src下</p>
 <p>note: 不建议这种方式，需要修改$GOPATH/src</p>
-<h2 id="go-mod">GO MOD</h2>
+<h2 id="go-mod" tabindex="-1">GO MOD</h2>
 <p>（1）打开 go mod 模式：设置GO111MODULE off</p>
 <p>（2）go mod init xx</p>
 <p>（3）import xxx/filename</p>
@@ -477,6 +477,8 @@ main.go:5:2: package tempconv is not in GOROOT (D:\soft\Go\src\tempconv)</p>
 <p>----module/tempconv.go</p>
 <p>----main.go</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;gocode/module&quot;</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>
