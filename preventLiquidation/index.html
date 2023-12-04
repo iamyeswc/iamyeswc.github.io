@@ -86,12 +86,12 @@
 
 
 
-<meta name="description" content="说明你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。 给你一个整数数组 repos ，其中：  repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。 repos[i] &#x3D;&#x3D; 0 表示第 i 天没">
+<meta name="description" content="说明 你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。 给你一个整数数组 repos ，其中：  repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。 repos[i] &#x3D;&#x3D; 0 表示第 i 天没有仓库有货物入库，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="防止爆仓">
 <meta property="og:url" content="http://example.com/preventLiquidation/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="说明你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。 给你一个整数数组 repos ，其中：  repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。 repos[i] &#x3D;&#x3D; 0 表示第 i 天没">
+<meta property="og:description" content="说明 你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。 给你一个整数数组 repos ，其中：  repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。 repos[i] &#x3D;&#x3D; 0 表示第 i 天没有仓库有货物入库，">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-09-12T06:38:28.000Z">
 <meta property="article:modified_time" content="2023-11-30T05:37:03.944Z">
@@ -433,66 +433,84 @@
       
 
       
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。</p>
+        <h2 id="shuo-ming" id="说明">说明</h2>
+<p>你的工厂有无数个仓库，所有仓库一开始都是空的。如果第 n 个仓库货物入库前是空的，那么它就会装入货物。如果第 n 个仓库货物入库前是 满的 ，这个仓库会爆仓 。你的目标是任意一个仓库都不能爆仓。</p>
 <p>给你一个整数数组 repos ，其中：</p>
 <ul>
 <li>repos[i] &gt; 0 表示第 i 天时，第 repos[i] 个仓库会有货物入库。</li>
-<li>repos[i] &#x3D;&#x3D; 0 表示第 i 天没有仓库有货物入库，你可以选择 一个 货运车队清空这个仓库的全部货物。</li>
+<li>repos[i] == 0 表示第 i 天没有仓库有货物入库，你可以选择 一个 货运车队清空这个仓库的全部货物。</li>
 </ul>
 <p>请返回一个数组 ans ，满足：</p>
-<p>ans.length &#x3D;&#x3D; repos.length</p>
+<p>ans.length == repos.length</p>
 <ul>
-<li><p>如果 repos[i] &gt; 0 ，那么<code>ans[i] == -1</code> 。</p>
+<li>
+<p>如果 repos[i] &gt; 0 ，那么<code>ans[i] == -1</code> 。</p>
 </li>
-<li><p>如果 repos<code>[i] == 0</code> ，<code>ans[i]</code> 是你第 i 天选择清空的仓库。</p>
-<p>如果有多种可行解，请返回它们中的 任意一个<br>如果没办法阻止爆仓，请返回一个 空的数组 。</p>
+<li>
+<p>如果 repos<code>[i] == 0</code> ，<code>ans[i]</code> 是你第 i 天选择清空的仓库。</p>
+<p>如果有多种可行解，请返回它们中的 任意一个<br>
+如果没办法阻止爆仓，请返回一个 空的数组 。</p>
 <p>请注意，如果你选择清空一个装满货物的仓库，它会变成一个空的仓库。但如果你选择清空一个空的仓库，那么将无事发生。</p>
 </li>
 </ul>
-<h2 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h2><ul>
-<li><p>输入：repos &#x3D; <code>[1,2,3,4]</code></p>
+<h2 id="shi-li-1" id="示例1">示例1</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,3,4]</code></p>
 </li>
-<li><p>输出：<code>[-1,-1,-1,-1]</code></p>
+<li>
+<p>输出：<code>[-1,-1,-1,-1]</code></p>
 </li>
-<li><p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
+<li>
+<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
 <p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
 <p>第三天后，满仓的仓库包括 <code>[1,2,3]</code></p>
 <p>第四天后，满仓的仓库包括 <code>[1,2,3,4]</code></p>
 <p>没有哪一天你可以清空任何仓库，也没有仓库会发生爆仓。</p>
 </li>
 </ul>
-<h2 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h2><ul>
-<li><p>输入：repos &#x3D; <code>[1,2,0,0,2,1]</code></p>
+<h2 id="shi-li-2" id="示例2">示例2</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,0,0,2,1]</code></p>
 </li>
-<li><p>输出：<code>[-1,-1,2,1,-1,-1]</code></p>
+<li>
+<p>输出：<code>[-1,-1,2,1,-1,-1]</code></p>
 </li>
-<li><p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
+<li>
+<p>解释：第一天后，满仓的仓库包括 <code>[1]</code></p>
 <p>第二天后，满仓的仓库包括 <code>[1,2]</code></p>
-<p>第三天后，我们清空仓库 2 。所以剩下满仓的仓库包括<br><code>[1]</code></p>
+<p>第三天后，我们清空仓库 2 。所以剩下满仓的仓库包括<br>
+<code>[1]</code></p>
 <p>第四天后，我们清空仓库 1 。所以暂时没有满仓的仓库了。</p>
 <p>第五天后，满仓的仓库包括 <code>[2]</code>。</p>
 <p>第六天后，满仓的仓库包括 <code>[1,2]</code>。</p>
 <p>可以看出，这个方案下不会有爆仓发生。同时，<code>[-1,-1,1,2,-1,-1]</code> 也是另一个可行的没有爆仓的方案。</p>
 </li>
 </ul>
-<h2 id="示例3"><a href="#示例3" class="headerlink" title="示例3"></a>示例3</h2><ul>
-<li><p>输入：repos &#x3D; <code>[1,2,0,1,2]</code></p>
+<h2 id="shi-li-3" id="示例3">示例3</h2>
+<ul>
+<li>
+<p>输入：repos = <code>[1,2,0,1,2]</code></p>
 </li>
-<li><p>输出：<code>[]</code></p>
+<li>
+<p>输出：<code>[]</code></p>
 </li>
-<li><p>解释：第二天后，满仓的仓库包括 <code>[1,2]</code>。我们可以在第三天清空一个仓库。</p>
+<li>
+<p>解释：第二天后，满仓的仓库包括 <code>[1,2]</code>。我们可以在第三天清空一个仓库。</p>
 <p>但第三天后，仓库 1 和 2 都会再次遇到货物入库，所以不管我们第三天清空哪个仓库，另一个仓库都会发生爆仓。</p>
 </li>
 </ul>
-<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><ul>
+<h2 id="ti-shi" id="提示">提示</h2>
+<ul>
 <li><code>1 &lt;= repos.length &lt;= 105</code></li>
 <li><code>0 &lt;= repos[i] &lt;= 109</code></li>
 </ul>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><ul>
+<h2 id="jie-jue-fang-fa" id="解决方法">解决方法</h2>
+<ul>
 <li>c++版本</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">// demo</span><br><span class="line">// 1,2,3,4-&gt;[-1,-1,-1,-1]</span><br><span class="line">// 1,2,0,0,2,1-&gt;[-1,-1,2,1,-1,-1]</span><br><span class="line">// 1,2,0,1,2-?&gt;[]</span><br><span class="line">vector&lt;int&gt; preventOverFlow(vector&lt;int&gt; repos) &#123;</span><br><span class="line">	int days = repos.size();</span><br><span class="line">	// 存储仓库内的货物，1：有， 0：无</span><br><span class="line">	unordered_map&lt;int, int&gt; warehouses;</span><br><span class="line">	vector&lt;int&gt; result(days, -1);</span><br><span class="line">	for (int i = 0; i &lt; days; i++) &#123;</span><br><span class="line">		// 当前天需要放货物到仓库，判断仓库是否可放</span><br><span class="line">		if (repos[i] &gt; 0) &#123;</span><br><span class="line">			// 仓库内有货物，不能放，溢出了</span><br><span class="line">			if (warehouses.count(repos[i]) &gt; 0 &amp;&amp; warehouses[repos[i]] &gt; 0) &#123;</span><br><span class="line">				return &#123;</span><br><span class="line">				&#125;</span><br><span class="line">				;</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				// 仓库内无货物，能放，入库</span><br><span class="line">				warehouses[repos[i]]++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			// 当天可以选择一个仓库入库，选择后面需要放东西的仓库, 并且该仓库里有东西</span><br><span class="line">			for (int j = i + 1; j &lt; days; j++) &#123;</span><br><span class="line">				if (repos[j] &gt; 0 &amp;&amp; warehouses.count(repos[j]) &gt; 0 &amp;&amp; warehouses[repos[j]] &gt; 0) &#123;</span><br><span class="line">					result[i] = repos[j];</span><br><span class="line">					warehouses[repos[j]]--;</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">	vector&lt;int&gt; repos = &#123;</span><br><span class="line">		1, 2, 0, 0, 2, 1</span><br><span class="line">	&#125;</span><br><span class="line">	;</span><br><span class="line">	vector&lt;int&gt; result = preventOverFlow(repos);</span><br><span class="line">	if (result.empty()) &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		cout &lt;&lt; &quot;[&quot;;</span><br><span class="line">		for (int i = 0; i &lt; result.size(); i++) &#123;</span><br><span class="line">			cout &lt;&lt; result[i];</span><br><span class="line">			if (i &lt; result.size() - 1) &#123;</span><br><span class="line">				cout &lt;&lt; &quot;,&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		cout &lt;&lt; &quot;]&quot; &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>go版本</li>
 </ul>
@@ -741,7 +759,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1"><span class="nav-number">2.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2"><span class="nav-number">3.</span> <span class="nav-text">示例2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B3"><span class="nav-number">4.</span> <span class="nav-text">示例3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA"><span class="nav-number">5.</span> <span class="nav-text">提示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">解决方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#shuo-ming"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shi-li-1"><span class="nav-number">2.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shi-li-2"><span class="nav-number">3.</span> <span class="nav-text">示例2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shi-li-3"><span class="nav-number">4.</span> <span class="nav-text">示例3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ti-shi"><span class="nav-number">5.</span> <span class="nav-text">提示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jie-jue-fang-fa"><span class="nav-number">6.</span> <span class="nav-text">解决方法</span></a></li></ol></div>
             
 
           </div>
@@ -775,7 +793,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">27.5k</span>
+    <span title="Site words total count">27.2k</span>
   
 </div>
 <!--

@@ -86,12 +86,12 @@
 
 
 
-<meta name="description" content="Go mod Go语言默认的依赖管理工具     命令 作用    go mod download 下载依赖包到本地（默认为 GOPATH&#x2F;pkg&#x2F;mod 目录）   go mod edit 编辑 go.mod 文件   go mod graph 打印模块依赖图   go mod init 初始化当前文件夹，创建 go.mod 文件   go mod tidy 增加缺少的包，删">
+<meta name="description" content="Go mod   Go语言默认的依赖管理工具      命令 作用     go mod download 下载依赖包到本地（默认为 GOPATH&#x2F;pkg&#x2F;mod 目录）   go mod edit 编辑 go.mod 文件   go mod graph 打印模块依赖图   go mod init 初始化当前文件夹，创建 go.mod 文件   go mod tidy 增加缺少的包，删除无用的包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go mod">
 <meta property="og:url" content="http://example.com/Go%20mod/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="Go mod Go语言默认的依赖管理工具     命令 作用    go mod download 下载依赖包到本地（默认为 GOPATH&#x2F;pkg&#x2F;mod 目录）   go mod edit 编辑 go.mod 文件   go mod graph 打印模块依赖图   go mod init 初始化当前文件夹，创建 go.mod 文件   go mod tidy 增加缺少的包，删">
+<meta property="og:description" content="Go mod   Go语言默认的依赖管理工具      命令 作用     go mod download 下载依赖包到本地（默认为 GOPATH&#x2F;pkg&#x2F;mod 目录）   go mod edit 编辑 go.mod 文件   go mod graph 打印模块依赖图   go mod init 初始化当前文件夹，创建 go.mod 文件   go mod tidy 增加缺少的包，删除无用的包">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-02-23T06:48:38.000Z">
 <meta property="article:modified_time" content="2023-12-01T02:55:49.359Z">
@@ -396,7 +396,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  260
+                  257
                 </span>
               
 
@@ -433,19 +433,23 @@
       
 
       
-        <h1 id="Go-mod"><a href="#Go-mod" class="headerlink" title="Go mod"></a>Go mod</h1><ul>
-<li><p>Go语言默认的依赖管理工具</p>
+        <h1 id="go-mod">Go mod</h1>
+<ul>
+<li>
+<p>Go语言默认的依赖管理工具</p>
 </li>
-<li><table>
+<li>
+<table>
 <thead>
 <tr>
 <th>命令</th>
 <th>作用</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>go mod download</td>
-<td>下载依赖包到本地（默认为 GOPATH&#x2F;pkg&#x2F;mod 目录）</td>
+<td>下载依赖包到本地（默认为 GOPATH/pkg/mod 目录）</td>
 </tr>
 <tr>
 <td>go mod edit</td>
@@ -475,18 +479,24 @@
 <td>go mod why</td>
 <td>解释为什么需要依赖</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 </li>
-<li><p>export GOPROXY&#x3D;<a target="_blank" rel="noopener" href="https://goproxy.cn/">https://goproxy.cn</a> 使用代理服务器</p>
+<li>
+<p>export GOPROXY=<a target="_blank" rel="noopener" href="https://goproxy.cn">https://goproxy.cn</a> 使用代理服务器</p>
 </li>
-<li><p>go.mod 文件一旦创建后，它的内容将会被 go toolchain 全面掌控，go toolchain 会在各类命令执行时，比如<code>go get</code>、<code>go build</code>、<code>go mod</code>等修改和维护 go.mod 文件</p>
+<li>
+<p>go.mod 文件一旦创建后，它的内容将会被 go toolchain 全面掌控，go toolchain 会在各类命令执行时，比如<code>go get</code>、<code>go build</code>、<code>go mod</code>等修改和维护 go.mod 文件</p>
 </li>
-<li><p>使用</p>
+<li>
+<p>使用</p>
 <ol>
-<li><p>初始化生成go.mod文件</p>
+<li>
+<p>初始化生成go.mod文件</p>
 <p><code>go mod init</code></p>
 </li>
-<li><p>go.mod 提供了 module、require、replace 和 exclude 四个命令：</p>
+<li>
+<p>go.mod 提供了 module、require、replace 和 exclude 四个命令：</p>
 <ul>
 <li>module 语句指定包的名字（路径）</li>
 <li>require 语句指定的依赖项模块</li>
@@ -741,7 +751,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-mod"><span class="nav-number">1.</span> <span class="nav-text">Go mod</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#go-mod"><span class="nav-number">1.</span> <span class="nav-text">Go mod</span></a></li></ol></div>
             
 
           </div>
@@ -775,7 +785,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">27.5k</span>
+    <span title="Site words total count">27.2k</span>
   
 </div>
 <!--
