@@ -439,7 +439,7 @@
       
 
       
-        <h1 id="slice%E5%92%8Cmap%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84%E4%B8%8E%E6%BA%90%E7%A0%81" tabindex="-1">slice和map底层结构与源码</h1>
+        <h1 id="slice-he-map-di-ceng-jie-gou-yu-yuan-ma">slice和map底层结构与源码</h1>
 <ul>
 <li>slice源码位置在$GOPATH/src/runtime/slice.go</li>
 </ul>
@@ -456,7 +456,7 @@ hash值的高八位存储在bucket中的tophash中，用来快速判断key是否
 key和value的具体值则通过指针运算存储<br>
 当一个bucket满时，通过overfolw指针链接到下一个bucket<br>
 <img src="/images/goinaction5.png" alt="image.png"></p>
-<h1 id="slice%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8" tabindex="-1">slice线程安全</h1>
+<h1 id="slice-xian-cheng-an-quan">slice线程安全</h1>
 <ul>
 <li>多线程是slice是不安全的</li>
 </ul>
@@ -470,22 +470,22 @@ a=7的时候， slice=[9 4 5 6 7]<br>
 a=3的时候，slice=[9 4 5 6 3]<br>
 可以看出是在slice=[9 4 5 6]时扩容，之前cap=4, a=7和a=3的时候，同时扩容，将原来的9 4 5 6拷贝过来，并在新位置加上对应元素，两个goroutine同时运行，出现了索引位覆写问题<br>
 索引位覆写：同时修改相同索引位置的元素</p>
-<h2 id="%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95" tabindex="-1">解决方法</h2>
-<h3 id="goroutine%E7%AD%89%E5%BE%85%E5%85%B6%E4%BB%96goroutine%E5%AE%8C%E6%88%90%E4%BB%BB%E5%8A%A1" tabindex="-1">goroutine等待其他goroutine完成任务</h3>
+<h2 id="jie-jue-fang-fa" id="解决方法">解决方法</h2>
+<h3 id="goroutine-deng-dai-qi-ta-goroutine-wan-cheng-ren-wu" id="goroutine等待其他goroutine完成任务">goroutine等待其他goroutine完成任务</h3>
 <p>for循环中对每个goroutine内部都增加了等待任务，必须等待其他goroutine完成才能继续执行，这样能安全的访问slice</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> slice []<span class="type">int</span></span><br><span class="line">    n := <span class="number">10</span></span><br><span class="line">    <span class="keyword">var</span> sum <span class="type">int</span></span><br><span class="line">    wg := sync.WaitGroup&#123;&#125;</span><br><span class="line"></span><br><span class="line">    fmt.Printf(<span class="string">&quot;len:%d, cap:%d, slice:%v\n&quot;</span>, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(a <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            sum++</span><br><span class="line">            slice = <span class="built_in">append</span>(slice, a)</span><br><span class="line">            fmt.Printf(<span class="string">&quot;a:%d, len:%d, cap:%d, slice:%v\n&quot;</span>, a, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line">        &#125;(i)</span><br><span class="line">        wg.Wait()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Printf(<span class="string">&quot;len:%d, cap:%d, slice:%v\n&quot;</span>, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line">    fmt.Println(sum)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>output:<br>
 <img src="/images/goinaction7.png" alt="image.png"><br>
 切片slice中相同索引下存放的值总是相同的</p>
-<h4 id="%E9%97%AE%E9%A2%98" tabindex="-1">问题</h4>
+<h4 id="wen-ti" id="问题">问题</h4>
 <p>所有goroutine阻塞，无法并发执行，影响性能</p>
-<h3 id="%E5%8A%A0%E9%94%81" tabindex="-1">加锁</h3>
+<h3 id="jia-suo" id="加锁">加锁</h3>
 <p>对数据修改的时候加锁</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> slice []<span class="type">int</span></span><br><span class="line">	n := <span class="number">10</span></span><br><span class="line">	<span class="keyword">var</span> sum <span class="type">int</span></span><br><span class="line">	wg := sync.WaitGroup&#123;&#125;</span><br><span class="line">	mutex := sync.Mutex&#123;&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">&quot;len:%d, cap:%d, slice:%v\n&quot;</span>, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line"></span><br><span class="line">	wg.Add(n)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(a <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">			<span class="keyword">defer</span> wg.Done()</span><br><span class="line">			mutex.Lock()</span><br><span class="line">			<span class="keyword">defer</span> mutex.Unlock()</span><br><span class="line">			sum++</span><br><span class="line">			slice = <span class="built_in">append</span>(slice, a)</span><br><span class="line">			fmt.Printf(<span class="string">&quot;a:%d, len:%d, cap:%d, slice:%v\n&quot;</span>, a, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line">		&#125;(i)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Wait()</span><br><span class="line">	fmt.Printf(<span class="string">&quot;len:%d, cap:%d, slice:%v\n&quot;</span>, <span class="built_in">len</span>(slice), <span class="built_in">cap</span>(slice), slice)</span><br><span class="line">	fmt.Println(sum)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>output:<br>
 <img src="/images/goinaction8.png" alt="image.png"><br>
 切片slice中相同索引下存放的值总是相同的</p>
-<h1 id="map%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8" tabindex="-1">map线程安全</h1>
+<h1 id="map-xian-cheng-an-quan">map线程安全</h1>
 <ul>
 <li>多线程是map是不安全的</li>
 </ul>
@@ -496,8 +496,6 @@ a=3的时候，slice=[9 4 5 6 3]<br>
 map线程不安全不能成功运行<br>
 解决方法和slice相似：加锁<br>
 修改后能成功运行</p>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 
       
     </div>
@@ -742,7 +740,7 @@ map线程不安全不能成功运行<br>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#slice%E5%92%8Cmap%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84%E4%B8%8E%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">slice和map底层结构与源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slice%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="nav-number">2.</span> <span class="nav-text">slice线程安全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#goroutine%E7%AD%89%E5%BE%85%E5%85%B6%E4%BB%96goroutine%E5%AE%8C%E6%88%90%E4%BB%BB%E5%8A%A1"><span class="nav-number">2.1.1.</span> <span class="nav-text">goroutine等待其他goroutine完成任务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%94%81"><span class="nav-number">2.1.2.</span> <span class="nav-text">加锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="nav-number">3.</span> <span class="nav-text">map线程安全</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#slice-he-map-di-ceng-jie-gou-yu-yuan-ma"><span class="nav-number">1.</span> <span class="nav-text">slice和map底层结构与源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slice-xian-cheng-an-quan"><span class="nav-number">2.</span> <span class="nav-text">slice线程安全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#jie-jue-fang-fa"><span class="nav-number">2.1.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#goroutine-deng-dai-qi-ta-goroutine-wan-cheng-ren-wu"><span class="nav-number">2.1.1.</span> <span class="nav-text">goroutine等待其他goroutine完成任务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#wen-ti"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jia-suo"><span class="nav-number">2.1.2.</span> <span class="nav-text">加锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map-xian-cheng-an-quan"><span class="nav-number">3.</span> <span class="nav-text">map线程安全</span></a></li></ol></div>
             
 
           </div>

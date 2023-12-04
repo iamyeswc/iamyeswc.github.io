@@ -1876,7 +1876,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #d48e46;
+  background: #b9af2a;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3074,4 +3074,7 @@ li.recent_posts_li {
   .post-body {
     text-align: justify;
   }
+}
+.post-toc .nav .nav-child {
+  display: block;
 }
