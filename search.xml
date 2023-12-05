@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>如何使用go搭建一个http server</title>
+    <url>/httpServer/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
+<li><p>问题描述：</p>
+<p>需要有一个service去接收client端传来的attachment，并进行处理</p>
+</li>
+<li><p>存在问题</p>
+<ol>
+<li><p>client端需要等待service接收attachment并处理后的response</p>
+<p>处理过程可能耗时</p>
+</li>
+<li><p>前端也会有upload接口来上传文件，client端不止一个</p>
+</li>
+</ol>
+</li>
+<li><p>综上</p>
+<p>基于要求2，需要有http请求，如果让client端直接将attchment塞入q, client端需要有能力与队列交互，并处理与队列相关的错误与异常，还要考虑只有合法客户端才能发布消息到队列。</p>
+<p>由于此处的client端不止一个，因此维护多个client端与队列通信较为复杂且不容易维护。</p>
+<p>因此这里采用的方法是：</p>
+<p>clinet端直接与service端交互，service端接收client端的http请求后，将attachment塞入q中，然后立即给client端返回200，节省等待处理的过程。</p>
+<p>client只需要关注如何把attachment发送给service端，无需知道队列的存在，与队列的操作都由service端负责，能更好的控制和优化与队列的操作</p>
+</li>
+</ul>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><ol>
+<li><p>初始化</p>
+<ul>
+<li>数据库</li>
+<li>消息队列</li>
+<li>主contenxt（用于监听结束信号）</li>
+</ul>
+</li>
+<li><p>启动http server</p>
+<ul>
+<li><p>创建gin实例</p>
+</li>
+<li><p>向gin实例添加中间件：日志记录器，恢复中间件，Prometheus请求指标处理器</p>
+</li>
+<li><p>注册pprof调试路由：可查看调试信息</p>
+</li>
+<li><p>设置get, post等方法的处理函数 </p>
+<p>或者创建新的路由组下的处理函数</p>
+</li>
+<li><p>创建http实例， 设置读写，连接超时时间，并将上面创建的gin实例传入handler中，handler是服务器对于http请求的处理方式</p>
+</li>
+<li><p>用新gouroutine启动http服务器，因为监听http请求的ListenAndServe方法是阻塞操作，不希望阻塞主程序</p>
+</li>
+</ul>
+</li>
+<li><p>当有终止信号时，graceful shutdown</p>
+<p>新创建一个context，一定时间后结束（10s），在这时间内还能继续接收请求</p>
+</li>
+</ol>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>main.go</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;context&quot;</span></span><br><span class="line">	<span class="string">&quot;monitor-service/internal/config&quot;</span></span><br><span class="line">	<span class="string">&quot;monitor-service/internal/log&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;os/signal&quot;</span></span><br><span class="line">	<span class="string">&quot;syscall&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/gin-contrib/pprof&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/gin-gonic/gin&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	MainTraceId = <span class="string">&quot;main&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">serve</span><span class="params">()</span></span> *http.Server &#123;</span><br><span class="line">	gin.SetMode(gin.DebugMode)</span><br><span class="line"></span><br><span class="line">	router := gin.New()</span><br><span class="line">	router.Use(gin.Logger(), gin.Recovery())</span><br><span class="line"></span><br><span class="line">	pprof.Register(router)</span><br><span class="line"></span><br><span class="line">	router.GET(<span class="string">&quot;/&quot;</span>, welcome)</span><br><span class="line"></span><br><span class="line">	v1Root := router.Group(<span class="string">&quot;demo&quot;</span>)</span><br><span class="line">	monitorRoot := v1Root.Group(<span class="string">&quot;monitor&quot;</span>)</span><br><span class="line">	monitorRoot.POST(<span class="string">&quot;/upload&quot;</span>, upload)</span><br><span class="line"></span><br><span class="line">	srv := http.Server&#123;</span><br><span class="line">		Addr:         <span class="string">&quot;:80&quot;</span>,</span><br><span class="line">		Handler:      http.TimeoutHandler(router, <span class="number">10</span>*time.Second, <span class="string">`&#123;&quot;error&quot;: &quot;Handler timeout&quot;&#125;`</span>),</span><br><span class="line">		ReadTimeout:  <span class="number">10</span> * time.Second,</span><br><span class="line">		WriteTimeout: <span class="number">10</span> * time.Second,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//主动关闭连接不算err</span></span><br><span class="line">		<span class="keyword">if</span> err := srv.ListenAndServe(); err != <span class="literal">nil</span> &amp;&amp; err != http.ErrServerClosed &#123;</span><br><span class="line">			log.Errf(MainTraceId, <span class="string">&quot;Server Listen:%s&quot;</span>, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;srv</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	log.Infof(MainTraceId, <span class="string">&quot;%s: start main&quot;</span>, config.GetAppName())</span><br><span class="line"></span><br><span class="line">	<span class="comment">//start init</span></span><br><span class="line">	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</span><br><span class="line">	<span class="keyword">defer</span> stop()</span><br><span class="line"></span><br><span class="line">	<span class="comment">//end init</span></span><br><span class="line"></span><br><span class="line">	srv := serve()</span><br><span class="line"></span><br><span class="line">	&lt;-ctx.Done()</span><br><span class="line">	stop()</span><br><span class="line">	log.Info(MainTraceId, <span class="string">&quot;Shutdown Server....&quot;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//graceful shutdown</span></span><br><span class="line">	ctx, cancle := context.WithTimeout(context.Background(), <span class="number">10</span>*time.Second)</span><br><span class="line">	<span class="keyword">defer</span> cancle()</span><br><span class="line">	<span class="keyword">if</span> err := srv.Shutdown(ctx); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Errf(MainTraceId, <span class="string">&quot;Server Shutdown:%s&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	log.Info(MainTraceId, <span class="string">&quot;Server Exit!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>handler.go</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;github.com/gin-gonic/gin&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">welcome</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">	c.JSON(<span class="number">200</span>, gin.H&#123;<span class="string">&quot;result&quot;</span>: <span class="string">&quot;pong&quot;</span>&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">upload</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">	<span class="comment">//<span class="doctag">TODO:</span> get file</span></span><br><span class="line">	c.JSON(<span class="number">200</span>, gin.H&#123;<span class="string">&quot;code&quot;</span>: <span class="string">&quot;200&quot;</span>, <span class="string">&quot;message&quot;</span>: <span class="string">&quot;OK&quot;</span>&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><h4 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h4><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">BUILDNO=10000</span><br><span class="line">BUILD_TIME:=<span class="variable">$(<span class="built_in">shell</span> date)</span></span><br><span class="line">APPNAMESERVER=server</span><br><span class="line"></span><br><span class="line">DIR_CUR := <span class="variable">$(<span class="built_in">dir</span> $(<span class="built_in">realpath</span> $(<span class="built_in">firstword</span> <span class="variable">$(MAKEFILE_LIST)</span>)</span>))</span><br><span class="line">DOCKERDIR=<span class="variable">$(DIR_CUR)</span>/docker</span><br><span class="line">OUTPUTBINSERVER=<span class="variable">$(DOCKERDIR)</span>/server/<span class="variable">$(APPNAMESERVER)</span></span><br><span class="line"></span><br><span class="line">GOOS=linux</span><br><span class="line">GOARCH=amd64</span><br><span class="line">GO=go</span><br><span class="line">GOARGS_LD_FLAGS=-X <span class="string">&quot;main.BuildNumber=<span class="variable">$(BUILDNO)</span>&quot;</span> -X <span class="string">&quot;main.BuildTime=<span class="variable">$(BUILD_TIME)</span>&quot;</span></span><br><span class="line">GOARGS_BUILD_SERVER=build -v -o <span class="variable">$(OUTPUTBINSERVER)</span> -ldflags &#x27;<span class="variable">$(GOARGS_LD_FLAGS)</span>&#x27;</span><br><span class="line">GOVER=<span class="variable">$(<span class="built_in">shell</span> <span class="variable">$(GO)</span> version)</span></span><br><span class="line"></span><br><span class="line">BUILDER_IMAGE=golang</span><br><span class="line">BUILDER_TAG=1.12</span><br><span class="line"></span><br><span class="line"><span class="section">all: build</span></span><br><span class="line"></span><br><span class="line"><span class="section">build:</span></span><br><span class="line">	@echo <span class="string">&quot;===&gt; Build <span class="variable">$(APPNAMESERVER)</span> with <span class="variable">$(GOVER)</span>&quot;</span></span><br><span class="line">	(cd src; CGO_ENABLED=0 GOOS=<span class="variable">$(GOOS)</span> GOARCH=<span class="variable">$(GOARCH)</span> <span class="variable">$(GO)</span> <span class="variable">$(GOARGS_BUILD_SERVER)</span> monitor-service/cmd/server)</span><br><span class="line"></span><br><span class="line"><span class="section">docker: build</span></span><br><span class="line">	docker build -f docker/server/Dockerfile ./docker/server -t monitor-service:latest</span><br><span class="line"></span><br><span class="line"><span class="section">run:</span></span><br><span class="line">	docker run -p 8080:80 --rm monitor-service</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -rf <span class="variable">$(OUTPUTBINSERVER)</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean build test run docker</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="dockerfile"><a href="#dockerfile" class="headerlink" title="dockerfile"></a>dockerfile</h4><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> amazonlinux:<span class="number">2023</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum update -y &amp;&amp; yum clean all</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> server /</span></span><br><span class="line"><span class="keyword">ENV</span> LOGLEVEL=DEBUG</span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;/server&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li>make docker<ol>
+<li>执行go build</li>
+<li>docker build -f docker&#x2F;server&#x2F;Dockerfile .&#x2F;docker&#x2F;server -t monitor-service:latest</li>
+</ol>
+</li>
+<li>make run<ul>
+<li>执行docker run -p 8080:80 –rm monitor-service</li>
+</ul>
+</li>
+</ul>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h4 id="自定义日志生成器"><a href="#自定义日志生成器" class="headerlink" title="自定义日志生成器"></a>自定义日志生成器</h4><h5 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h5><p>格式化log输出为：<u>[时间 app名字 log级别名称 id]文件名:行数, log内容</u></p>
+<p>[2023&#x2F;12&#x2F;05 06.01.32.576361,,Infof,main]server.go:53, monitor: start main</p>
+<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><ul>
+<li><p>按照log级别设置自定义的log</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	LogLevelErr LogLevel = <span class="literal">iota</span></span><br><span class="line">	LogLevelWarn</span><br><span class="line">	LogLevelInfo</span><br><span class="line">	LogLevelDebug</span><br><span class="line"></span><br><span class="line">	defaultLogLevel = LogLevelDebug</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> logLevelName = <span class="keyword">map</span>[LogLevel]<span class="type">string</span>&#123;</span><br><span class="line">	LogLevelErr:   <span class="string">&quot;Errf&quot;</span>,</span><br><span class="line">	LogLevelWarn:  <span class="string">&quot;Warnf&quot;</span>,</span><br><span class="line">	LogLevelInfo:  <span class="string">&quot;Infof&quot;</span>,</span><br><span class="line">	LogLevelDebug: <span class="string">&quot;Debugf&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>当是对应的log级别就调用统一的output log函数</p>
+<p>根据format的log为： <u>[时间 app名字 log级别名称 id]文件名:行数, log内容</u></p>
+<p>其中</p>
+<ol>
+<li><p>时间：time.Now().UTC().Format(timeFormat)</p>
+</li>
+<li><p>app名字 log级别名称 id 以及log内容都可以通过调用时候参数传入</p>
+</li>
+<li><p>file, line需要通过runtime.Caller(skip)找到调用栈,skip表示跳过多少层，返回那层信息</p>
+<p>skip&#x3D;0表示caller自己, skip&#x3D;1可以直到调用者，由于这里会多调用了一层output（skip&#x3D;1是得到output信息），要找到调用output函数的信息，skip需要等于2</p>
+<ul>
+<li>如果 <code>skip</code> 为 0，则获取当前函数（即 Caller 所在函数）的信息；</li>
+<li>如果 <code>skip</code> 为 1，则获取调用当前函数的函数的信息；</li>
+<li>如果 <code>skip</code> 为 2，则获取调用上述函数的函数的信息，依此类推。</li>
+</ul>
+</li>
+<li><p>最终通过fmt.Sprintf将format内容组织起来，通过os.Stdout.Write输出到标准输出上</p>
+</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *Logger)</span></span> output(level LogLevel, traceId, log <span class="type">string</span>) &#123;</span><br><span class="line">	<span class="comment">//找出是谁调用了output(在调用栈上移动的步数), skip=0表示caller自己</span></span><br><span class="line">	skip := <span class="number">2</span></span><br><span class="line">	<span class="keyword">if</span> l == instance &#123;</span><br><span class="line">		skip++</span><br><span class="line">	&#125;</span><br><span class="line">	_, file, line, ok := runtime.Caller(skip)</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		file = filepath.Base(file)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	s := fmt.Sprintf(logFormat, time.Now().UTC().Format(timeFormat), l.serviceName, logLevelName[level], traceId, file, line, log)</span><br><span class="line">	<span class="keyword">if</span> s[<span class="built_in">len</span>(s)<span class="number">-1</span>] != <span class="string">&#x27;\n&#x27;</span> &#123;</span><br><span class="line">		s = s + <span class="string">&quot;\n&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//将log写到标准输出</span></span><br><span class="line">	_, err := os.Stdout.Write([]<span class="type">byte</span>(s))</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, <span class="string">&quot;Write log error: %s&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><p>docker run -p 8080:80 –rm monitor-service<br>[2023&#x2F;12&#x2F;05 06.01.32.576361,,Infof,main]server.go:53, monitor: start main</p>
+<h4 id="自定义gin-log日志生成器"><a href="#自定义gin-log日志生成器" class="headerlink" title="自定义gin log日志生成器"></a>自定义gin log日志生成器</h4><h5 id="描述-2"><a href="#描述-2" class="headerlink" title="描述"></a>描述</h5><p>gin默认的log生成的日志如下</p>
+<p>[GIN] 2023&#x2F;12&#x2F;05 - 06:19:06 | 200 |        47.2µs |      172.17.0.1 | POST     “&#x2F;demo&#x2F;monitor&#x2F;upload”</p>
+<h5 id="gin-Logger-源码"><a href="#gin-Logger-源码" class="headerlink" title="gin.Logger()源码"></a>gin.Logger()源码</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *Context)</span></span> &#123;</span><br><span class="line">		<span class="comment">// Start timer</span></span><br><span class="line">		start := time.Now()</span><br><span class="line">		path := c.Request.URL.Path</span><br><span class="line">		raw := c.Request.URL.RawQuery</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Process request</span></span><br><span class="line">		c.Next()</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Log only when path is not being skipped</span></span><br><span class="line">		<span class="keyword">if</span> _, ok := skip[path]; !ok &#123;</span><br><span class="line">			param := LogFormatterParams&#123;</span><br><span class="line">				Request: c.Request,</span><br><span class="line">				isTerm:  isTerm,</span><br><span class="line">				Keys:    c.Keys,</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Stop timer</span></span><br><span class="line">			param.TimeStamp = time.Now()</span><br><span class="line">			param.Latency = param.TimeStamp.Sub(start)</span><br><span class="line"></span><br><span class="line">			param.ClientIP = c.ClientIP()</span><br><span class="line">			param.Method = c.Request.Method</span><br><span class="line">			param.StatusCode = c.Writer.Status()</span><br><span class="line">			param.ErrorMessage = c.Errors.ByType(ErrorTypePrivate).String()</span><br><span class="line"></span><br><span class="line">			param.BodySize = c.Writer.Size()</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> raw != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				path = path + <span class="string">&quot;?&quot;</span> + raw</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			param.Path = path</span><br><span class="line"></span><br><span class="line">			fmt.Fprint(out, formatter(param))</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="改造"><a href="#改造" class="headerlink" title="改造"></a>改造</h5><p>按照gin.Logger()源码，使用gin.LogFormatterParams和自定义的log生成器，将http请求的log内容按照<u>客户端ip  请求方法 请求路径 请求协议版本 服务端返回给客户端状态码 处理请求时间 user-agent请求头字段内容 错误信息</u>格式组织</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GinLogger</span><span class="params">()</span></span> gin.HandlerFunc &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		start := time.Now()</span><br><span class="line">		path := c.Request.URL.Path</span><br><span class="line">		raw := c.Request.URL.RawQuery</span><br><span class="line"></span><br><span class="line">		<span class="comment">//处理下一个中间件请求</span></span><br><span class="line">		c.Next()</span><br><span class="line"></span><br><span class="line">		param := gin.LogFormatterParams&#123;</span><br><span class="line">			Request: c.Request,</span><br><span class="line">			Keys:    c.Keys,</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> raw != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			path = path + <span class="string">&quot;?&quot;</span> + raw</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		param.ClientIP = c.ClientIP()</span><br><span class="line">		param.Method = c.Request.Method</span><br><span class="line">		param.Path = path</span><br><span class="line">		<span class="comment">// param.Request.Proto = c.Request.Proto</span></span><br><span class="line">		param.StatusCode = c.Writer.Status()</span><br><span class="line">		param.TimeStamp = time.Now()</span><br><span class="line">		param.Latency = param.TimeStamp.Sub(start)</span><br><span class="line">		param.ErrorMessage = c.Errors.ByType(gin.ErrorTypePrivate).String()</span><br><span class="line">		<span class="comment">// param.BodySize = c.Writer.Size()</span></span><br><span class="line"></span><br><span class="line">		log.Infof(<span class="string">&quot;gin-logger&quot;</span>, <span class="string">&quot;%s %s %s %s %d %s \&quot;%s\&quot; %s&quot;</span>, param.ClientIP, param.Method, param.Path, param.Request.Proto, param.StatusCode, param.Latency, param.Request.UserAgent(), param.ErrorMessage)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="结果-1"><a href="#结果-1" class="headerlink" title="结果"></a>结果</h5><p>format后的gin log如下: </p>
+<ul>
+<li>按照<u>[时间 app名字 log级别名称 id]文件名:行数, log内容</u><ul>
+<li>log内容按照 <u>客户端ip  请求方法 请求路径 请求协议版本 服务端返回给客户端状态码 处理请求时间 user-agent请求头字段内容 错误信息</u></li>
+</ul>
+</li>
+</ul>
+<p>[2023&#x2F;12&#x2F;05 06.00.43.075511,,Infof,gin-logger]middleware.go:38, 172.17.0.1 GET &#x2F; HTTP&#x2F;1.1 200 51.3µs “curl&#x2F;7.68.0”<br>[2023&#x2F;12&#x2F;05 06.00.47.551118,,Infof,gin-logger]middleware.go:38, 172.17.0.1 POST &#x2F;demo&#x2F;monitor&#x2F;upload HTTP&#x2F;1.1 200 35.9µs “curl&#x2F;7.68.0”</p>
+<h3 id="结果-2"><a href="#结果-2" class="headerlink" title="结果"></a>结果</h3><ul>
+<li>测试命令：curl -X GET localhost:8080&#x2F;</li>
+</ul>
+<p>显示：{“result”:”pong”}</p>
+<ul>
+<li>curl -X POST localhost:8080&#x2F;demo&#x2F;monitor&#x2F;upload -H ‘X-Trace-Id: 123’ -F ‘file&#x3D;@”test.txt”‘</li>
+</ul>
+<p>显示：{“code”:”200”,”message”:”OK”}</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>service</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何使用go搭建一个定时任务</title>
     <url>/cronjob/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
@@ -569,7 +712,7 @@
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#x6c;&#x69;&#x73;&#97;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#x6c;&#x69;&#x73;&#97;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#x69;&#115;&#x61;&#64;&#x65;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x6c;&#x69;&#115;&#x61;&#64;&#x65;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;">&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#108;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#108;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -586,11 +729,11 @@
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#x6c;&#64;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;">&#98;&#105;&#108;&#x6c;&#64;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#115;&#97;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#99;&#x6f;&#x6d;">&#108;&#105;&#115;&#97;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#99;&#x6f;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#108;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#98;&#105;&#108;&#108;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#109;">&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#109;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#105;&#115;&#x61;&#x40;&#x6e;&#101;&#119;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;">&#108;&#105;&#115;&#x61;&#x40;&#x6e;&#101;&#119;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#108;&#64;&#101;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;">&#98;&#105;&#108;&#108;&#64;&#101;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#x62;&#105;&#x6c;&#x6c;&#x40;&#110;&#x65;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#110;&#46;&#x63;&#x6f;&#109;">&#x62;&#105;&#x6c;&#x6c;&#x40;&#110;&#x65;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#110;&#46;&#x63;&#x6f;&#109;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#x6c;&#64;&#110;&#x65;&#119;&#x64;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#111;&#109;">&#x62;&#x69;&#108;&#x6c;&#64;&#110;&#x65;&#119;&#x64;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#111;&#109;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;">&#x6c;&#105;&#x73;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#105;&#115;&#97;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;">&#x6c;&#105;&#115;&#97;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#x6c;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#x69;&#108;&#x6c;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#x6e;&#x2e;&#x63;&#111;&#x6d;">&#98;&#105;&#x6c;&#x6c;&#x40;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#x6e;&#x2e;&#x63;&#111;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#109;">&#x62;&#x69;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#109;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>

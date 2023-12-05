@@ -292,6 +292,204 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/goinactionSliceMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="好好学习">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/goinactionSliceMap/" itemprop="url">slice 和 map 线程安全问题</a></h1>
+        
+
+        <div class="post-meta">
+		
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T10:41:09+00:00">
+                2023-02-21
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
+                2023-12-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+		  
+		  
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          slice和map底层结构与源码
+slice源码位置在$GOPATH&#x2F;src&#x2F;runtime&#x2F;slice.go
+12345type slice struct &#123;	array unsafe.Pointer	len   int	cap   int&#125;
+sl
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/goinactionSliceMap/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -341,7 +539,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -544,7 +742,7 @@ math.Ma
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -740,7 +938,7 @@ math.Ma
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -940,7 +1138,7 @@ math.Ma
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -1141,7 +1339,7 @@ typedef函数形式：typedef  返回类型(新类型)(参数列表)
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -1340,7 +1538,7 @@ go run “d:\vsProject\gocode\main.go”main.go:
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -1548,7 +1746,7 @@ The Go Programming Language： https://gopl-zh.github.io/     Go in actio
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -1749,7 +1947,7 @@ dockermain command
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:38:08+00:00">
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T06:41:17+00:00">
                 2023-12-05
               </time>
             
@@ -1938,7 +2136,7 @@ Its facilities for concurrency
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1999,6 +2197,10 @@ Its facilities for concurrency
 				  
 				  
 					<li class="recent_posts_li">
+					  <a href="/httpServer/" title="如何使用go搭建一个http server" target="_blank">如何使用go搭建一个http server</a>
+					</li>
+				  
+					<li class="recent_posts_li">
 					  <a href="/cronjob/" title="如何使用go搭建一个定时任务" target="_blank">如何使用go搭建一个定时任务</a>
 					</li>
 				  
@@ -2012,10 +2214,6 @@ Its facilities for concurrency
 				  
 					<li class="recent_posts_li">
 					  <a href="/cveVersion/" title="CVE版本" target="_blank">CVE版本</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/sameLengthTrack/" title="相同长度的轨道" target="_blank">相同长度的轨道</a>
 					</li>
 				  
 				</ul>
@@ -2062,7 +2260,7 @@ Its facilities for concurrency
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">27.7k</span>
+    <span title="Site words total count">29.7k</span>
   
 </div>
 <!--
