@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="service," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="背景问题描述： service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用go搭建一个pipeline">
+<meta property="og:url" content="http://example.com/pipeline/index.html">
+<meta property="og:site_name" content="好好学习">
+<meta property="og:description" content="背景问题描述： service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/images/pipeline1.png">
+<meta property="article:published_time" content="2023-12-05T16:59:47.000Z">
+<meta property="article:modified_time" content="2023-12-05T09:01:48.723Z">
+<meta property="article:author" content="Yeswc">
+<meta property="article:tag" content="service">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/pipeline1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/pipeline/"/>
+
+
+
+
+
+  <title>如何使用go搭建一个pipeline | 好好学习</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">好好学习</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Coding Coding</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder-open"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="好好学习">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何使用go搭建一个pipeline</h1>
+        
+
+        <div class="post-meta">
+		
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-12-05T16:59:47+00:00">
+                2023-12-05
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T09:01:48+00:00">
+                2023-12-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+		  
+		  
+			 <span class="post-meta-divider">|</span>
+			 <span id="busuanzi_value_page_pv"></span>次阅读
+		  
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><ol>
+<li>service需要从q里拿到attachment</li>
+<li>并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。</li>
+<li>并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理</li>
+</ol>
+<h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><p>按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。</p>
+<p>如果有一个任务执行时间较长，那就会影响效率。</p>
+<h3 id="综上"><a href="#综上" class="headerlink" title="综上"></a>综上</h3><p>为了提升效率，采用pipeline执行多任务，当每个任务的处理时间相近时，效率可提高n-1&#x2F;n（n为任务数）</p>
+<ul>
+<li><p><strong>pipeline</strong>: 采用<strong>goroutine + channel</strong>方式， 实现了<strong>生产者消费者模型</strong></p>
+<p>每个任务是一个goroutine，将经过当前任务处理好的数据放入channel中传递给下一个任务</p>
+<p>因此，有需要处理时才有数据，可以减少内存使用，同时多个goroutine并行处理，充分利用资源</p>
+</li>
+<li><p>每个任务封装到单独函数中，实现模块化设计，代码也会更清晰</p>
+</li>
+</ul>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
+<li><p>初始化</p>
+<ul>
+<li>数据库</li>
+<li>消息队列</li>
+</ul>
+</li>
+<li><p>实现pipeline</p>
+<ul>
+<li><p>f1函数（func receive)</p>
+<ul>
+<li>创建out channel</li>
+<li>起一个goroutine循环去处理<ul>
+<li>去q里拿attachment, 把拿到的attachment放入out channel中</li>
+<li>sleep 一定时间，继续去q里拿下一个</li>
+</ul>
+</li>
+<li>返回out channel</li>
+</ul>
+</li>
+<li><p>f2函数（func process), 接收f1函数的channel为自己的in channel</p>
+<ul>
+<li><p>创建out channel</p>
+</li>
+<li><p>起一个goroutine循环去处理</p>
+<p>去in channel里拿task, 把处理后的task放入out channel中</p>
+</li>
+<li><p>返回out channel</p>
+</li>
+</ul>
+</li>
+<li><p>f3函数（func upload), 接收f2函数的channel为自己的in channel</p>
+<p>利用main函数的主线程来调用f3函数，使得函数阻塞在f3这里</p>
+<ul>
+<li><p>循环去处理</p>
+<p>去in channel里拿task, 处理</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>伪代码</p>
+<p>main.go代码如下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">out1 := f1()</span><br><span class="line">out2 := f2(out1)</span><br><span class="line">f3(out2)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>其中：</p>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+f1去q里拿attchment放入channel中</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+当channel中有内容时，f2进行处理，处理完后放入channel</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+当channel中有内容时，f3进行处理</p>
+</li>
+</ul>
+<p>f1, f2中都会单独起一个goroutine处理，f3则是利用main函数的主线程来调用f3函数，使得函数阻塞在f3这里</p>
+<p>如果f3也起一个goroutine, 那么函数就会立即结束</p>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/images/pipeline1.png"></p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h4 id="graceful-shutdown"><a href="#graceful-shutdown" class="headerlink" title="graceful shutdown"></a>graceful shutdown</h4><h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>如果f1, f2, f3有一个任务在处理时， service突然退出了，那需要把当前任务做完，即需要把f1-&gt;f2-&gt;f3这一套流程走完</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>创建一个done channel用于广播结束信号</li>
+<li>创建一个ch channel, 监听几个退出信号(syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</li>
+<li>起一个goroutine等待ch channel内容，当ch channel里有内容时<ul>
+<li>关闭done channel: 相当于向channel里发送零值，等同于广播</li>
+</ul>
+</li>
+</ol>
+<h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//start for graceful down</span></span><br><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">defer</span> <span class="built_in">close</span>(done)</span><br><span class="line"></span><br><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">defer</span> <span class="built_in">close</span>(ch)</span><br><span class="line">signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	&lt;-ch</span><br><span class="line">	<span class="comment">//广播done信号</span></span><br><span class="line">	<span class="built_in">close</span>(done)</span><br><span class="line">	log.Infof(MainTraceId, <span class="string">&quot;Shutdown Server...&quot;</span>)</span><br><span class="line">&#125;()</span><br><span class="line"><span class="comment">//end for graceful down</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="f1函数"><a href="#f1函数" class="headerlink" title="f1函数"></a>f1函数</h6><p>如果done channel里有数据，就直接返回，不再去q里取attachment了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(out)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-done:<span class="comment">//graceful shutdown</span></span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			out &lt;- Task&#123;</span><br><span class="line">				Num:   i,</span><br><span class="line">				QName: qName,</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+<h6 id="f2函数"><a href="#f2函数" class="headerlink" title="f2函数"></a>f2函数</h6><p>f2函数不用处理，因为当f1传来的channel没有内容，f2就不会再处理了</p>
+<h6 id="f3函数"><a href="#f3函数" class="headerlink" title="f3函数"></a>f3函数</h6><p>f3函数如果f2传来的channel里没有内容，并且done channel里有内容的时候，才会结束f3，此时相当于流水线的任务都完成了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;%s:%d\n&quot;</span>, task.QName, task.Num)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//graceful shutdown</span></span><br><span class="line">&lt;-done</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="多个q如何处理"><a href="#多个q如何处理" class="headerlink" title="多个q如何处理"></a>多个q如何处理</h4><h5 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h5><p>如果f1需要去多个q里取attachment, 则需要将多个channel里的内容合并到一个channel里</p>
+<h5 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>创建out channel</li>
+<li>遍历多个channels<ul>
+<li>将多个channel的内容都加入到out channel中</li>
+<li>这里channel加入的数据是不需要顺序的，因此可以使用新的goroutine来专门把内容加入outchannel</li>
+</ul>
+</li>
+<li>等待merge完成并关闭out channel<ul>
+<li>由于需要等所有channel里的内容加入到out channel，所以需要同步等完成</li>
+<li>但是同步时不能阻塞主程序，因此需要新开一个goroutine去等待</li>
+</ul>
+</li>
+</ol>
+<h5 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(chs ...&lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	wg.Add(<span class="built_in">len</span>(chs))</span><br><span class="line"></span><br><span class="line">	output := <span class="function"><span class="keyword">func</span><span class="params">(ch &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> ch &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, ch := <span class="keyword">range</span> chs &#123;</span><br><span class="line">		<span class="keyword">go</span> output(ch)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步时不能阻塞主程序，因此需要新开一个goroutine</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		wg.Wait()</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;monitor-service/internal/log&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;os/signal&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">	<span class="string">&quot;syscall&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	MainTraceId = <span class="string">&quot;main&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Task <span class="keyword">struct</span> &#123;</span><br><span class="line">	Num   <span class="type">int</span></span><br><span class="line">	QName <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//start init</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//end init</span></span><br><span class="line">	run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//start for graceful down</span></span><br><span class="line">	done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(ch)</span><br><span class="line">	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		&lt;-ch</span><br><span class="line">		<span class="comment">//广播done信号</span></span><br><span class="line">		<span class="built_in">close</span>(done)</span><br><span class="line">		log.Infof(MainTraceId, <span class="string">&quot;Shutdown Server...&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="comment">//end for graceful down</span></span><br><span class="line"></span><br><span class="line">	upload(done, process(merge(receive(done, <span class="string">&quot;main queue&quot;</span>), receive(done, <span class="string">&quot;dlq queue&quot;</span>))))</span><br><span class="line"></span><br><span class="line">	log.Infof(MainTraceId, <span class="string">&quot;Server Exit!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(chs ...&lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	wg.Add(<span class="built_in">len</span>(chs))</span><br><span class="line"></span><br><span class="line">	output := <span class="function"><span class="keyword">func</span><span class="params">(ch &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> ch &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, ch := <span class="keyword">range</span> chs &#123;</span><br><span class="line">		<span class="keyword">go</span> output(ch)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步时不能阻塞主程序，因此需要新开一个go routine</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		wg.Wait()</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">receive</span><span class="params">(done &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, qName <span class="type">string</span>)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> <span class="built_in">close</span>(out)</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-done:</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				out &lt;- Task&#123;</span><br><span class="line">					Num:   i,</span><br><span class="line">					QName: qName,</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">process</span><span class="params">(in &lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">upload</span><span class="params">(done &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, in &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%s:%d\n&quot;</span>, task.QName, task.Num)</span><br><span class="line">	&#125;</span><br><span class="line">	&lt;-done</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><blockquote>
+<p>运行后发现分别从main queue和dlq queue里拉数据，当输入停止service信号（ctrl+c)时，程序graceful shutdown正常结束</p>
+</blockquote>
+<p>docker run -p 8081:80 –rm monitor-parser<br>main queue:1<br>dlq queue:1<br>main queue:2<br>main queue:3<br>dlq queue:2<br>main queue:4<br>main queue:5<br>dlq queue:3<br>dlq queue:4<br>main queue:6<br>main queue:7<br>dlq queue:5<br>dlq queue:6<br>main queue:8<br>main queue:9<br>dlq queue:7<br>dlq queue:8<br>main queue:10<br>dlq queue:9<br>dlq queue:10<br>^C[2023&#x2F;12&#x2F;05 08.56.17.245260,,Infof,main]parser.go:39, Shutdown Server…<br>[2023&#x2F;12&#x2F;05 08.56.17.245325,,Infof,main]parser.go:45, Server Exit!</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/service/" rel="tag"><i class="fa fa-tag"></i> service</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/httpServer/" rel="next" title="如何使用go搭建一个http server">
+                <i class="fa fa-chevron-left"></i> 如何使用go搭建一个http server
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/iamyeswc" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:iamyeswc@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+			
+			
+			  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+				<div class="links-of-blogroll-title">
+				  <!-- modify icon to fire by szw -->
+				  <i class="fa fa-history fa-" aria-hidden="true"></i>
+				  近期文章
+				</div>
+				<ul class="links-of-blogroll-list">
+				  
+				  
+					<li class="recent_posts_li">
+					  <a href="/pipeline/" title="如何使用go搭建一个pipeline" target="_blank">如何使用go搭建一个pipeline</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/httpServer/" title="如何使用go搭建一个http server" target="_blank">如何使用go搭建一个http server</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/cronjob/" title="如何使用go搭建一个定时任务" target="_blank">如何使用go搭建一个定时任务</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/hexoDeploy/" title="hexo使用问题" target="_blank">hexo使用问题</a>
+					</li>
+				  
+					<li class="recent_posts_li">
+					  <a href="/pprof/" title="使用pprof对go http service进行性能分析" target="_blank">使用pprof对go http service进行性能分析</a>
+					</li>
+				  
+				</ul>
+			  </div>
+			
+
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E4%B8%8A"><span class="nav-number">1.3.</span> <span class="nav-text">综上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graceful-shutdown"><span class="nav-number">2.2.1.</span> <span class="nav-text">graceful shutdown</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#f1%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.1.</span> <span class="nav-text">f1函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f2%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.2.</span> <span class="nav-text">f2函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f3%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.3.</span> <span class="nav-text">f3函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AAq%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86"><span class="nav-number">2.2.2.</span> <span class="nav-text">多个q如何处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2022 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yeswc</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">31.3k</span>
+  
+</div>
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "box";
+      
+          flOptions.boxForm = "horizontal";
+      
+          flOptions.position = "middleRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

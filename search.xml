@@ -1,30 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>如何使用go搭建一个pipeline</title>
+    <url>/pipeline/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><ol>
+<li>service需要从q里拿到attachment</li>
+<li>并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。</li>
+<li>并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理</li>
+</ol>
+<h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><p>按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。</p>
+<p>如果有一个任务执行时间较长，那就会影响效率。</p>
+<h3 id="综上"><a href="#综上" class="headerlink" title="综上"></a>综上</h3><p>为了提升效率，采用pipeline执行多任务，当每个任务的处理时间相近时，效率可提高n-1&#x2F;n（n为任务数）</p>
+<ul>
+<li><p><strong>pipeline</strong>: 采用<strong>goroutine + channel</strong>方式， 实现了<strong>生产者消费者模型</strong></p>
+<p>每个任务是一个goroutine，将经过当前任务处理好的数据放入channel中传递给下一个任务</p>
+<p>因此，有需要处理时才有数据，可以减少内存使用，同时多个goroutine并行处理，充分利用资源</p>
+</li>
+<li><p>每个任务封装到单独函数中，实现模块化设计，代码也会更清晰</p>
+</li>
+</ul>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
+<li><p>初始化</p>
+<ul>
+<li>数据库</li>
+<li>消息队列</li>
+</ul>
+</li>
+<li><p>实现pipeline</p>
+<ul>
+<li><p>f1函数（func receive)</p>
+<ul>
+<li>创建out channel</li>
+<li>起一个goroutine循环去处理<ul>
+<li>去q里拿attachment, 把拿到的attachment放入out channel中</li>
+<li>sleep 一定时间，继续去q里拿下一个</li>
+</ul>
+</li>
+<li>返回out channel</li>
+</ul>
+</li>
+<li><p>f2函数（func process), 接收f1函数的channel为自己的in channel</p>
+<ul>
+<li><p>创建out channel</p>
+</li>
+<li><p>起一个goroutine循环去处理</p>
+<p>去in channel里拿task, 把处理后的task放入out channel中</p>
+</li>
+<li><p>返回out channel</p>
+</li>
+</ul>
+</li>
+<li><p>f3函数（func upload), 接收f2函数的channel为自己的in channel</p>
+<p>利用main函数的主线程来调用f3函数，使得函数阻塞在f3这里</p>
+<ul>
+<li><p>循环去处理</p>
+<p>去in channel里拿task, 处理</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>伪代码</p>
+<p>main.go代码如下</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">out1 := f1()</span><br><span class="line">out2 := f2(out1)</span><br><span class="line">f3(out2)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>其中：</p>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+f1去q里拿attchment放入channel中</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+当channel中有内容时，f2进行处理，处理完后放入channel</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+当channel中有内容时，f3进行处理</p>
+</li>
+</ul>
+<p>f1, f2中都会单独起一个goroutine处理，f3则是利用main函数的主线程来调用f3函数，使得函数阻塞在f3这里</p>
+<p>如果f3也起一个goroutine, 那么函数就会立即结束</p>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/images/pipeline1.png"></p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h4 id="graceful-shutdown"><a href="#graceful-shutdown" class="headerlink" title="graceful shutdown"></a>graceful shutdown</h4><h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>如果f1, f2, f3有一个任务在处理时， service突然退出了，那需要把当前任务做完，即需要把f1-&gt;f2-&gt;f3这一套流程走完</p>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>创建一个done channel用于广播结束信号</li>
+<li>创建一个ch channel, 监听几个退出信号(syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</li>
+<li>起一个goroutine等待ch channel内容，当ch channel里有内容时<ul>
+<li>关闭done channel: 相当于向channel里发送零值，等同于广播</li>
+</ul>
+</li>
+</ol>
+<h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">//start for graceful down</span></span><br><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">defer</span> <span class="built_in">close</span>(done)</span><br><span class="line"></span><br><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">defer</span> <span class="built_in">close</span>(ch)</span><br><span class="line">signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	&lt;-ch</span><br><span class="line">	<span class="comment">//广播done信号</span></span><br><span class="line">	<span class="built_in">close</span>(done)</span><br><span class="line">	log.Infof(MainTraceId, <span class="string">&quot;Shutdown Server...&quot;</span>)</span><br><span class="line">&#125;()</span><br><span class="line"><span class="comment">//end for graceful down</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="f1函数"><a href="#f1函数" class="headerlink" title="f1函数"></a>f1函数</h6><p>如果done channel里有数据，就直接返回，不再去q里取attachment了</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(out)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-done:<span class="comment">//graceful shutdown</span></span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			out &lt;- Task&#123;</span><br><span class="line">				Num:   i,</span><br><span class="line">				QName: qName,</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+<h6 id="f2函数"><a href="#f2函数" class="headerlink" title="f2函数"></a>f2函数</h6><p>f2函数不用处理，因为当f1传来的channel没有内容，f2就不会再处理了</p>
+<h6 id="f3函数"><a href="#f3函数" class="headerlink" title="f3函数"></a>f3函数</h6><p>f3函数如果f2传来的channel里没有内容，并且done channel里有内容的时候，才会结束f3，此时相当于流水线的任务都完成了</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;%s:%d\n&quot;</span>, task.QName, task.Num)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//graceful shutdown</span></span><br><span class="line">&lt;-done</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="多个q如何处理"><a href="#多个q如何处理" class="headerlink" title="多个q如何处理"></a>多个q如何处理</h4><h5 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h5><p>如果f1需要去多个q里取attachment, 则需要将多个channel里的内容合并到一个channel里</p>
+<h5 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h5><ol>
+<li>创建out channel</li>
+<li>遍历多个channels<ul>
+<li>将多个channel的内容都加入到out channel中</li>
+<li>这里channel加入的数据是不需要顺序的，因此可以使用新的goroutine来专门把内容加入outchannel</li>
+</ul>
+</li>
+<li>等待merge完成并关闭out channel<ul>
+<li>由于需要等所有channel里的内容加入到out channel，所以需要同步等完成</li>
+<li>但是同步时不能阻塞主程序，因此需要新开一个goroutine去等待</li>
+</ul>
+</li>
+</ol>
+<h5 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(chs ...&lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	wg.Add(<span class="built_in">len</span>(chs))</span><br><span class="line"></span><br><span class="line">	output := <span class="function"><span class="keyword">func</span><span class="params">(ch &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> ch &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, ch := <span class="keyword">range</span> chs &#123;</span><br><span class="line">		<span class="keyword">go</span> output(ch)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步时不能阻塞主程序，因此需要新开一个goroutine</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		wg.Wait()</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;monitor-service/internal/log&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;os/signal&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">	<span class="string">&quot;syscall&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	MainTraceId = <span class="string">&quot;main&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Task <span class="keyword">struct</span> &#123;</span><br><span class="line">	Num   <span class="type">int</span></span><br><span class="line">	QName <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//start init</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//end init</span></span><br><span class="line">	run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//start for graceful down</span></span><br><span class="line">	done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(ch)</span><br><span class="line">	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		&lt;-ch</span><br><span class="line">		<span class="comment">//广播done信号</span></span><br><span class="line">		<span class="built_in">close</span>(done)</span><br><span class="line">		log.Infof(MainTraceId, <span class="string">&quot;Shutdown Server...&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="comment">//end for graceful down</span></span><br><span class="line"></span><br><span class="line">	upload(done, process(merge(receive(done, <span class="string">&quot;main queue&quot;</span>), receive(done, <span class="string">&quot;dlq queue&quot;</span>))))</span><br><span class="line"></span><br><span class="line">	log.Infof(MainTraceId, <span class="string">&quot;Server Exit!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(chs ...&lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	wg.Add(<span class="built_in">len</span>(chs))</span><br><span class="line"></span><br><span class="line">	output := <span class="function"><span class="keyword">func</span><span class="params">(ch &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> ch &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, ch := <span class="keyword">range</span> chs &#123;</span><br><span class="line">		<span class="keyword">go</span> output(ch)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步时不能阻塞主程序，因此需要新开一个go routine</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		wg.Wait()</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">receive</span><span class="params">(done &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, qName <span class="type">string</span>)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> <span class="built_in">close</span>(out)</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-done:</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				out &lt;- Task&#123;</span><br><span class="line">					Num:   i,</span><br><span class="line">					QName: qName,</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">process</span><span class="params">(in &lt;-<span class="keyword">chan</span> Task)</span></span> &lt;-<span class="keyword">chan</span> Task &#123;</span><br><span class="line">	out := <span class="built_in">make</span>(<span class="keyword">chan</span> Task)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">			out &lt;- task</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(out)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> out</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">upload</span><span class="params">(done &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, in &lt;-<span class="keyword">chan</span> Task)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> task := <span class="keyword">range</span> in &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%s:%d\n&quot;</span>, task.QName, task.Num)</span><br><span class="line">	&#125;</span><br><span class="line">	&lt;-done</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><blockquote>
+<p>运行后发现分别从main queue和dlq queue里拉数据，当输入停止service信号（ctrl+c)时，程序graceful shutdown正常结束</p>
+</blockquote>
+<p>docker run -p 8081:80 –rm monitor-parser<br>main queue:1<br>dlq queue:1<br>main queue:2<br>main queue:3<br>dlq queue:2<br>main queue:4<br>main queue:5<br>dlq queue:3<br>dlq queue:4<br>main queue:6<br>main queue:7<br>dlq queue:5<br>dlq queue:6<br>main queue:8<br>main queue:9<br>dlq queue:7<br>dlq queue:8<br>main queue:10<br>dlq queue:9<br>dlq queue:10<br>^C[2023&#x2F;12&#x2F;05 08.56.17.245260,,Infof,main]parser.go:39, Shutdown Server…<br>[2023&#x2F;12&#x2F;05 08.56.17.245325,,Infof,main]parser.go:45, Server Exit!</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>service</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何使用go搭建一个http server</title>
     <url>/httpServer/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
-<li><p>问题描述：</p>
-<p>需要有一个service去接收client端传来的attachment，并进行处理</p>
-</li>
-<li><p>存在问题</p>
-<ol>
+    <content><![CDATA[<h1 id="如何使用go搭建一个http-server"><a href="#如何使用go搭建一个http-server" class="headerlink" title="如何使用go搭建一个http server"></a>如何使用go搭建一个http server</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><p>需要有一个service去接收client端传来的attachment，并进行处理</p>
+<h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><ol>
 <li><p>client端需要等待service接收attachment并处理后的response</p>
 <p>处理过程可能耗时</p>
 </li>
 <li><p>前端也会有upload接口来上传文件，client端不止一个</p>
 </li>
 </ol>
-</li>
-<li><p>综上</p>
-<p>基于要求2，需要有http请求，如果让client端直接将attchment塞入q, client端需要有能力与队列交互，并处理与队列相关的错误与异常，还要考虑只有合法客户端才能发布消息到队列。</p>
+<h3 id="综上"><a href="#综上" class="headerlink" title="综上"></a>综上</h3><p>基于要求2，需要有http请求，如果让client端直接将attchment塞入q, client端需要有能力与队列交互，并处理与队列相关的错误与异常，还要考虑只有合法客户端才能发布消息到队列。</p>
 <p>由于此处的client端不止一个，因此维护多个client端与队列通信较为复杂且不容易维护。</p>
 <p>因此这里采用的方法是：</p>
 <p>clinet端直接与service端交互，service端接收client端的http请求后，将attachment塞入q中，然后立即给client端返回200，节省等待处理的过程。</p>
 <p>client只需要关注如何把attachment发送给service端，无需知道队列的存在，与队列的操作都由service端负责，能更好的控制和优化与队列的操作</p>
-</li>
-</ul>
-<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><ol>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
 <li><p>初始化</p>
 <ul>
 <li>数据库</li>
@@ -80,9 +203,9 @@
 </ul>
 </li>
 </ul>
-<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h4 id="自定义日志生成器"><a href="#自定义日志生成器" class="headerlink" title="自定义日志生成器"></a>自定义日志生成器</h4><h5 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h5><p>格式化log输出为：<u>[时间 app名字 log级别名称 id]文件名:行数, log内容</u></p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h4 id="自定义日志生成器"><a href="#自定义日志生成器" class="headerlink" title="自定义日志生成器"></a>自定义日志生成器</h4><h5 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h5><p>格式化log输出为：<u>[时间 app名字 log级别名称 id]文件名:行数, log内容</u></p>
 <p>[2023&#x2F;12&#x2F;05 06.01.32.576361,,Infof,main]server.go:53, monitor: start main</p>
-<h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><ul>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><ul>
 <li><p>按照log级别设置自定义的log</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	LogLevelErr LogLevel = <span class="literal">iota</span></span><br><span class="line">	LogLevelWarn</span><br><span class="line">	LogLevelInfo</span><br><span class="line">	LogLevelDebug</span><br><span class="line"></span><br><span class="line">	defaultLogLevel = LogLevelDebug</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> logLevelName = <span class="keyword">map</span>[LogLevel]<span class="type">string</span>&#123;</span><br><span class="line">	LogLevelErr:   <span class="string">&quot;Errf&quot;</span>,</span><br><span class="line">	LogLevelWarn:  <span class="string">&quot;Warnf&quot;</span>,</span><br><span class="line">	LogLevelInfo:  <span class="string">&quot;Infof&quot;</span>,</span><br><span class="line">	LogLevelDebug: <span class="string">&quot;Debugf&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -110,7 +233,7 @@
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *Logger)</span></span> output(level LogLevel, traceId, log <span class="type">string</span>) &#123;</span><br><span class="line">	<span class="comment">//找出是谁调用了output(在调用栈上移动的步数), skip=0表示caller自己</span></span><br><span class="line">	skip := <span class="number">2</span></span><br><span class="line">	<span class="keyword">if</span> l == instance &#123;</span><br><span class="line">		skip++</span><br><span class="line">	&#125;</span><br><span class="line">	_, file, line, ok := runtime.Caller(skip)</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		file = filepath.Base(file)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	s := fmt.Sprintf(logFormat, time.Now().UTC().Format(timeFormat), l.serviceName, logLevelName[level], traceId, file, line, log)</span><br><span class="line">	<span class="keyword">if</span> s[<span class="built_in">len</span>(s)<span class="number">-1</span>] != <span class="string">&#x27;\n&#x27;</span> &#123;</span><br><span class="line">		s = s + <span class="string">&quot;\n&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//将log写到标准输出</span></span><br><span class="line">	_, err := os.Stdout.Write([]<span class="type">byte</span>(s))</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, <span class="string">&quot;Write log error: %s&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><p>docker run -p 8080:80 –rm monitor-service<br>[2023&#x2F;12&#x2F;05 06.01.32.576361,,Infof,main]server.go:53, monitor: start main</p>
-<h4 id="自定义gin-log日志生成器"><a href="#自定义gin-log日志生成器" class="headerlink" title="自定义gin log日志生成器"></a>自定义gin log日志生成器</h4><h5 id="描述-2"><a href="#描述-2" class="headerlink" title="描述"></a>描述</h5><p>gin默认的log生成的日志如下</p>
+<h4 id="自定义gin-log日志生成器"><a href="#自定义gin-log日志生成器" class="headerlink" title="自定义gin log日志生成器"></a>自定义gin log日志生成器</h4><h5 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h5><p>gin默认的log生成的日志如下</p>
 <p>[GIN] 2023&#x2F;12&#x2F;05 - 06:19:06 | 200 |        47.2µs |      172.17.0.1 | POST     “&#x2F;demo&#x2F;monitor&#x2F;upload”</p>
 <h5 id="gin-Logger-源码"><a href="#gin-Logger-源码" class="headerlink" title="gin.Logger()源码"></a>gin.Logger()源码</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *Context)</span></span> &#123;</span><br><span class="line">		<span class="comment">// Start timer</span></span><br><span class="line">		start := time.Now()</span><br><span class="line">		path := c.Request.URL.Path</span><br><span class="line">		raw := c.Request.URL.RawQuery</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Process request</span></span><br><span class="line">		c.Next()</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Log only when path is not being skipped</span></span><br><span class="line">		<span class="keyword">if</span> _, ok := skip[path]; !ok &#123;</span><br><span class="line">			param := LogFormatterParams&#123;</span><br><span class="line">				Request: c.Request,</span><br><span class="line">				isTerm:  isTerm,</span><br><span class="line">				Keys:    c.Keys,</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Stop timer</span></span><br><span class="line">			param.TimeStamp = time.Now()</span><br><span class="line">			param.Latency = param.TimeStamp.Sub(start)</span><br><span class="line"></span><br><span class="line">			param.ClientIP = c.ClientIP()</span><br><span class="line">			param.Method = c.Request.Method</span><br><span class="line">			param.StatusCode = c.Writer.Status()</span><br><span class="line">			param.ErrorMessage = c.Errors.ByType(ErrorTypePrivate).String()</span><br><span class="line"></span><br><span class="line">			param.BodySize = c.Writer.Size()</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> raw != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				path = path + <span class="string">&quot;?&quot;</span> + raw</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			param.Path = path</span><br><span class="line"></span><br><span class="line">			fmt.Fprint(out, formatter(param))</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
@@ -287,7 +410,7 @@
         <category>go</category>
       </categories>
       <tags>
-        <tag>pprof</tag>
+        <tag>service</tag>
       </tags>
   </entry>
   <entry>
@@ -712,7 +835,7 @@
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;">&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#108;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#108;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;">&#108;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#99;&#x6f;&#109;">&#x6c;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#99;&#x6f;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -729,11 +852,11 @@
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#108;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#98;&#105;&#108;&#108;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;">&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;">&#x6c;&#105;&#x73;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#105;&#115;&#97;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;">&#x6c;&#105;&#115;&#97;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#x6d;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#x6c;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#x69;&#108;&#x6c;&#64;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#x6e;&#x2e;&#x63;&#111;&#x6d;">&#98;&#105;&#x6c;&#x6c;&#x40;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#97;&#105;&#x6e;&#x2e;&#x63;&#111;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#109;">&#x62;&#x69;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#x6f;&#109;&#x61;&#x69;&#x6e;&#x2e;&#x63;&#x6f;&#109;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#x73;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#105;&#x73;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#x69;&#x73;&#x61;&#64;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;">&#108;&#x69;&#x73;&#x61;&#64;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;">&#98;&#x69;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#x62;&#105;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#111;&#109;&#97;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#105;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#111;&#109;&#97;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#x6c;&#x40;&#x6e;&#x65;&#x77;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x69;&#108;&#x6c;&#x40;&#x6e;&#x65;&#x77;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#x6d;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>
