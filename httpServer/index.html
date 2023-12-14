@@ -86,15 +86,15 @@
 
 
 
-<meta name="description" content="如何使用go搭建一个http server背景问题描述：需要有一个service去接收client端传来的attachment，并进行处理 存在问题 client端需要等待service接收attachment并处理后的response 处理过程可能耗时  前端也会有upload接口来上传文件，client端不止一个   综上基于要求2，需要有http请求，如果让client端直接将attchme">
+<meta name="description" content="如何使用go搭建一个http server背景问题描述需要有一个service去接收client端传来的attachment，并进行处理 存在问题 client端需要等待service接收attachment并处理后的response 处理过程可能耗时  前端也会有upload接口来上传文件，client端不止一个   综上基于要求2，需要有http请求，如果让client端直接将attchmen">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使用go搭建一个http server">
 <meta property="og:url" content="http://example.com/httpServer/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="如何使用go搭建一个http server背景问题描述：需要有一个service去接收client端传来的attachment，并进行处理 存在问题 client端需要等待service接收attachment并处理后的response 处理过程可能耗时  前端也会有upload接口来上传文件，client端不止一个   综上基于要求2，需要有http请求，如果让client端直接将attchme">
+<meta property="og:description" content="如何使用go搭建一个http server背景问题描述需要有一个service去接收client端传来的attachment，并进行处理 存在问题 client端需要等待service接收attachment并处理后的response 处理过程可能耗时  前端也会有upload接口来上传文件，client端不止一个   综上基于要求2，需要有http请求，如果让client端直接将attchmen">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-12-05T14:39:04.000Z">
-<meta property="article:modified_time" content="2023-12-05T09:01:48.723Z">
+<meta property="article:modified_time" content="2023-12-14T07:20:18.409Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="service">
 <meta name="twitter:card" content="summary">
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T09:01:48+00:00">
-                2023-12-05
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-14T07:20:18+00:00">
+                2023-12-14
               </time>
             
           </span>
@@ -412,7 +412,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  10
+                  9
                 </span>
               
             </div>
@@ -433,7 +433,7 @@
       
 
       
-        <h1 id="如何使用go搭建一个http-server"><a href="#如何使用go搭建一个http-server" class="headerlink" title="如何使用go搭建一个http server"></a>如何使用go搭建一个http server</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><p>需要有一个service去接收client端传来的attachment，并进行处理</p>
+        <h1 id="如何使用go搭建一个http-server"><a href="#如何使用go搭建一个http-server" class="headerlink" title="如何使用go搭建一个http server"></a>如何使用go搭建一个http server</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>需要有一个service去接收client端传来的attachment，并进行处理</p>
 <h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><ol>
 <li><p>client端需要等待service接收attachment并处理后的response</p>
 <p>处理过程可能耗时</p>
@@ -695,7 +695,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -717,7 +717,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -756,6 +756,10 @@
 				  
 				  
 					<li class="recent_posts_li">
+					  <a href="/dailyQuestion/" title="每日一题" target="_blank">每日一题</a>
+					</li>
+				  
+					<li class="recent_posts_li">
 					  <a href="/pipeline/" title="如何使用go搭建一个pipeline" target="_blank">如何使用go搭建一个pipeline</a>
 					</li>
 				  
@@ -769,10 +773,6 @@
 				  
 					<li class="recent_posts_li">
 					  <a href="/hexoDeploy/" title="hexo使用问题" target="_blank">hexo使用问题</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/pprof/" title="使用pprof对go http service进行性能分析" target="_blank">使用pprof对go http service进行性能分析</a>
 					</li>
 				  
 				</ul>
@@ -801,7 +801,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8go%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAhttp-server"><span class="nav-number">1.</span> <span class="nav-text">如何使用go搭建一个http server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">问题描述：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E4%B8%8A"><span class="nav-number">1.1.3.</span> <span class="nav-text">综上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#makefile"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dockerfile"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">dockerfile</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">1.3.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%97%A5%E5%BF%97%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">自定义日志生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.3.3.1.1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">1.3.3.1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">1.3.3.1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89gin-log%E6%97%A5%E5%BF%97%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">自定义gin log日志生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">1.3.3.2.1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#gin-Logger-%E6%BA%90%E7%A0%81"><span class="nav-number">1.3.3.2.2.</span> <span class="nav-text">gin.Logger()源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%94%B9%E9%80%A0"><span class="nav-number">1.3.3.2.3.</span> <span class="nav-text">改造</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C-1"><span class="nav-number">1.3.3.2.4.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8go%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAhttp-server"><span class="nav-number">1.</span> <span class="nav-text">如何使用go搭建一个http server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E4%B8%8A"><span class="nav-number">1.1.3.</span> <span class="nav-text">综上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#makefile"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dockerfile"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">dockerfile</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">1.3.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%97%A5%E5%BF%97%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">自定义日志生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.3.3.1.1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">1.3.3.1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">1.3.3.1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89gin-log%E6%97%A5%E5%BF%97%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">自定义gin log日志生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">1.3.3.2.1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#gin-Logger-%E6%BA%90%E7%A0%81"><span class="nav-number">1.3.3.2.2.</span> <span class="nav-text">gin.Logger()源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%94%B9%E9%80%A0"><span class="nav-number">1.3.3.2.3.</span> <span class="nav-text">改造</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C-1"><span class="nav-number">1.3.3.2.4.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -835,7 +835,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">31.3k</span>
+    <span title="Site words total count">32.4k</span>
   
 </div>
 <!--

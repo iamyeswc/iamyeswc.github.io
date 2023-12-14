@@ -86,16 +86,16 @@
 
 
 
-<meta name="description" content="背景问题描述： service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采">
+<meta name="description" content="背景问题描述 service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使用go搭建一个pipeline">
 <meta property="og:url" content="http://example.com/pipeline/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="背景问题描述： service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采">
+<meta property="og:description" content="背景问题描述 service需要从q里拿到attachment 并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。 并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理  存在问题按照上述的任务，如果串行执行，每一步任务必须要等上一步任务完成才能开始执行。 如果有一个任务执行时间较长，那就会影响效率。 综上为了提升效率，采用">
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/images/pipeline1.png">
 <meta property="article:published_time" content="2023-12-05T16:59:47.000Z">
-<meta property="article:modified_time" content="2023-12-05T09:01:48.723Z">
+<meta property="article:modified_time" content="2023-12-14T07:20:18.409Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="service">
 <meta name="twitter:card" content="summary">
@@ -343,8 +343,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-05T09:01:48+00:00">
-                2023-12-05
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-14T07:20:18+00:00">
+                2023-12-14
               </time>
             
           </span>
@@ -435,7 +435,7 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><ol>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><ol>
 <li>service需要从q里拿到attachment</li>
 <li>并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。</li>
 <li>并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理</li>
@@ -610,6 +610,10 @@ f1去q里拿attchment放入channel中</p>
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/dailyQuestion/" rel="prev" title="每日一题">
+                每日一题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -689,7 +693,7 @@ f1去q里拿attchment放入channel中</p>
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -711,7 +715,7 @@ f1去q里拿attchment放入channel中</p>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -750,6 +754,10 @@ f1去q里拿attchment放入channel中</p>
 				  
 				  
 					<li class="recent_posts_li">
+					  <a href="/dailyQuestion/" title="每日一题" target="_blank">每日一题</a>
+					</li>
+				  
+					<li class="recent_posts_li">
 					  <a href="/pipeline/" title="如何使用go搭建一个pipeline" target="_blank">如何使用go搭建一个pipeline</a>
 					</li>
 				  
@@ -763,10 +771,6 @@ f1去q里拿attchment放入channel中</p>
 				  
 					<li class="recent_posts_li">
 					  <a href="/hexoDeploy/" title="hexo使用问题" target="_blank">hexo使用问题</a>
-					</li>
-				  
-					<li class="recent_posts_li">
-					  <a href="/pprof/" title="使用pprof对go http service进行性能分析" target="_blank">使用pprof对go http service进行性能分析</a>
 					</li>
 				  
 				</ul>
@@ -795,7 +799,7 @@ f1去q里拿attchment放入channel中</p>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E4%B8%8A"><span class="nav-number">1.3.</span> <span class="nav-text">综上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graceful-shutdown"><span class="nav-number">2.2.1.</span> <span class="nav-text">graceful shutdown</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#f1%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.1.</span> <span class="nav-text">f1函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f2%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.2.</span> <span class="nav-text">f2函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f3%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.3.</span> <span class="nav-text">f3函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AAq%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86"><span class="nav-number">2.2.2.</span> <span class="nav-text">多个q如何处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E4%B8%8A"><span class="nav-number">1.3.</span> <span class="nav-text">综上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graceful-shutdown"><span class="nav-number">2.2.1.</span> <span class="nav-text">graceful shutdown</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#f1%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.1.</span> <span class="nav-text">f1函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f2%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.2.</span> <span class="nav-text">f2函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#f3%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.1.3.3.</span> <span class="nav-text">f3函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AAq%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86"><span class="nav-number">2.2.2.</span> <span class="nav-text">多个q如何处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">结果</span></a></li></ol></div>
             
 
           </div>
@@ -829,7 +833,7 @@ f1去q里拿attchment放入channel中</p>
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">31.3k</span>
+    <span title="Site words total count">32.4k</span>
   
 </div>
 <!--

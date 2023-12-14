@@ -1,9 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>每日一题</title>
+    <url>/dailyQuestion/</url>
+    <content><![CDATA[<h2 id="12-14"><a href="#12-14" class="headerlink" title="12.14"></a>12.14</h2><h3 id="移掉K位数字"><a href="#移掉K位数字" class="headerlink" title="移掉K位数字"></a>移掉K位数字</h3><p><a href="https://leetcode.cn/problems/remove-k-digits/">https://leetcode.cn/problems/remove-k-digits/</a></p>
+<p>给你一个以字符串表示的非负整数 num 和一个整数 k ，移除这个数中的 k 位数字，使得剩下的数字最小。请你以字符串形式返回这个最小的数字。</p>
+<p>示例 1 ：</p>
+<p>输入：num &#x3D; “1432219”, k &#x3D; 3<br>输出：”1219”<br>解释：移除掉三个数字 4, 3, 和 2 形成一个新的最小的数字 1219 。<br>示例 2 ：</p>
+<p>输入：num &#x3D; “10200”, k &#x3D; 1<br>输出：”200”<br>解释：移掉首位的 1 剩下的数字为 200. 注意输出不能有任何前导零。<br>示例 3 ：</p>
+<p>输入：num &#x3D; “10”, k &#x3D; 2<br>输出：”0”<br>解释：从原数字移除所有的数字，剩余为空就是 0 。</p>
+<p>提示：</p>
+<p>1 &lt;&#x3D; k &lt;&#x3D; num.length &lt;&#x3D; 105<br>num 仅由若干位数字（0 - 9）组成<br>除了 0 本身之外，num 不含任何前导零</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>贪心法：高位数字的影响比低位数字大，所以需要尽可能让高位的数字小</p>
+<p>（1）利用栈，把数字从高位开始依次入栈</p>
+<p>入栈的时候判断是否比栈里的数字小 如果是 就一直出栈到k的额度用完，这样保证了小的数字在高位</p>
+<p>当k的额度用完 那就把剩下的数字都入栈</p>
+<p>如果全部入栈后 k的额度还有 就默认从栈顶开始出栈</p>
+<p>（2）出栈所有数字就是结果（需要删除最前面的0）</p>
+<p>这时候需要注意：</p>
+<p>如果全为0的结果和前面是0后面有数字的情况处理</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>num &#x3D; “1456128”, k &#x3D; 4  预期输出 112 </p>
+<p>处理过程：</p>
+<p>1.入栈</p>
+<table>
+<thead>
+<tr>
+<th>第一个（k&#x3D;4）</th>
+<th>第二个（k&#x3D;4）</th>
+<th align="left">第三个（k&#x3D;4）</th>
+<th>第四个（k&#x3D;4）</th>
+<th>第五个（k&#x3D;3）</th>
+<th>第五个（k&#x3D;2）</th>
+<th>第五个（k&#x3D;1）</th>
+<th>第六个（k&#x3D;1）</th>
+<th>第七个（k&#x3D;1）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td align="left"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="left"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="left"></td>
+<td>6</td>
+<td><del>6</del>    （1小于6，6出栈）</td>
+<td></td>
+<td></td>
+<td></td>
+<td>8</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="left">5</td>
+<td>5</td>
+<td>5</td>
+<td><del>5</del>  （1小于5，5出栈）</td>
+<td></td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td>4</td>
+<td align="left">4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td><del>4</del>  1    （1小于4，4出栈， 1入栈）</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td align="left">1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>k还有额度 则 栈顶的8要出栈</p>
+<p>2.出栈</p>
+<p>最终结果是112</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><h5 id="c"><a href="#c" class="headerlink" title="c++"></a>c++</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">class Solution</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    <span class="type">string</span> removeKdigits(<span class="type">string</span> num, <span class="type">int</span> k)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">string</span> result;</span><br><span class="line">        <span class="type">string</span> resultTmp;</span><br><span class="line">        stack&lt;char&gt; st;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.入栈</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; num.size(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            char c = num[i];</span><br><span class="line">            <span class="comment">// 1.1 栈不为空，并且当前值比栈内值小，并且有剩余移除的额度</span></span><br><span class="line">            while (!st.empty() &amp;&amp; c &lt; st.top() &amp;&amp; k &gt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                st.pop();</span><br><span class="line">                k--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 1.2 栈为空就入栈；当前值比栈内值大也入栈</span></span><br><span class="line">            st.push(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 有剩余的额度要继续出栈</span></span><br><span class="line">        while (k &gt; <span class="number">0</span> &amp;&amp; !st.empty())</span><br><span class="line">        &#123;</span><br><span class="line">            st.pop();</span><br><span class="line">            k--;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 出栈</span></span><br><span class="line">        while (!st.empty())</span><br><span class="line">        &#123;</span><br><span class="line">            resultTmp += st.top();</span><br><span class="line">            st.pop();</span><br><span class="line">        &#125;</span><br><span class="line">        reverse(resultTmp.begin(), resultTmp.end());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!resultTmp.empty())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 栈里有内容删除前面的0</span></span><br><span class="line">            <span class="type">int</span> index = <span class="number">0</span>;</span><br><span class="line">            while (index &lt; resultTmp.size() &amp;&amp; resultTmp[index] == <span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                index++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 删除前面0的resultTmp</span></span><br><span class="line">            <span class="keyword">if</span> (index &lt; resultTmp.size())</span><br><span class="line">            &#123;</span><br><span class="line">                result = resultTmp.substr(index);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 全是0的resultTmp</span></span><br><span class="line">                resultTmp = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">                result = resultTmp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 栈里没内容就是空</span></span><br><span class="line">            resultTmp = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">            result = resultTmp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="go"><a href="#go" class="headerlink" title="go"></a>go</h5><p>go代码里没有stack，需要用切片来实现stack</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Stack []<span class="type">byte</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Push(str <span class="type">byte</span>) &#123;</span><br><span class="line">	*s = <span class="built_in">append</span>(*s, str)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Pop() <span class="type">error</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> s.IsEmpty() &#123;</span><br><span class="line">		<span class="keyword">return</span> fmt.Errorf(<span class="string">&quot;Stack is empty&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		i := <span class="built_in">len</span>(*s) - <span class="number">1</span></span><br><span class="line">		*s = (*s)[:i]</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Top() (<span class="type">byte</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> s.IsEmpty() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, fmt.Errorf(<span class="string">&quot;Stack is empty&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		i := <span class="built_in">len</span>(*s) - <span class="number">1</span></span><br><span class="line">		elenment := (*s)[i]</span><br><span class="line">		<span class="keyword">return</span> elenment, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> IsEmpty() <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(*s) == <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReverseSlice</span><span class="params">(s []<span class="type">byte</span>)</span></span> &#123;</span><br><span class="line">	length := <span class="built_in">len</span>(s)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; length/<span class="number">2</span>; i++ &#123;</span><br><span class="line">		s[i], s[length<span class="number">-1</span>-i] = s[length<span class="number">-1</span>-i], s[i]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">removeKdigits</span><span class="params">(num <span class="type">string</span>, k <span class="type">int</span>)</span></span> <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> st Stack</span><br><span class="line">	<span class="keyword">var</span> resultTmp []<span class="type">byte</span></span><br><span class="line">	<span class="keyword">var</span> result <span class="type">string</span></span><br><span class="line">	<span class="comment">//1.入栈</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(num); i++ &#123;</span><br><span class="line">		c := num[i]</span><br><span class="line">		<span class="keyword">for</span> !st.IsEmpty() &amp;&amp; k &gt; <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> s, _ := st.Top(); c &lt; s &#123;</span><br><span class="line">				st.Pop()</span><br><span class="line">				k--</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		st.Push(c)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> k &gt; <span class="number">0</span> &amp;&amp; !st.IsEmpty() &#123;</span><br><span class="line">		st.Pop()</span><br><span class="line">		k--</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2.出栈</span></span><br><span class="line">	<span class="keyword">for</span> !st.IsEmpty() &#123;</span><br><span class="line">		s, _ := st.Top()</span><br><span class="line">		resultTmp = <span class="built_in">append</span>(resultTmp, s)</span><br><span class="line">		st.Pop()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(resultTmp) != <span class="number">0</span> &#123;</span><br><span class="line">		ReverseSlice(resultTmp)</span><br><span class="line">		index := <span class="number">0</span></span><br><span class="line">		<span class="keyword">for</span> index &lt; <span class="built_in">len</span>(resultTmp) &amp;&amp; resultTmp[index] == <span class="string">&#x27;0&#x27;</span> &#123;</span><br><span class="line">			index++</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> index &lt; <span class="built_in">len</span>(resultTmp) &#123;</span><br><span class="line">			<span class="keyword">for</span> index &lt; <span class="built_in">len</span>(resultTmp) &#123;</span><br><span class="line">				<span class="comment">//函数string()可以将一个byte（或rune）转换为一个包含该字符的字符串</span></span><br><span class="line">				result += <span class="type">string</span>(resultTmp[index])</span><br><span class="line">				index++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> result</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;0&quot;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;0&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+      <tags>
+        <tag>greedy</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何使用go搭建一个pipeline</title>
     <url>/pipeline/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><ol>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><ol>
 <li>service需要从q里拿到attachment</li>
 <li>并且需要对attachment进行解压缩，对于合法的文件提取文件的文本内容，并重新组织。</li>
 <li>并将attachment存储到s3上，同时将合法的文件内容传输给下一个service处理</li>
@@ -134,7 +253,7 @@ f1去q里拿attchment放入channel中</p>
   <entry>
     <title>如何使用go搭建一个http server</title>
     <url>/httpServer/</url>
-    <content><![CDATA[<h1 id="如何使用go搭建一个http-server"><a href="#如何使用go搭建一个http-server" class="headerlink" title="如何使用go搭建一个http server"></a>如何使用go搭建一个http server</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><p>需要有一个service去接收client端传来的attachment，并进行处理</p>
+    <content><![CDATA[<h1 id="如何使用go搭建一个http-server"><a href="#如何使用go搭建一个http-server" class="headerlink" title="如何使用go搭建一个http server"></a>如何使用go搭建一个http server</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>需要有一个service去接收client端传来的attachment，并进行处理</p>
 <h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><ol>
 <li><p>client端需要等待service接收attachment并处理后的response</p>
 <p>处理过程可能耗时</p>
@@ -835,7 +954,7 @@ f1去q里拿attchment放入channel中</p>
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;">&#108;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#99;&#x6f;&#109;">&#x6c;&#x69;&#x73;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#99;&#x6f;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#x6c;&#105;&#x73;&#97;&#64;&#x65;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#105;&#x73;&#97;&#64;&#x65;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#108;&#105;&#115;&#97;&#64;&#x65;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#108;&#105;&#115;&#97;&#64;&#x65;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -852,11 +971,11 @@ f1去q里拿attchment放入channel中</p>
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;">&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#108;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#x6c;&#108;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#x69;&#x6c;&#108;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#115;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;">&#108;&#x69;&#115;&#x61;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#46;&#99;&#111;&#109;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#x73;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#105;&#x73;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#x69;&#x73;&#x61;&#64;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;">&#108;&#x69;&#x73;&#x61;&#64;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;">&#98;&#x69;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#x62;&#105;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#111;&#109;&#97;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#105;&#108;&#108;&#64;&#110;&#101;&#119;&#100;&#111;&#109;&#97;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#x6c;&#x40;&#x6e;&#x65;&#x77;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x69;&#108;&#x6c;&#x40;&#x6e;&#x65;&#x77;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#x6d;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#x69;&#x73;&#97;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#x6c;&#x69;&#x73;&#97;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#x69;&#x73;&#97;&#64;&#x6e;&#101;&#119;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#x63;&#111;&#109;">&#x6c;&#x69;&#x73;&#97;&#64;&#x6e;&#101;&#119;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#x63;&#111;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#x6c;&#x6c;&#64;&#101;&#109;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#109;">&#98;&#x69;&#x6c;&#x6c;&#64;&#101;&#109;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#109;</a>“}<br>bill.changeEmail(“<a href="mailto:&#x62;&#x69;&#108;&#108;&#64;&#x6e;&#101;&#119;&#x64;&#x6f;&#109;&#97;&#x69;&#110;&#x2e;&#99;&#x6f;&#109;">&#x62;&#x69;&#108;&#108;&#64;&#x6e;&#101;&#119;&#x64;&#x6f;&#109;&#97;&#x69;&#110;&#x2e;&#99;&#x6f;&#109;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#64;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#99;&#111;&#109;">&#98;&#105;&#x6c;&#x6c;&#64;&#110;&#101;&#x77;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#99;&#111;&#109;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>
