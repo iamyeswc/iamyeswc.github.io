@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="service," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -86,17 +86,14 @@
 
 
 
-<meta name="description" content="代码应用参考：https:&#x2F;&#x2F;github.com&#x2F;gin-contrib&#x2F;pprof 把pprof挂载到gin的路由器下有两种方法  在gin的跟路由上注册pprof的路由使用pprof.Register(router)下面创建的服务器的路由是http:&#x2F;&#x2F;localhost:80&#x2F;ui&#x2F;test&#x2F;…则可以通过http:&#x2F;&#x2F;localhost:80&#x2F;debug&#x2F;pprof&#x2F;来访问pprof首页">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用pprof对go http service进行性能分析">
-<meta property="og:url" content="http://example.com/pprof/index.html">
+<meta name="description" content="好好学习">
+<meta property="og:type" content="website">
+<meta property="og:title" content="好好学习">
+<meta property="og:url" content="http://example.com/tags/daily/index.html">
 <meta property="og:site_name" content="好好学习">
-<meta property="og:description" content="代码应用参考：https:&#x2F;&#x2F;github.com&#x2F;gin-contrib&#x2F;pprof 把pprof挂载到gin的路由器下有两种方法  在gin的跟路由上注册pprof的路由使用pprof.Register(router)下面创建的服务器的路由是http:&#x2F;&#x2F;localhost:80&#x2F;ui&#x2F;test&#x2F;…则可以通过http:&#x2F;&#x2F;localhost:80&#x2F;debug&#x2F;pprof&#x2F;来访问pprof首页">
+<meta property="og:description" content="好好学习">
 <meta property="og:locale">
-<meta property="article:published_time" content="2023-11-29T17:06:23.000Z">
-<meta property="article:modified_time" content="2023-12-18T02:15:22.714Z">
 <meta property="article:author" content="Yeswc">
-<meta property="article:tag" content="service">
 <meta name="twitter:card" content="summary">
 
 
@@ -127,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/pprof/"/>
+  <link rel="canonical" href="http://example.com/tags/daily/"/>
 
 
 
 
 
-  <title>使用pprof对go http service进行性能分析 | 好好学习</title>
+  <title>标签: daily | 好好学习</title>
   
 
 
@@ -152,7 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -280,251 +277,54 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block tag">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>daily<small>标签</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/pprof/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="好好学习">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+            <a class="post-title-link" href="/dailyQuestion12.11-12.15/" itemprop="url">
+              
+                <span itemprop="name">每日一题12.11-12.15</span>
+              
+            </a>
         
-          <h1 class="post-title" itemprop="name headline">使用pprof对go http service进行性能分析</h1>
-        
+      </h2>
 
-        <div class="post-meta">
-		
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2023-12-14T14:11:34+00:00"
+              content="2023-12-14" >
+          12-14
+        </time>
+      </div>
 
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-11-29T17:06:23+00:00">
-                2023-11-29
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-18T02:15:22+00:00">
-                2023-12-18
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-		  
-		  
-			 <span class="post-meta-divider">|</span>
-			 <span id="busuanzi_value_page_pv"></span>次阅读
-		  
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  530
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="代码应用"><a href="#代码应用" class="headerlink" title="代码应用"></a>代码应用</h2><p><strong>参考</strong>：<a target="_blank" rel="noopener" href="https://github.com/gin-contrib/pprof">https://github.com/gin-contrib/pprof</a></p>
-<p>把pprof挂载到gin的路由器下有两种方法</p>
-<ul>
-<li>在gin的<code>跟路由</code>上注册pprof的路由<br>使用<code>pprof.Register(router)</code><br>下面创建的服务器的路由是<a target="_blank" rel="noopener" href="http://localhost/ui/test/">http://localhost:80/ui/test/</a>…<br>则可以通过<a target="_blank" rel="noopener" href="http://localhost/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/debug/pprof/来访问pprof首页</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">pprof.Register(router)</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在gin的<code>指定路由</code>上注册pprof的路由<br>使用<code>pprof.Register(router)</code><br>下面创建的服务器的路由是<a target="_blank" rel="noopener" href="http://localhost/ui/test/">http://localhost:80/ui/test/</a>…, pprof的路由挂载在了test路由下<br>则需要通过<a target="_blank" rel="noopener" href="http://localhost/test/debug/pprof/%E6%9D%A5%E8%AE%BF%E9%97%AEpprof%E9%A6%96%E9%A1%B5">http://localhost:80/test/debug/pprof/来访问pprof首页</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">router := gin.New()</span><br><span class="line">router.Use(mw.GinLogger(), gin.Recovery(), mw.PromRequestMetricHandler())</span><br><span class="line">uiRoot := router.Group(&quot;ui&quot;)</span><br><span class="line">pprof.RouteRegister(v1Root)</span><br><span class="line">testRoot := uiRoot.Group(&quot;test&quot;)</span><br><span class="line">testRoot .POST(&quot;ruareport&quot;, upload)</span><br><span class="line">testRoot .GET(&quot;healthy&quot;, checkHealthy)</span><br><span class="line"></span><br><span class="line">srv := http.Server&#123;</span><br><span class="line">Addr:         &quot;:80&quot;,</span><br><span class="line">Handler:      http.TimeoutHandler(router, conf.GetConnTimeout(), `&#123;&quot;error&quot;: &quot;Handler Timeout.&quot;&#125;`),</span><br><span class="line">ReadTimeout:  10 * time.Second,</span><br><span class="line">WriteTimeout: conf.GetConnTimeout(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>pprof的路由：</p>
-<p>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;             –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;cmdline      –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;profile      –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] POST   &#x2F;debug&#x2F;pprof&#x2F;symbol       –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;symbol       –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;trace        –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapF.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;allocs       –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;block        –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;goroutine    –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;heap         –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;mutex        –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)<br>[GIN-debug] GET    &#x2F;debug&#x2F;pprof&#x2F;threadcreate –&gt; github.com&#x2F;gin-gonic&#x2F;gin.WrapH.func1 (4 handlers)</p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/service/" rel="tag"><i class="fa fa-tag"></i> service</a>
-          
-        </div>
-      
-
-      
-      
-        <div class="post-widgets">
-        
-
-        
-
-        
-          
-          <div id="needsharebutton-postbottom">
-            <span class="btn">
-              <i class="fa fa-share-alt" aria-hidden="true"></i>
-            </span>
-          </div>
-        
-        </div>
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/cveVersion/" rel="next" title="CVE版本">
-                <i class="fa fa-chevron-left"></i> CVE版本
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/hexoDeploy/" rel="prev" title="hexo使用问题">
-                hexo使用问题 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
 
 
           </div>
@@ -532,10 +332,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -556,17 +352,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -681,22 +468,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">代码应用</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -866,10 +637,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
