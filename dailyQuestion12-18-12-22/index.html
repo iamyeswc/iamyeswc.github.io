@@ -94,7 +94,7 @@
 <meta property="og:description" content="12.18打家劫舍https:&#x2F;&#x2F;leetcode.cn&#x2F;problems&#x2F;house-robber&#x2F; 你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-12-18T10:15:59.000Z">
-<meta property="article:modified_time" content="2023-12-19T06:49:19.517Z">
+<meta property="article:modified_time" content="2023-12-20T04:57:25.580Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="daily">
 <meta name="twitter:card" content="summary">
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-12-19T06:49:19+00:00">
-                2023-12-19
+              <time title="更新于" itemprop="dateModified" datetime="2023-12-20T04:57:25+00:00">
+                2023-12-20
               </time>
             
           </span>
@@ -396,7 +396,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.2k
+                  2.5k
                 </span>
               
 
@@ -412,7 +412,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  11
                 </span>
               
             </div>
@@ -508,7 +508,7 @@
 <ul>
 <li><p>在unordered_set中对每个数字查找找到连续序列的<strong>起始元素</strong>, 即<strong>不存在比自身还小1</strong>的数字</p>
 </li>
-<li><p>当找到后就确定了连续数列的起始值，遍历找到连续数列的长度（每次都加1，判断是否在set里）</p>
+<li><p>当找到后就确定了连续数列的起始值，遍历找到连续数列的长度（每次都加1，判断是否在unordered_set里）</p>
 <blockquote>
 <p>当确定了起始值的遍历，时间复杂度是O(n)， 因为每个数字只会进入一次遍历里面</p>
 </blockquote>
@@ -521,6 +521,120 @@
 <h5 id="go-1"><a href="#go-1" class="headerlink" title="go"></a>go</h5><p>插入map, 把nums里的值作为key， 这样可以利用</p>
 <p>**_, exists :&#x3D; numsMap[key-1]**判断是否是连续序列的起始值</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">longestConsecutive</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> result <span class="type">int</span></span><br><span class="line">	numsMap := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">	<span class="comment">//1.插入map, 把nums里的值作为key</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		numsMap[nums[i]] = <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//2.遍历map, 找起始值</span></span><br><span class="line">	<span class="keyword">for</span> key := <span class="keyword">range</span> numsMap &#123;</span><br><span class="line">		<span class="comment">// 2.1当前值为起始值 找不到比自己小1的数</span></span><br><span class="line">		<span class="keyword">if</span> _, exists := numsMap[key<span class="number">-1</span>]; !exists &#123;</span><br><span class="line">			currentNum := key</span><br><span class="line">			currentLen := <span class="number">1</span></span><br><span class="line">			<span class="comment">// 2.2 找最长的序列</span></span><br><span class="line">			<span class="keyword">for</span> _, exists := numsMap[currentNum+<span class="number">1</span>]; exists; _, exists = numsMap[currentNum+<span class="number">1</span>] &#123;</span><br><span class="line">				currentNum++</span><br><span class="line">				currentLen++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> currentLen &gt; result &#123;</span><br><span class="line">				result = currentLen</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="12-20"><a href="#12-20" class="headerlink" title="12.20"></a>12.20</h2><h3 id="缺失的第一个正数"><a href="#缺失的第一个正数" class="headerlink" title="缺失的第一个正数"></a>缺失的第一个正数</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/first-missing-positive/">https://leetcode.cn/problems/first-missing-positive/</a></p>
+<p>给你一个未排序的整数数组 <code>nums</code> ，请你找出其中没有出现的最小的正整数。</p>
+<p>请你实现时间复杂度为 <code>O(n)</code> 并且只使用常数级别额外空间的解决方案。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,2,0]</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [3,4,-1,1]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [7,8,9,11,12]</span><br><span class="line">输出：1</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 5 * 105</code></li>
+<li><code>-231 &lt;= nums[i] &lt;= 231 - 1</code></li>
+</ul>
+<h4 id="思路1"><a href="#思路1" class="headerlink" title="思路1"></a>思路1</h4><p>时间复杂度是O(n) 想到哈希表unordered_set</p>
+<blockquote>
+<p>理想情况下，查找一个元素（使用unordered_set的find函数）的平均时间复杂度是O(1)，也就是常数时间。然而，在最坏的情况下（例如所有键都哈希到同一bucket时），时间复杂度可以退化到O(n)</p>
+</blockquote>
+<p>1.把当前nums里的值加入unordered_set</p>
+<p>2.从<strong>1</strong>开始遍历，找到unordered_set里<strong>没有出现的值</strong>就是最小正整数</p>
+<p><u>虽然这个做法满足时间复杂度是O(n) ，但是用了额外的unordered_set， 空间复杂度是O(n), 不满足常数级别的空间复杂度</u></p>
+<h4 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h4><h5 id="c-2"><a href="#c-2" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">firstMissingPositive</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;nums)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> result = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 1. 插入unordered_set</span></span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">uset</span><span class="params">(nums.begin(), nums.end())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 从1开始遍历是否在unordered_set里</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 2.1 不在里面说明是最小的正整数</span></span><br><span class="line">            <span class="keyword">if</span> (!uset.<span class="built_in">count</span>(result))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                result++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="go-2"><a href="#go-2" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">firstMissingPositive</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	mp := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">	result := <span class="number">1</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//1.插入哈希表</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		mp[nums[i]] = <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2.从1开始遍历</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="comment">//2.1找不到就是最小正整数</span></span><br><span class="line">		<span class="keyword">if</span> _, exists := mp[result]; !exists &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			result++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="思路2"><a href="#思路2" class="headerlink" title="思路2"></a>思路2</h4><p><u>要使得时间复杂度是O(n), 那只能对n个数遍历一次</u></p>
+<p><u>空间复杂度是常数级别，那就不能构造新的结构（哈希表），要在原始的数组上操作</u></p>
+<ul>
+<li><p>对于长度为n的数组，如果值是从1到n， 最小的正整数也是n+1, 否则 最小正整数是在1~n之间</p>
+</li>
+<li><p>因此只需要关注1~n之间是否有不在数组里的值即可（如果都在数组里，则答案就是n+1）</p>
+</li>
+</ul>
+<p>综上， 题目是两种情况：</p>
+<p>正面： 答案在1~n之间</p>
+<p>反面：答案是n+1</p>
+<p>当在正面情况下找不到的时候 答案肯定是n+1</p>
+<p>所以此题简化为<strong>找1~n是否都在数组里</strong></p>
+<p>因为要省空间，所以要利用原数组</p>
+<ol>
+<li><p>对于负数和大于数组长度的值统一赋值为n+1， 让数组的值都为正整数</p>
+</li>
+<li><p>利用数组索引和nums的值对应（索引 +1 &#x3D; i )， 如果 i 在数组里，则将nums[ i -1] 的位置的值 写为负数 （当前值的负数）</p>
+</li>
+<li><p>最终遍历完数组，正整数的值所在的索引+1 就是1 ~ n中没有出现的正整数</p>
+<p>如果都为负数，那答案就是n+1</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [3,4,-1,1]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>第0个</th>
+<th>第1个</th>
+<th>第2个</th>
+<th>第3个</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始数组</td>
+<td>3</td>
+<td>4</td>
+<td>-1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>负数转换为n+1</td>
+<td>3</td>
+<td>4</td>
+<td><strong>5</strong></td>
+<td>1</td>
+</tr>
+<tr>
+<td>开始遍历</td>
+<td><u>3</u></td>
+<td>4</td>
+<td><strong>-5</strong> （3 对应索引 3 -1 &#x3D;2）</td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td><u>3</u></td>
+<td><u>4</u></td>
+<td>-5</td>
+<td><strong>-1</strong> （4 对应索引 4 -1 &#x3D;3）</td>
+</tr>
+<tr>
+<td></td>
+<td><u>3</u></td>
+<td><u>4</u></td>
+<td><u>-5</u> （5对应索引 5 - 1&gt; n不处理）</td>
+<td>-1</td>
+</tr>
+<tr>
+<td></td>
+<td><strong><u>-3</u></strong></td>
+<td><u>4</u></td>
+<td><u>-5</u></td>
+<td><u>-1</u> （1对应索引 1 - 1 &#x3D; 0不处理）</td>
+</tr>
+</tbody></table>
+<p>最后的正整数是4，索引是1，答案是索引1+1 &#x3D; 2</p>
+<h4 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h4><h5 id="c-3"><a href="#c-3" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">firstMissingPositive</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;nums)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> result = n + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.转换负数和大于n的值为n+1</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i] &lt;= <span class="number">0</span> || nums[i] &gt; n)</span><br><span class="line">            &#123;</span><br><span class="line">                nums[i] = n + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.找1~n的值是否在nums里（利用索引）</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> c = <span class="built_in">abs</span>(nums[i]);</span><br><span class="line">            <span class="keyword">if</span> (c &gt; n)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            nums[c - <span class="number">1</span>] = -<span class="built_in">abs</span>(nums[c - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 找是否是有正整数存在</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                result = i + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="go-3"><a href="#go-3" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">firstMissingPositive</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	n := <span class="built_in">len</span>(nums)</span><br><span class="line">	result := n + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//1.处理负数和大于n的数为n+1</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] &lt;= <span class="number">0</span> || nums[i] &gt; n &#123;</span><br><span class="line">			nums[i] = n + <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//2.找1~n是否在数组里 利用索引</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">var</span> c <span class="type">int</span></span><br><span class="line">		<span class="comment">//2.1 取绝对值</span></span><br><span class="line">		<span class="keyword">if</span> nums[i] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			c = nums[i]</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			c = -nums[i]</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//2.2 找1~n 利用索引赋值为负数</span></span><br><span class="line">		<span class="keyword">if</span> c &gt; n &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> nums[c<span class="number">-1</span>] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			nums[c<span class="number">-1</span>] = -nums[c<span class="number">-1</span>]</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			nums[c<span class="number">-1</span>] = nums[c<span class="number">-1</span>]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//3.找是否有正整数</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			result = i + <span class="number">1</span></span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 
 
 
@@ -763,7 +877,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#12-18"><span class="nav-number">1.</span> <span class="nav-text">12.18</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D"><span class="nav-number">1.1.</span> <span class="nav-text">打家劫舍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-19"><span class="nav-number">2.</span> <span class="nav-text">12.19</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97"><span class="nav-number">2.1.</span> <span class="nav-text">最长连续序列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-1"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-1"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#12-18"><span class="nav-number">1.</span> <span class="nav-text">12.18</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D"><span class="nav-number">1.1.</span> <span class="nav-text">打家劫舍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-19"><span class="nav-number">2.</span> <span class="nav-text">12.19</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97"><span class="nav-number">2.1.</span> <span class="nav-text">最长连续序列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-1"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-1"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-20"><span class="nav-number">3.</span> <span class="nav-text">12.20</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">缺失的第一个正数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF1"><span class="nav-number">3.1.1.</span> <span class="nav-text">思路1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="nav-number">3.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-2"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-2"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF2"><span class="nav-number">3.1.3.</span> <span class="nav-text">思路2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="nav-number">3.1.4.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-3"><span class="nav-number">3.1.4.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-3"><span class="nav-number">3.1.4.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -797,7 +911,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">34.5k</span>
+    <span title="Site words total count">35.7k</span>
   
 </div>
 <!--
