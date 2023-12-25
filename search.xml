@@ -389,7 +389,8 @@
 
 <h5 id="go-5"><a href="#go-5" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">firstMissingPositive</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	n := <span class="built_in">len</span>(nums)</span><br><span class="line">	result := n + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//1.处理负数和大于n的数为n+1</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] &lt;= <span class="number">0</span> || nums[i] &gt; n &#123;</span><br><span class="line">			nums[i] = n + <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//2.找1~n是否在数组里 利用索引</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">var</span> c <span class="type">int</span></span><br><span class="line">		<span class="comment">//2.1 取绝对值</span></span><br><span class="line">		<span class="keyword">if</span> nums[i] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			c = nums[i]</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			c = -nums[i]</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//2.2 找1~n 利用索引赋值为负数</span></span><br><span class="line">		<span class="keyword">if</span> c &gt; n &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> nums[c<span class="number">-1</span>] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			nums[c<span class="number">-1</span>] = -nums[c<span class="number">-1</span>]</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			nums[c<span class="number">-1</span>] = nums[c<span class="number">-1</span>]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//3.找是否有正整数</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] &gt; <span class="number">0</span> &#123;</span><br><span class="line">			result = i + <span class="number">1</span></span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="12-21"><a href="#12-21" class="headerlink" title="12.21"></a>12.21</h2><h3 id="单词搜索"><a href="#单词搜索" class="headerlink" title="单词搜索"></a>单词搜索</h3><p>给定一个 <code>m x n</code> 二维字符网格 <code>board</code> 和一个字符串单词 <code>word</code> 。如果 <code>word</code> 存在于网格中，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
+<h2 id="12-21"><a href="#12-21" class="headerlink" title="12.21"></a>12.21</h2><h3 id="单词搜索"><a href="#单词搜索" class="headerlink" title="单词搜索"></a>单词搜索</h3><p><a href="https://leetcode.cn/problems/word-search/">https://leetcode.cn/problems/word-search/</a></p>
+<p>给定一个 <code>m x n</code> 二维字符网格 <code>board</code> 和一个字符串单词 <code>word</code> 。如果 <code>word</code> 存在于网格中，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
 <p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
 <p><strong>示例 1：</strong></p>
 <p><img src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" alt="img"></p>
@@ -439,7 +440,8 @@
 
 
 
-<h2 id="12-22"><a href="#12-22" class="headerlink" title="12.22"></a>12.22</h2><h3 id="全排列"><a href="#全排列" class="headerlink" title="全排列"></a>全排列</h3><p><strong>示例 1：</strong></p>
+<h2 id="12-22"><a href="#12-22" class="headerlink" title="12.22"></a>12.22</h2><h3 id="全排列"><a href="#全排列" class="headerlink" title="全排列"></a>全排列</h3><p><a href="https://leetcode.cn/problems/permutations/">https://leetcode.cn/problems/permutations/</a></p>
+<p><strong>示例 1：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：nums = [1,2,3]</span><br><span class="line">输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</span><br></pre></td></tr></table></figure>
 
 <p><strong>示例 2：</strong></p>
@@ -481,6 +483,169 @@
 <h5 id="go-7"><a href="#go-7" class="headerlink" title="go"></a>go</h5><p>结束递归的时候需要把path<strong>（类型slice）拷贝一份副本出来</strong></p>
 <p>因为go代码里面slice传递的时候是引用传递，后续的值改变会影响原来的值</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">permute</span><span class="params">(nums []<span class="type">int</span>)</span></span> [][]<span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> result [][]<span class="type">int</span></span><br><span class="line">	<span class="keyword">var</span> dfsRes []<span class="type">int</span></span><br><span class="line">	<span class="comment">//通过 &amp; 符号获取 result 的地址</span></span><br><span class="line">	dfs(nums, &amp;result, dfsRes)</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dfs</span><span class="params">(nums []<span class="type">int</span>, result *[][]<span class="type">int</span>, dfsRes []<span class="type">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">//1.结束递归</span></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(dfsRes) == <span class="built_in">len</span>(nums) &#123;</span><br><span class="line">		<span class="comment">// 拷贝dfsRes副本 不然会改变值</span></span><br><span class="line">		temp := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="built_in">len</span>(dfsRes))</span><br><span class="line">		<span class="built_in">copy</span>(temp, dfsRes)</span><br><span class="line">		*result = <span class="built_in">append</span>(*result, temp)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2.递归</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> !isFound(dfsRes, nums[i]) &#123;</span><br><span class="line">			dfsRes = <span class="built_in">append</span>(dfsRes, nums[i])</span><br><span class="line">			dfs(nums, result, dfsRes)</span><br><span class="line">			dfsRes = dfsRes[:<span class="built_in">len</span>(dfsRes)<span class="number">-1</span>]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">isFound</span><span class="params">(dfsRes []<span class="type">int</span>, num <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(dfsRes); i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> dfsRes[i] == num &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="12-25"><a href="#12-25" class="headerlink" title="12.25"></a>12.25</h2><h3 id="每日温度"><a href="#每日温度" class="headerlink" title="每日温度"></a>每日温度</h3><p><a href="https://leetcode.cn/problems/daily-temperatures/description/">https://leetcode.cn/problems/daily-temperatures/description/</a></p>
+<p>给定一个整数数组 <code>temperatures</code> ，表示每天的温度，返回一个数组 <code>answer</code> ，其中 <code>answer[i]</code> 是指对于第 <code>i</code> 天，下一个更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 <code>0</code> 来代替。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: temperatures = [73,74,75,71,69,72,76,73]</span><br><span class="line">输出: [1,1,4,2,1,1,0,0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: temperatures = [30,40,50,60]</span><br><span class="line">输出: [1,1,1,0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: temperatures = [30,60,90]</span><br><span class="line">输出: [1,1,0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= temperatures.length &lt;= 10的5次方</code></li>
+<li><code>30 &lt;= temperatures[i] &lt;= 100</code></li>
+</ul>
+<h4 id="思路-6"><a href="#思路-6" class="headerlink" title="思路"></a>思路</h4><p>看到这题很容易想到是用两层嵌套循环，对每个元素都遍历其后面的元素找到第一个比它大的数字，这样的时间复杂度会是n的平方，由于题目中数组长度为temperatures.length &lt;&#x3D; 10的5次方，这样会超时。</p>
+<p>考虑使用单调栈的情况：</p>
+<ol>
+<li>需要找到数组中某个元素的下一个（或前一个）更大（或更小）的元素。</li>
+<li>当需要在O(1)的时间复杂度内，获取当前元素之前（或之后）的最近的比它大（或小）的元素。</li>
+<li>当你需要维护一个动态的、始终保持单调性（单调递增或单调递减）的数据结构，且需要快速地添加新元素和删除已存在的元素。</li>
+<li>当你需要找到某个元素在其前缀或后缀中的位置（即在其左边或右边）的最大（或最小）元素时。</li>
+</ol>
+<p>一般来说 涉及前后 最大最小的问题 可以考虑使用单调栈</p>
+<p>这题使用单调栈</p>
+<ul>
+<li><p>把数组索引入栈</p>
+<p>使用索引是因为 这里需要获取的是比自己大的数与自己的距离</p>
+<p>保存索引可以直接获取值 同时方便计算距离</p>
+</li>
+<li><p>如果当前值比栈顶值大，就一直出栈，并计算距离，这时候出栈的 就是找到最近比自己大的数字</p>
+</li>
+<li><p>如果出栈到最后栈内还有数字 就是没找到比自己大的</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: temperatures = [73,74,75,71,69,72,76,73]</span><br><span class="line">输出: [1,1,4,2,1,1,0,0]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>第一个</th>
+<th>第二个</th>
+<th>第三个</th>
+<th>第四个</th>
+<th>第五个</th>
+<th>第六个</th>
+<th>第七个</th>
+<th>第八个</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>73（73入栈）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>76（76入栈）</td>
+<td>76</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>72（72入栈）</td>
+<td><del>72</del></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>69（69入栈）</td>
+<td><del>69</del></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>71（71入栈）</td>
+<td>71</td>
+<td><del>71</del></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>75 （75入栈）</td>
+<td>75</td>
+<td>75</td>
+<td>75</td>
+<td><del>75</del></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>74 （74入栈）</td>
+<td><del>74</del> （75 &gt; 74）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>73（73入栈）</td>
+<td><del>73</del>（74 &gt; 73 ）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>index&#x3D;0</th>
+<th>index&#x3D;1</th>
+<th>index&#x3D;2</th>
+<th>index&#x3D;3</th>
+<th>index&#x3D;4</th>
+<th>index&#x3D;5</th>
+<th>index&#x3D;6</th>
+<th>index&#x3D;7</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>找到当前值出栈时候的比大小的数字 减去当前数字 的索引</p>
+<p>最后的76 73剩余在栈里 对应的值就是0（没找到比自己大的数字）</p>
+<h4 id="代码-8"><a href="#代码-8" class="headerlink" title="代码"></a>代码</h4><h5 id="c-8"><a href="#c-8" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dailyTemperatures</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;temperatures)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">result</span><span class="params">(temperatures.size())</span></span>;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; temperatures.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp; temperatures[i] &gt; temperatures[st.<span class="built_in">top</span>()])</span><br><span class="line">            &#123;</span><br><span class="line">                result[st.<span class="built_in">top</span>()] = i - st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (!st.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            result[st.<span class="built_in">top</span>()] = <span class="number">0</span>;</span><br><span class="line">            st.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="go-8"><a href="#go-8" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Stack <span class="keyword">struct</span> &#123;</span><br><span class="line">	data []<span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> IsEmpty() <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(s.data) == <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Pop() &#123;</span><br><span class="line">	s.data = s.data[:<span class="built_in">len</span>(s.data)<span class="number">-1</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Top() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> s.data[<span class="built_in">len</span>(s.data)<span class="number">-1</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Stack)</span></span> Push(c <span class="type">int</span>) &#123;</span><br><span class="line">	s.data = <span class="built_in">append</span>(s.data, c)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dailyTemperatures</span><span class="params">(temperatures []<span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> st Stack</span><br><span class="line">	result := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="built_in">len</span>(temperatures))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(temperatures); i++ &#123;</span><br><span class="line">		<span class="keyword">for</span> !st.IsEmpty() &amp;&amp; temperatures[i] &gt; temperatures[st.Top()] &#123;</span><br><span class="line">			result[st.Top()] = i - st.Top()</span><br><span class="line">			st.Pop()</span><br><span class="line">		&#125;</span><br><span class="line">		st.Push(i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> !st.IsEmpty() &#123;</span><br><span class="line">		result[st.Top()] = <span class="number">0</span></span><br><span class="line">		st.Pop()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
 
 
@@ -1328,7 +1493,7 @@ f1去q里拿attchment放入channel中</p>
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#x6c;&#x69;&#115;&#97;&#64;&#x65;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x6c;&#x69;&#115;&#97;&#64;&#x65;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#64;&#101;&#109;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x6c;&#105;&#x73;&#x61;&#64;&#101;&#109;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#x6c;&#x69;&#115;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#x6c;&#x69;&#115;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x6c;&#105;&#x73;&#97;&#x40;&#x65;&#x6d;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -1345,11 +1510,11 @@ f1去q里拿attchment放入channel中</p>
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#101;&#x6d;&#x61;&#105;&#108;&#46;&#99;&#111;&#109;">&#98;&#105;&#x6c;&#x6c;&#x40;&#101;&#x6d;&#x61;&#105;&#108;&#46;&#99;&#111;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#115;&#x61;&#x40;&#x65;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;">&#108;&#105;&#115;&#x61;&#x40;&#x65;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#105;&#x6c;&#x6c;&#x40;&#x65;&#109;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#105;&#115;&#97;&#x40;&#101;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;">&#108;&#105;&#115;&#97;&#x40;&#101;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#x2e;&#99;&#x6f;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#105;&#x73;&#x61;&#64;&#x6e;&#x65;&#119;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#109;">&#108;&#105;&#x73;&#x61;&#64;&#x6e;&#x65;&#119;&#x64;&#111;&#x6d;&#97;&#105;&#110;&#x2e;&#99;&#111;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#x62;&#105;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#x6d;">&#x62;&#105;&#108;&#108;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#x69;&#x6c;&#108;&#64;&#110;&#101;&#x77;&#x64;&#111;&#x6d;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#x69;&#x6c;&#108;&#64;&#110;&#101;&#x77;&#x64;&#111;&#x6d;&#x61;&#105;&#110;&#x2e;&#x63;&#x6f;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#105;&#108;&#x6c;&#x40;&#110;&#x65;&#119;&#100;&#x6f;&#109;&#97;&#105;&#110;&#46;&#99;&#111;&#109;">&#x62;&#105;&#108;&#x6c;&#x40;&#110;&#x65;&#119;&#100;&#x6f;&#109;&#97;&#105;&#110;&#46;&#99;&#111;&#109;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#115;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;">&#x6c;&#105;&#115;&#97;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#x69;&#115;&#97;&#64;&#110;&#101;&#x77;&#100;&#x6f;&#x6d;&#x61;&#105;&#110;&#x2e;&#99;&#111;&#x6d;">&#108;&#x69;&#115;&#97;&#64;&#110;&#101;&#x77;&#100;&#x6f;&#x6d;&#x61;&#105;&#110;&#x2e;&#99;&#111;&#x6d;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#x62;&#105;&#x6c;&#108;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#109;">&#x62;&#105;&#x6c;&#108;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#109;</a>“}<br>bill.changeEmail(“<a href="mailto:&#x62;&#105;&#x6c;&#x6c;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#105;&#x6e;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#105;&#x6c;&#x6c;&#x40;&#x6e;&#101;&#119;&#100;&#x6f;&#x6d;&#97;&#105;&#x6e;&#x2e;&#99;&#x6f;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#105;&#108;&#108;&#x40;&#110;&#x65;&#x77;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#x63;&#x6f;&#109;">&#x62;&#105;&#108;&#108;&#x40;&#110;&#x65;&#x77;&#100;&#111;&#x6d;&#x61;&#105;&#x6e;&#46;&#x63;&#x6f;&#109;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>
