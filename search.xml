@@ -689,6 +689,77 @@
 <p>其中后面一个参数是lambda， <strong>传入的参数必须是下标</strong></p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(intervals [][]<span class="type">int</span>)</span></span> [][]<span class="type">int</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> result [][]<span class="type">int</span></span><br><span class="line">	<span class="comment">//1.先把数组按照第一个数字排序</span></span><br><span class="line">	sort.Slice(intervals, <span class="function"><span class="keyword">func</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> intervals[a][<span class="number">0</span>] &lt; intervals[b][<span class="number">0</span>]</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//结果里面先放一个数组值，这样每次都比较看能否合并</span></span><br><span class="line">	result = <span class="built_in">append</span>(result, intervals[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2.[a0, a1] [b0, b1]</span></span><br><span class="line">	<span class="comment">//2.1 b0 &gt; a1 不合并</span></span><br><span class="line">	<span class="comment">//2.2 b0 &lt;= a1合并</span></span><br><span class="line">	<span class="comment">//2.2.1 a1 &lt;= b1 合并为[a0, b1]</span></span><br><span class="line">	<span class="comment">//2.2.1 a1 &gt; b1 合并为[a0, a1] 相当于不合并</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt; <span class="built_in">len</span>(intervals); i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> intervals[i][<span class="number">0</span>] &gt; result[<span class="built_in">len</span>(result)<span class="number">-1</span>][<span class="number">1</span>] &#123;</span><br><span class="line">			result = <span class="built_in">append</span>(result, intervals[i])</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> result[<span class="built_in">len</span>(result)<span class="number">-1</span>][<span class="number">1</span>] &lt;= intervals[i][<span class="number">1</span>] &#123;</span><br><span class="line">				result[<span class="built_in">len</span>(result)<span class="number">-1</span>][<span class="number">1</span>] = intervals[i][<span class="number">1</span>]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="12-27"><a href="#12-27" class="headerlink" title="12.27"></a>12.27</h2><h3 id="完全平方数"><a href="#完全平方数" class="headerlink" title="完全平方数"></a>完全平方数</h3><p><a href="https://leetcode.cn/problems/perfect-squares/">https://leetcode.cn/problems/perfect-squares/</a></p>
+<p>给你一个整数 <code>n</code> ，返回 <em>和为 <code>n</code> 的完全平方数的最少数量</em> 。</p>
+<p><strong>完全平方数</strong> 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，<code>1</code>、<code>4</code>、<code>9</code> 和 <code>16</code> 都是完全平方数，而 <code>3</code> 和 <code>11</code> 不是。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：n = 12</span><br><span class="line">输出：3 </span><br><span class="line">解释：12 = 4 + 4 + 4</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：n = 13</span><br><span class="line">输出：2</span><br><span class="line">解释：13 = 4 + 9</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= n &lt;= 104</code></li>
+</ul>
+<h4 id="思路-8"><a href="#思路-8" class="headerlink" title="思路"></a>思路</h4><p><u>这题是找 和为 <code>n</code> 的完全平方数的最少数量， 即为求解最优解， 想到用动态规划</u></p>
+<p>dp[ i ] &#x3D; x  表示完全平方数的和为 i 的 最少数量 x</p>
+<ul>
+<li><p>状态转移方程</p>
+<p>和为 i 的完全平方数，从1~i之间找到平方数j,  满足j*j &lt;&#x3D;i， 把 j 作为完全平方数加入，则dp[ i ] &#x3D; dp[ i - j *j ] + 1 , 接着 dp[ i - j *j ] 可以再继续往下找</p>
+<ol>
+<li>遍历所有小于等于当前值的完全平方数</li>
+<li>如果找到符合的完全平方数，把其加入 此时组成和的数量+1</li>
+</ol>
+</li>
+<li><p>初始化</p>
+</li>
+</ul>
+<p>dp[ 0 ] 完全平方数的和为0 的 最少数量 0</p>
+<p>dp[ 1 ] 完全平方数的和为1 的 最少数量 1</p>
+<p>dp[ n ]初始值为INT_MAX 为无限大</p>
+<h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><blockquote>
+<p>输入</p>
+<p>n &#x3D;5</p>
+<p>输出</p>
+<p>2</p>
+<p>预期结果</p>
+<p>2</p>
+</blockquote>
+<ol>
+<li><p>dp[ 2 ]  从1 ~ 2之间找 j</p>
+<p>j &#x3D; 1 : dp[ 2 ] &#x3D;  min(dp[ 2 ], dp[2 - 1* 1] + 1) 其中  dp[2 - 1* 1] &#x3D; dp[ 1 ] &#x3D; 1    —–&gt;  dp[ 2 ] &#x3D; 2</p>
+<p>j &#x3D; 2 : 2 * 2 &gt; 2 不符合</p>
+<p>综上  dp[ 2 ] &#x3D; 2</p>
+</li>
+<li><p>dp[ 3 ]  从1 ~ 3之间找 j</p>
+<p>j &#x3D; 1 : dp[ 3 ] &#x3D;  min(dp[ 3 ], dp[3 - 1* 1] + 1) 其中  dp[3 - 1* 1] &#x3D; dp[ 2 ] &#x3D; 2   —–&gt;  dp[ 3 ] &#x3D; 3</p>
+<p>j &#x3D; 2 : 2 * 2 &gt; 3 不符合</p>
+<p>j &#x3D; 3 : 3 * 3 &gt; 3 不符合</p>
+<p>综上  dp[ 3 ] &#x3D; 3</p>
+</li>
+<li><p>dp[ 4 ]  从1 ~ 4之间找 j</p>
+<p>j &#x3D; 1 : dp[ 4 ] &#x3D;  min(dp[ 4 ], dp[4 - 1* 1] + 1) 其中  dp[4 - 1* 1] &#x3D; dp[ 3 ] &#x3D; 3   —–&gt;  dp[ 4 ] &#x3D; 4</p>
+<p>j &#x3D; 2 : dp[ 4 ] &#x3D;  min(dp[ 4 ], dp[4 - 2* 2] + 1) 其中  dp[4 - 2* 2] &#x3D; dp[ 0 ] &#x3D; 0   —–&gt;  dp[ 4 ] &#x3D; 1</p>
+<p>j &#x3D; 3 : 3 * 3 &gt; 4 不符合</p>
+<p>j &#x3D; 4 : 4 * 4 &gt; 4 不符合</p>
+<p>综上  dp[ 4 ] &#x3D; 1</p>
+</li>
+<li><p>dp[ 5 ]  从1 ~ 5之间找 j</p>
+<p>j &#x3D; 1 : dp[ 5 ] &#x3D;  min(dp[ 5 ], dp[5 - 1* 1] + 1) 其中  dp[5 - 1* 1] &#x3D; dp[ 4 ] &#x3D; 1   —–&gt;  dp[ 5 ] &#x3D; 2</p>
+<p>j &#x3D; 2 : dp[ 5 ] &#x3D;  min(dp[ 5 ], dp[5 - 2* 2] + 1) 其中  dp[5 - 2* 2] &#x3D; dp[ 1 ] &#x3D; 1   —–&gt;  dp[ 4 ] &#x3D; 2</p>
+<p>j &#x3D; 3 : 3 * 3 &gt; 5 不符合</p>
+<p>j &#x3D; 4 : 4 * 4 &gt; 5 不符合</p>
+<p>j &#x3D; 5 : 5 * 5 &gt; 5 不符合</p>
+<p>综上  dp[ 5 ] &#x3D; 2</p>
+</li>
+</ol>
+<h5 id="代码-10"><a href="#代码-10" class="headerlink" title="代码"></a>代码</h5><h5 id="c-10"><a href="#c-10" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numSquares</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 0.表示完全平方数为i的最小数量</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, INT_MAX)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.初始状态</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.状态转移方程</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 2.1 遍历所有小于等于当前值的完全平方数</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n &amp;&amp; j * j &lt;= i; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 2.2如果找到符合的完全平方数，把其加入 此时组成和的数量+1</span></span><br><span class="line">                dp[i] = <span class="built_in">min</span>(dp[i], dp[i - j * j] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="go-10"><a href="#go-10" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">numSquares</span><span class="params">(n <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	<span class="comment">//0.初始化dp为长度为n+1</span></span><br><span class="line">	dp := <span class="built_in">make</span>([]<span class="type">int</span>, n+<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> dp &#123;</span><br><span class="line">		dp[i] = math.MaxInt64</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//1.初始状态</span></span><br><span class="line">	dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">	dp[<span class="number">1</span>] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//2.状态转移方程</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">2</span>; i &lt;= n; i++ &#123;</span><br><span class="line">		<span class="keyword">for</span> j := <span class="number">1</span>; j &lt;= n &amp;&amp; j*j &lt;= i; j++ &#123;</span><br><span class="line">			<span class="keyword">if</span> dp[i-j*j]+<span class="number">1</span> &lt; dp[i] &#123;</span><br><span class="line">				dp[i] = dp[i-j*j] + <span class="number">1</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> dp[n]</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
 
 
@@ -1536,7 +1607,7 @@ f1去q里拿attchment放入channel中</p>
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#105;&#115;&#x61;&#x40;&#101;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#108;&#105;&#115;&#x61;&#x40;&#101;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#108;&#x69;&#x73;&#x61;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;">&#108;&#x69;&#x73;&#x61;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#x69;&#115;&#97;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#109;">&#108;&#x69;&#115;&#97;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#109;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#x6c;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -1553,11 +1624,11 @@ f1去q里拿attchment放入channel中</p>
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#108;&#64;&#101;&#x6d;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;">&#98;&#x69;&#108;&#108;&#64;&#101;&#x6d;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#x73;&#97;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;">&#108;&#x69;&#x73;&#97;&#x40;&#101;&#x6d;&#97;&#105;&#x6c;&#x2e;&#99;&#111;&#109;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#x62;&#x69;&#x6c;&#x6c;&#64;&#101;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#109;">&#x62;&#x69;&#x6c;&#x6c;&#64;&#101;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#x73;&#x61;&#64;&#x65;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;">&#108;&#x69;&#x73;&#x61;&#64;&#x65;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#x73;&#x61;&#64;&#x65;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#111;&#109;">&#108;&#x69;&#x73;&#x61;&#64;&#x65;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#111;&#109;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#64;&#110;&#x65;&#x77;&#x64;&#x6f;&#x6d;&#x61;&#105;&#110;&#46;&#99;&#x6f;&#x6d;">&#x6c;&#105;&#x73;&#x61;&#64;&#110;&#x65;&#x77;&#x64;&#x6f;&#x6d;&#x61;&#105;&#110;&#46;&#99;&#x6f;&#x6d;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#x6c;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#98;&#105;&#108;&#x6c;&#x40;&#101;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#x69;&#108;&#108;&#x40;&#x6e;&#101;&#x77;&#x64;&#111;&#109;&#97;&#x69;&#x6e;&#46;&#x63;&#x6f;&#109;">&#98;&#x69;&#108;&#108;&#x40;&#x6e;&#101;&#x77;&#x64;&#111;&#109;&#97;&#x69;&#x6e;&#46;&#x63;&#x6f;&#109;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#98;&#x69;&#108;&#x6c;&#64;&#110;&#101;&#119;&#x64;&#x6f;&#109;&#97;&#105;&#x6e;&#x2e;&#99;&#111;&#109;">&#98;&#x69;&#108;&#x6c;&#64;&#110;&#101;&#119;&#x64;&#x6f;&#109;&#97;&#105;&#x6e;&#x2e;&#99;&#111;&#109;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#109;">&#x6c;&#105;&#x73;&#x61;&#x40;&#x65;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#109;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#x69;&#x73;&#x61;&#x40;&#x6e;&#x65;&#119;&#100;&#111;&#109;&#97;&#x69;&#110;&#46;&#99;&#111;&#109;">&#x6c;&#x69;&#x73;&#x61;&#x40;&#x6e;&#x65;&#119;&#100;&#111;&#109;&#97;&#x69;&#110;&#46;&#99;&#111;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#108;&#x6c;&#64;&#101;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;">&#98;&#105;&#108;&#x6c;&#64;&#101;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#x69;&#x6c;&#108;&#64;&#110;&#x65;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#110;&#46;&#x63;&#x6f;&#109;">&#98;&#x69;&#x6c;&#108;&#64;&#110;&#x65;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#110;&#46;&#x63;&#x6f;&#109;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#105;&#108;&#108;&#x40;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#x6e;&#46;&#99;&#x6f;&#109;">&#x62;&#105;&#108;&#108;&#x40;&#x6e;&#x65;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#x6e;&#46;&#99;&#x6f;&#109;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>
