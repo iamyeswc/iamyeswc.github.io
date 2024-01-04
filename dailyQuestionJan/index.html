@@ -94,7 +94,7 @@
 <meta property="og:description" content="01.02寻找重复数https:&#x2F;&#x2F;leetcode.cn&#x2F;problems&#x2F;find-the-duplicate-number&#x2F;description&#x2F; 给定一个包含 n + 1 个整数的数组 nums ，其数字都在 [1, n] 范围内（包括 1 和 n），可知至少存在一个重复的整数。 假设 nums 只有 一个重复的整数 ，返回 这个重复的数 。 你设计的解决方案必须 不修改 数组 nums">
 <meta property="og:locale">
 <meta property="article:published_time" content="2024-01-02T16:03:30.000Z">
-<meta property="article:modified_time" content="2024-01-03T09:14:29.452Z">
+<meta property="article:modified_time" content="2024-01-04T06:52:44.164Z">
 <meta property="article:author" content="Yeswc">
 <meta property="article:tag" content="daily">
 <meta name="twitter:card" content="summary">
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2024-01-03T09:14:29+00:00">
-                2024-01-03
+              <time title="更新于" itemprop="dateModified" datetime="2024-01-04T06:52:44+00:00">
+                2024-01-04
               </time>
             
           </span>
@@ -396,7 +396,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k
+                  2k
                 </span>
               
 
@@ -412,7 +412,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  8
                 </span>
               
             </div>
@@ -533,6 +533,79 @@
 
 <h5 id="go-1"><a href="#go-1" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">canJump</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	maxJump := <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//贪心法：找到最远能到的位置</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		<span class="comment">//1.如果上一个位置到不了当前下标，直接返回false</span></span><br><span class="line">		<span class="keyword">if</span> i &gt; maxJump &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//2.找到当前位置能跳的最远的位置</span></span><br><span class="line">		<span class="keyword">if</span> maxJump &lt; (i + nums[i]) &#123;</span><br><span class="line">			maxJump = i + nums[i]</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//3.如果当前位置最远位置能到最后一个下标直接返回</span></span><br><span class="line">		<span class="keyword">if</span> maxJump &gt;= (<span class="built_in">len</span>(nums) - <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="01-04"><a href="#01-04" class="headerlink" title="01.04"></a>01.04</h2><h3 id="回文子串"><a href="#回文子串" class="headerlink" title="回文子串"></a>回文子串</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/palindromic-substrings/description/">https://leetcode.cn/problems/palindromic-substrings/description/</a></p>
+<p>给你一个字符串 <code>s</code> ，请你统计并返回这个字符串中 <strong>回文子串</strong> 的数目。</p>
+<p><strong>回文字符串</strong> 是正着读和倒过来读一样的字符串。</p>
+<p><strong>子字符串</strong> 是字符串中的由连续字符组成的一个序列。</p>
+<p>具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;abc&quot;</span><br><span class="line">输出：3</span><br><span class="line">解释：三个回文子串: &quot;a&quot;, &quot;b&quot;, &quot;c&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;aaa&quot;</span><br><span class="line">输出：6</span><br><span class="line">解释：6个回文子串: &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;aa&quot;, &quot;aa&quot;, &quot;aaa&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>s</code> 由小写英文字母组成</li>
+</ul>
+<h4 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h4><p>回文串就是对称串：</p>
+<ul>
+<li><p>如果是奇数个数，就是以最中间一个字母为轴 需要对称；</p>
+</li>
+<li><p>如果是偶数个数，就是以中间两个数为轴 需要对称。</p>
+</li>
+</ul>
+<p>因此，遍历字符串的每个位置，从当前位置出发：</p>
+<ol>
+<li><p>计算奇数长度的回文串个数: start &#x3D; i, end&#x3D;i</p>
+<p>以 i 为轴，所以起始和结束的指针都是 i </p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>i-1</th>
+<th>i</th>
+<th>i+1</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>i-1的数要和i+1相同</td>
+<td>以此为轴</td>
+<td>i-1的数要和i+1相同</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>计算偶数长度的回文串个数: start &#x3D; i, end&#x3D;i+1</p>
+<p>此时没有轴了，所以起始指针是 i ， 结束指针是i+1</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>i</th>
+<th>i+1</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>i的数要和i+1相同</td>
+<td>i的数要和i+1相同</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<p>如何算回文串呢：</p>
+<p>双指针，一个向前一个向后 判断当前的字符是不是一样的，一样就是回文，反之不满足</p>
+<h4 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h4><h5 id="c-2"><a href="#c-2" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countSubstrings</span><span class="params">(string s)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 中心扩展法</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 奇数位置 从自己的位置扩展</span></span><br><span class="line">            count += <span class="built_in">countPliand</span>(s, i, i);</span><br><span class="line">            <span class="comment">// 偶数位置 从i和旁边的数字扩展</span></span><br><span class="line">            count += <span class="built_in">countPliand</span>(s, i, i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countPliand</span><span class="params">(string s, <span class="type">int</span> start, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (start &gt;= <span class="number">0</span> &amp;&amp; end &lt;= s.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (s[start] == s[end])</span><br><span class="line">            &#123;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="comment">// 移动指针 判断是否是回文</span></span><br><span class="line">                start--;</span><br><span class="line">                end++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="go-2"><a href="#go-2" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">countSubstrings</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line">	<span class="comment">//中心扩展法，找到从当前位置扩展的子串是不是回文</span></span><br><span class="line">	<span class="comment">//从当前位置出发可能是奇数长度也可能是偶数长度</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s); i++ &#123;</span><br><span class="line">		<span class="comment">//奇数长度</span></span><br><span class="line">		count += countPalind(s, i, i)</span><br><span class="line">		<span class="comment">//偶数长度</span></span><br><span class="line">		count += countPalind(s, i, i+<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">countPalind</span><span class="params">(s <span class="type">string</span>, start, end <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> start &gt;= <span class="number">0</span> &amp;&amp; end &lt;= <span class="built_in">len</span>(s)<span class="number">-1</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> s[start] == s[end] &#123;</span><br><span class="line">			count++</span><br><span class="line">			<span class="comment">//往两边走</span></span><br><span class="line">			start--</span><br><span class="line">			end++</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> count</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -774,7 +847,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#01-02"><span class="nav-number">1.</span> <span class="nav-text">01.02</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">寻找重复数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#01-03"><span class="nav-number">2.</span> <span class="nav-text">01.03</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F"><span class="nav-number">2.1.</span> <span class="nav-text">跳跃游戏</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-1"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-1"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#01-02"><span class="nav-number">1.</span> <span class="nav-text">01.02</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">寻找重复数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#01-03"><span class="nav-number">2.</span> <span class="nav-text">01.03</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F"><span class="nav-number">2.1.</span> <span class="nav-text">跳跃游戏</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.1.3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-1"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-1"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#01-04"><span class="nav-number">3.</span> <span class="nav-text">01.04</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2"><span class="nav-number">3.1.</span> <span class="nav-text">回文子串</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">3.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="nav-number">3.1.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#c-2"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">c++</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#go-2"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">go</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -808,7 +881,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">43.1k</span>
+    <span title="Site words total count">43.8k</span>
   
 </div>
 <!--

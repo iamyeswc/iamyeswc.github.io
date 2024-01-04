@@ -103,6 +103,79 @@
 
 <h5 id="go-1"><a href="#go-1" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">canJump</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	maxJump := <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//贪心法：找到最远能到的位置</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		<span class="comment">//1.如果上一个位置到不了当前下标，直接返回false</span></span><br><span class="line">		<span class="keyword">if</span> i &gt; maxJump &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//2.找到当前位置能跳的最远的位置</span></span><br><span class="line">		<span class="keyword">if</span> maxJump &lt; (i + nums[i]) &#123;</span><br><span class="line">			maxJump = i + nums[i]</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//3.如果当前位置最远位置能到最后一个下标直接返回</span></span><br><span class="line">		<span class="keyword">if</span> maxJump &gt;= (<span class="built_in">len</span>(nums) - <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="01-04"><a href="#01-04" class="headerlink" title="01.04"></a>01.04</h2><h3 id="回文子串"><a href="#回文子串" class="headerlink" title="回文子串"></a>回文子串</h3><p><a href="https://leetcode.cn/problems/palindromic-substrings/description/">https://leetcode.cn/problems/palindromic-substrings/description/</a></p>
+<p>给你一个字符串 <code>s</code> ，请你统计并返回这个字符串中 <strong>回文子串</strong> 的数目。</p>
+<p><strong>回文字符串</strong> 是正着读和倒过来读一样的字符串。</p>
+<p><strong>子字符串</strong> 是字符串中的由连续字符组成的一个序列。</p>
+<p>具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;abc&quot;</span><br><span class="line">输出：3</span><br><span class="line">解释：三个回文子串: &quot;a&quot;, &quot;b&quot;, &quot;c&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;aaa&quot;</span><br><span class="line">输出：6</span><br><span class="line">解释：6个回文子串: &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;aa&quot;, &quot;aa&quot;, &quot;aaa&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>s</code> 由小写英文字母组成</li>
+</ul>
+<h4 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h4><p>回文串就是对称串：</p>
+<ul>
+<li><p>如果是奇数个数，就是以最中间一个字母为轴 需要对称；</p>
+</li>
+<li><p>如果是偶数个数，就是以中间两个数为轴 需要对称。</p>
+</li>
+</ul>
+<p>因此，遍历字符串的每个位置，从当前位置出发：</p>
+<ol>
+<li><p>计算奇数长度的回文串个数: start &#x3D; i, end&#x3D;i</p>
+<p>以 i 为轴，所以起始和结束的指针都是 i </p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>i-1</th>
+<th>i</th>
+<th>i+1</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>i-1的数要和i+1相同</td>
+<td>以此为轴</td>
+<td>i-1的数要和i+1相同</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>计算偶数长度的回文串个数: start &#x3D; i, end&#x3D;i+1</p>
+<p>此时没有轴了，所以起始指针是 i ， 结束指针是i+1</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>i</th>
+<th>i+1</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>i的数要和i+1相同</td>
+<td>i的数要和i+1相同</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<p>如何算回文串呢：</p>
+<p>双指针，一个向前一个向后 判断当前的字符是不是一样的，一样就是回文，反之不满足</p>
+<h4 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h4><h5 id="c-2"><a href="#c-2" class="headerlink" title="c++"></a>c++</h5><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countSubstrings</span><span class="params">(string s)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 中心扩展法</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 奇数位置 从自己的位置扩展</span></span><br><span class="line">            count += <span class="built_in">countPliand</span>(s, i, i);</span><br><span class="line">            <span class="comment">// 偶数位置 从i和旁边的数字扩展</span></span><br><span class="line">            count += <span class="built_in">countPliand</span>(s, i, i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countPliand</span><span class="params">(string s, <span class="type">int</span> start, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (start &gt;= <span class="number">0</span> &amp;&amp; end &lt;= s.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (s[start] == s[end])</span><br><span class="line">            &#123;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="comment">// 移动指针 判断是否是回文</span></span><br><span class="line">                start--;</span><br><span class="line">                end++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="go-2"><a href="#go-2" class="headerlink" title="go"></a>go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">countSubstrings</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line">	<span class="comment">//中心扩展法，找到从当前位置扩展的子串是不是回文</span></span><br><span class="line">	<span class="comment">//从当前位置出发可能是奇数长度也可能是偶数长度</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s); i++ &#123;</span><br><span class="line">		<span class="comment">//奇数长度</span></span><br><span class="line">		count += countPalind(s, i, i)</span><br><span class="line">		<span class="comment">//偶数长度</span></span><br><span class="line">		count += countPalind(s, i, i+<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">countPalind</span><span class="params">(s <span class="type">string</span>, start, end <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> start &gt;= <span class="number">0</span> &amp;&amp; end &lt;= <span class="built_in">len</span>(s)<span class="number">-1</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> s[start] == s[end] &#123;</span><br><span class="line">			count++</span><br><span class="line">			<span class="comment">//往两边走</span></span><br><span class="line">			start--</span><br><span class="line">			end++</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> count</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -1825,7 +1898,7 @@ f1去q里拿attchment放入channel中</p>
     <url>/goinactionChapter5-9/</url>
     <content><![CDATA[<h1 id="Go语言的类型系统"><a href="#Go语言的类型系统" class="headerlink" title="Go语言的类型系统"></a>Go语言的类型系统</h1><h2 id="用户定义的类型"><a href="#用户定义的类型" class="headerlink" title="用户定义的类型"></a>用户定义的类型</h2><h3 id="struct创建结构类型"><a href="#struct创建结构类型" class="headerlink" title="struct创建结构类型"></a>struct创建结构类型</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">    name       <span class="type">string</span></span><br><span class="line">    email      <span class="type">string</span></span><br><span class="line">    ext        <span class="type">int</span></span><br><span class="line">    privileged <span class="type">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#x6c;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;">&#x6c;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#x6c;&#x69;&#115;&#97;&#64;&#x65;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;">&#x6c;&#x69;&#115;&#97;&#64;&#x65;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
+<p>（1）使用<br>var bill user -&gt;  声明时总是会被初始化，结构里的每个字段都会用零值初始化（数值类型零值:0, 字符串零值：空字符串，布尔类型：false)<br>（2）note<br>var和 :&#x3D; 的区别<br>var是创建一个变量并初始化为其零值<br>:&#x3D; 结合字面量 可以将变量初始化为某个非零值(根据右侧的类型信息作为声明变量的类型）<br>eg: lisa :&#x3D; user{<br>name:”lisa”,<br>email:”<a href="mailto:&#108;&#105;&#x73;&#x61;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;">&#108;&#105;&#x73;&#x61;&#x40;&#101;&#109;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;</a>“,<br>ext:123,<br>privileged:true,<br>} -&gt; 初始化结构类型 使用 结构字面量, 对字段声明顺序没有要求<br>lisa :&#x3D; user{“lisa”, “<a href="mailto:&#108;&#105;&#115;&#x61;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#108;&#105;&#115;&#x61;&#x40;&#101;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#x6f;&#x6d;</a>“, 123, true} -&gt; 只有值，没有字段名，结尾不需要逗号，值得顺序要和结构类型一致<br>（3）使用用户自定义结构类型声明字段</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> admin <span class="keyword">struct</span> &#123;</span><br><span class="line">    person user</span><br><span class="line">    level  <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">fred := admin&#123;</span><br><span class="line">        person: user&#123;</span><br><span class="line">            name:       <span class="string">&quot;fred&quot;</span>,</span><br><span class="line">            email:      <span class="string">&quot;fred@email.com&quot;</span>,</span><br><span class="line">            ext:        <span class="number">456</span>,</span><br><span class="line">            privileged: <span class="literal">false</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        level: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -1842,11 +1915,11 @@ f1去q里拿attchment放入channel中</p>
 <ul>
 <li>使用值接收者实现方法: func (u user) notify()</li>
 </ul>
-<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#x62;&#105;&#x6c;&#x6c;&#64;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;">&#x62;&#105;&#x6c;&#x6c;&#64;&#x65;&#x6d;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#x73;&#97;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;">&#x6c;&#105;&#x73;&#97;&#x40;&#101;&#x6d;&#x61;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
+<p>(1)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#x69;&#108;&#108;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;">&#98;&#x69;&#108;&#108;&#x40;&#x65;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a>“}<br>bill.notify()<br>(2)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#x69;&#115;&#x61;&#x40;&#x65;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a>“}<br>lisa.notify()<br>go语言调整指针的值来符合方法的定义-&gt; (*lisa).notify()</p>
 <ul>
 <li>使用指针接收者实现方法: func (u *user) changeEmail(email string)</li>
 </ul>
-<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#x6c;&#105;&#115;&#x61;&#64;&#x65;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;">&#x6c;&#105;&#115;&#x61;&#64;&#x65;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#x6c;&#105;&#x73;&#97;&#x40;&#110;&#x65;&#x77;&#100;&#x6f;&#x6d;&#x61;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#109;">&#x6c;&#105;&#x73;&#97;&#x40;&#110;&#x65;&#x77;&#100;&#x6f;&#x6d;&#x61;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#98;&#105;&#x6c;&#108;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#109;">&#98;&#105;&#x6c;&#108;&#64;&#101;&#109;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#109;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#105;&#108;&#x6c;&#x40;&#x6e;&#101;&#x77;&#100;&#x6f;&#x6d;&#97;&#105;&#110;&#x2e;&#x63;&#111;&#x6d;">&#98;&#105;&#108;&#x6c;&#x40;&#x6e;&#101;&#x77;&#100;&#x6f;&#x6d;&#97;&#105;&#110;&#x2e;&#x63;&#111;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#x62;&#x69;&#x6c;&#x6c;&#x40;&#110;&#x65;&#119;&#100;&#x6f;&#x6d;&#x61;&#105;&#x6e;&#x2e;&#99;&#x6f;&#109;">&#x62;&#x69;&#x6c;&#x6c;&#x40;&#110;&#x65;&#119;&#100;&#x6f;&#x6d;&#x61;&#105;&#x6e;&#x2e;&#99;&#x6f;&#109;</a>“)</p>
+<p>(1)user类型的指针调用方法<br>lisa :&#x3D; &amp;user{“Lisa”, “<a href="mailto:&#108;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;">&#108;&#x69;&#115;&#x61;&#64;&#101;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;</a>“}<br>lisa.changeEmail(“<a href="mailto:&#108;&#x69;&#115;&#x61;&#64;&#110;&#101;&#119;&#100;&#x6f;&#x6d;&#x61;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#109;">&#108;&#x69;&#115;&#x61;&#64;&#110;&#101;&#119;&#100;&#x6f;&#x6d;&#x61;&#x69;&#x6e;&#x2e;&#99;&#x6f;&#109;</a>“)<br>(2)user类型的值来调用方法<br>bill :&#x3D; user{“Bill”, “<a href="mailto:&#x62;&#105;&#x6c;&#x6c;&#x40;&#101;&#x6d;&#97;&#x69;&#108;&#46;&#99;&#111;&#x6d;">&#x62;&#105;&#x6c;&#x6c;&#x40;&#101;&#x6d;&#97;&#x69;&#108;&#46;&#99;&#111;&#x6d;</a>“}<br>bill.changeEmail(“<a href="mailto:&#98;&#x69;&#108;&#x6c;&#x40;&#x6e;&#101;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#x6e;&#46;&#99;&#x6f;&#x6d;">&#98;&#x69;&#108;&#x6c;&#x40;&#x6e;&#101;&#x77;&#x64;&#x6f;&#109;&#97;&#x69;&#x6e;&#46;&#99;&#x6f;&#x6d;</a>“)<br>go语言调整值来符合方法的定义-&gt; （&amp;bill).changeEmail(“<a href="mailto:&#98;&#x69;&#108;&#108;&#x40;&#110;&#101;&#119;&#x64;&#111;&#109;&#x61;&#x69;&#x6e;&#46;&#x63;&#x6f;&#109;">&#98;&#x69;&#108;&#108;&#x40;&#110;&#101;&#119;&#x64;&#111;&#109;&#x61;&#x69;&#x6e;&#46;&#x63;&#x6f;&#109;</a>“)</p>
 <ul>
 <li>go语言的两种类型的接收者:</li>
 </ul>
